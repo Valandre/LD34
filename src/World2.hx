@@ -1,39 +1,123 @@
 package ;
 import hxd.Res;
-import hxd.Math;
+using hxd.Math;
 
-class World
+enum MatKind {
+	Default;
+}
+
+class World2 extends h3d.scene.World
 {
-	var game : Game;
-	var width : Int;
-	var root : h3d.scene.Object;
+	public var models : Map<String, h3d.scene.World.WorldModel>;
+	public var startPoint : h2d.col.Point;
 	var map : hxd.Pixels;
 	var grid : Array<Int>;
 	var rnd : hxd.Rand;
-	public var startPoint : h2d.col.Point;
+	var game : Game;
 
-	public function new(width) {
+	public function new( chunkSize : Int, worldSize : Int, ?parent ) {
+		super(chunkSize, worldSize, parent);
 		game = Game.inst;
-		this.width = width;
-
-		root = new h3d.scene.Object(game.s3d);
+		enableSpecular = true;
+		models = new Map();
+		initChunksBounds();
 	}
 
+	override function initChunk(c:h3d.scene.World.WorldChunk) {
+	}
+
+	override function initMaterial( mesh : h3d.scene.Mesh, mat ) {
+		super.initMaterial(mesh, mat);
+		mesh.material.receiveShadows = true;
+
+		if( mesh.material.specularTexture != null ) {
+			mesh.material.specularAmount = 5;
+			mesh.material.specularPower = 3;
+		}
+
+		if( !mesh.material.shadows )
+			return;
+
+		mesh.material.allocPass("depth");
+		mesh.material.allocPass("normal");
+	}
+
+/*
+	function resolveMaterialKind(name : String) {
+		name = name.split(".").shift().split("_").shift();
+		name = ~/[0-9]+/g.replace(name.split("/").pop(), "");
+		return switch(name) {
+			//case "Tree", "Herb" : MK_Wind;
+			//case "Grass", "Bush", "Clover", "WaterLily" : MK_Wind_Nolight_NoShadow;
+			default : Default;
+		}
+	}
+
+	function setMaterial(model : h3d.scene.World.WorldModel) {
+		var matKind = resolveMaterialKind(model.r.name);
+		switch(matKind) {
+			case Default:
+		}
+	}*/
+
+	public function getModel(r : hxd.res.Model) {
+		return getModelPath(r.entry.path);
+	}
+
+	function getModelPath( path : String ) {
+		var model = models.get(path);
+		if(model == null) {
+			var r = @:privateAccess Res.loader.loadModel(path);
+			model = loadModel(r);
+			//setMaterial(model);
+			models.set(path, model);
+		}
+		return model;
+	}
+/*
+	function addElements(c:h3d.scene.World.WorldChunk) {
+		var index = Std.int(c.x / chunkSize) + Std.int(c.y / chunkSize) * Std.int(worldSize / chunkSize);
+		var elements = data.chunks.get(index);
+		if(elements == null) return;
+
+		for(e in elements) {
+			var m = models.get(e.modelPath);
+			if( m == null ) {
+				m = getModel(@:privateAccess Res.loader.loadModel(e.modelPath));
+				models.set(e.modelPath, m);
+			}
+			add(m, e.x, e.y, e.z, e.scale, e.rotation);
+		}
+	}*/
+/*
+	override function loadMaterialTexture(r, mat) {
+		var wmat = super.loadMaterialTexture(r, mat);
+		var dirs = r.entry.directory.split("/");
+		wmat.name = ~/[0-9]+/g.replace(dirs.pop(), "");
+		return wmat;
+	}*/
+
+
 	function reset() {
-		while(root.numChildren > 0) {
-			var o = root.getChildAt(0);
-			o.remove();
-			o.dispose();
-			o = null;
+		models = new Map();
+		dispose();
+	}
+
+	public function getFreePos() {
+		while(true) {
+			var x = rnd.random(worldSize);
+			var y = rnd.random(worldSize);
+			if(grid[x + y * worldSize] == 0)
+				return new h2d.col.Point(x, y);
 		}
 	}
 
 	public function getStartingPoint() {
-		var x = Std.int(width * 0.5);
-		var y = Std.int(width * 0.5);
+		var x = Std.int(worldSize * 0.5);
+		var y = Std.int(worldSize * 0.5);
 
 		var deep = 1;
-		while(deep < width * 0.5) {
+		while(deep < worldSize * 0.5) {
 			for( i in -deep...deep)
 				for( j in -deep...deep) {
 					if(Math.abs(i) != deep && Math.abs(j) != deep) continue;
@@ -49,31 +133,26 @@ class World
 	public function generate(seed) {
 		reset();
 
-		setGround();
 		map = buildCity(seed);
 		startPoint = getStartingPoint();
 
 		var models = [Res.city.build01, Res.city.build01, Res.city.tree01, Res.city.tree02, Res.city.tree03];
-		var roads = [Res.city.road01, Res.city.road02, Res.city.road03, Res.city.road04];
+		var roads = [Res.city.road01, Res.city.road02, Res.city.road03, Res.city.road04, Res.city.road05];
 
 		inline function addBuilding(x: Int, y : Int) {
 			var r = rnd.random(models.length);
 			if(x - 1 == startPoint.x && y - 1 == startPoint.y)
 				r = Math.imax(2, r);
-			var m = game.loadModel(models[r]);
-			m.x = x + 0.5;
-			m.y = y + 0.5;
-			if(r < 2)
-				m.setRotate(0, 0, Math.PI * 0.5 * rnd.random(4));
-			root.addChild(m);
-			grid[x + y * width] = 1;
+			var m = getModelPath(models[r].entry.path);
+			add(m, x + 0.5, y + 0.5, 0, 1, r < 2 ? Math.PI * 0.5 * rnd.random(4) : 0);
+			grid[x + y * worldSize] = 1;
 		}
 
 		inline function addRoad(x: Int, y : Int) {
 			var l = x - 1 >= 0 && map.getPixel(x - 1, y) != -1;
-			var r = x + 1 < width && map.getPixel(x + 1, y) != -1;
+			var r = x + 1 < worldSize && map.getPixel(x + 1, y) != -1;
 			var u = y - 1 >= 0 && map.getPixel(x, y - 1) != -1;
-			var d = y + 1 < width && map.getPixel(x, y + 1) != -1;
+			var d = y + 1 < worldSize && map.getPixel(x, y + 1) != -1;
 			var count = 0;
 			if(l) count++;
 			if(r) count++;
@@ -84,6 +163,11 @@ class World
 			var rot = 0;
 			switch(count) {
 				case 1 :
+					id = 4;
+					if(r) rot = 0;
+					else if(d) rot = 1;
+					else if(l) rot = 2;
+					else if(u) rot = 3;
 				case 2 :
 					if((l && r)) {
 						id = 0;
@@ -127,13 +211,9 @@ class World
 				default : throw "not supported";
 			}
 
-			var m = game.loadModel(roads[id]);
-			m.x = x + 0.5;
-			m.y = y + 0.5;
-			m.setRotate(0, 0, Math.PI * 0.5 * rot);
-			root.addChild(m);
-
-			grid[x + y * width] = 0;
+			var m = getModelPath(roads[id].entry.path);
+			add(m, x + 0.5, y + 0.5, 0, 1, Math.PI * 0.5 * rot);
+			grid[x + y * worldSize] = 0;
 		}
 
 		grid = [];
@@ -149,15 +229,15 @@ class World
 
 		var g = new h2d.Graphics();
 		g.beginFill(0);
-		g.drawRect(0, 0, width, width);
+		g.drawRect(0, 0, worldSize, worldSize);
 		g.endFill();
 
 
-		var n = Std.int((width - 1) / 3);
+		var n = Std.int((worldSize - 1) / 3);
 		g.beginFill(0xFFFFFF);
 		for(i in 0...n) {
-			g.drawRect(i * 3 + 1, 1, 2, width - 2);
-			g.drawRect(1, i * 3 + 1, width - 2, 2);
+			g.drawRect(i * 3 + 1, 1, 2, worldSize - 2);
+			g.drawRect(1, i * 3 + 1, worldSize - 2, 2);
 		}
 		g.endFill();
 
@@ -197,59 +277,20 @@ class World
 
 		g.endFill();
 
-		var tex = new h3d.mat.Texture(width, width, [Target]);
+		var tex = new h3d.mat.Texture(worldSize, worldSize, [Target]);
 		g.drawTo(tex);
 		return tex.capturePixels();
 	}
 
-	function setGround() {
-		var prim = new h3d.prim.BigPrimitive(8);
-
-		inline function addVertice(x : Float, y : Float) {
-			prim.addVertexValue(x);
-			prim.addVertexValue(y);
-			prim.addVertexValue(-0.01);
-
-			prim.addVertexValue(0);
-			prim.addVertexValue(0);
-			prim.addVertexValue(1);
-
-			prim.addVertexValue(x);
-			prim.addVertexValue(y);
-		}
-
-		prim.begin(0);
-
-		var w = width;
-		for(y in 0...w + 1 )
-			for(x in 0...w + 1 )
-				addVertice(x, y);
-
-		for(y in 0...w )
-			for(x in 0...w ) {
-				var i = x + y * (w + 1);
-				prim.addIndex(i);
-				prim.addIndex(i + 1);
-				prim.addIndex(i + w + 2);
-				prim.addIndex(i);
-				prim.addIndex(i + w + 2);
-				prim.addIndex(i + w + 1);
-			}
-
-		prim.flush();
-
-
-		var m = new h3d.scene.Mesh(prim, root);
-		m.material.mainPass.enableLights = true;
-		m.material.texture = Res.city.groun01.toTexture();
-		m.material.texture.wrap = Repeat;
-		m.material.shadows = true;
-	}
-
 	public function collide(x: Float, y : Float,  ray : Float) {
 
+		if(x < 0) return new h2d.col.Point(0.05, 0);
+		if(x > worldSize) return new h2d.col.Point( -0.05, 0);
+		if(y < 0) return new h2d.col.Point(0, 0.05);
+		if(y > worldSize) return new h2d.col.Point(0, -0.05);
+
 		inline function isCollide(px : Int, py : Int) {
-			if(grid[px + py * width] == 0) return null;
+			if(grid[px + py * worldSize] == 0) return null;
 			var dx = x - (px + 0.5);
 			var dy = y - (py + 0.5);
 			if(Math.abs(dx) < 0.5 + ray && Math.abs(dy) < 0.5 + ray)
@@ -269,11 +310,12 @@ class World
 	}
 
 	public function isCollide(x : Float, y : Float) {
-		return grid[Std.int(x) + Std.int(y * width)] != 0;
+		if(x < 0 || x >= worldSize || y < 0 || y >= worldSize) return true;
+		return grid[Std.int(x) + Std.int(y * worldSize)] != 0;
 	}
 
-	public function update(dt : Float) {
+
+	override function sync(ctx) {
 
 	}
-
 }

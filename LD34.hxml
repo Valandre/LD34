@@ -11,3 +11,4 @@
 -D native-trace
 -D advanced-telemetry
 -dce full
+-swf-version 15

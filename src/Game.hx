@@ -5,6 +5,7 @@ import hxd.Res;
 class Game extends hxd.App {
 
 	public static var inst : Game;
+	public var inspector : hxd.net.SceneInspector;
 	public var world : World;
 	public var hero : Hero;
 	public var fighters : Array<Fighter>;
@@ -12,6 +13,7 @@ class Game extends hxd.App {
 	var width = 0;
 
 	var camOffset : h3d.Vector;
+	public var renderer : Composite;
 
 	static function main() {
 		hxd.Res.initLocal();
@@ -20,6 +22,7 @@ class Game extends hxd.App {
 	}
 
 	override function init() {
+		inspector = new hxd.net.SceneInspector(s3d);
 		width = 3 * citySize + 1;
 
 		var light = new h3d.scene.DirLight(new h3d.Vector( 0.3, -0.4, -0.9), s3d);
@@ -27,12 +30,15 @@ class Game extends hxd.App {
 		s3d.lightSystem.ambientLight.set(0.74, 0.74, 0.74);
 		s3d.lightSystem.perPixelLighting = true;
 
+		renderer = new Composite();
+		s3d.renderer = renderer;
+
 		resetCamOffset();
 		var cam = s3d.camera;
 		cam.target.set(width * 0.5, width * 0.5, 0);
 		cam.pos.set(cam.target.x + camOffset.x, cam.target.y + camOffset.y, cam.target.z + camOffset.z);
 		cam.fovY = 36;
-		cam.zNear = 5;
+		cam.zNear = 1;
 		cam.zFar = 100;
 
 		generate(0);
@@ -48,7 +54,7 @@ class Game extends hxd.App {
 
 	function generate(seed) {
 		if(world == null)
-			world = new World(width);
+			world = new World(width >> 1, width, s3d);
 		world.generate(seed);
 
 		var p = world.startPoint;
@@ -61,39 +67,55 @@ class Game extends hxd.App {
 
 		if(fighters == null)
 			fighters = [];
-		for( f in fighters)
+		for( f in fighters) {
 			f.remove();
+			fighters.remove(f);
+		}
+
+		for( i in 0...5) {
+			var p = world.getFreePos();
+			fighters.push(new Fighter(p.x + 0.5, p.y + 0.5));
+		}
 	}
 
+	var models : Map<String, h3d.scene.Object> = new Map();
 	public function loadModel( m : hxd.res.Model ) {
-		var lib = m.toHmd();
-		var e = lib.makeObject(loadTexture.bind(m.entry.path));
-		for( m in e.getMaterials()) {
-			m.mainPass.enableLights = true;
-			m.addPass(new h3d.mat.Pass("depth", m.mainPass));
-			m.addPass(new h3d.mat.Pass("normal", m.mainPass));
-			cast(m, h3d.mat.MeshMaterial).shadows = true;
+		var e = models.get(m.entry.path);
+		if(e == null) {
+			var lib = m.toHmd();
+			e = lib.makeObject(loadTexture.bind(m.entry.path));
+			for( m in e.getMaterials()) {
+				m.mainPass.enableLights = true;
+				m.addPass(new h3d.mat.Pass("depth", m.mainPass));
+				m.addPass(new h3d.mat.Pass("normal", m.mainPass));
+				cast(m, h3d.mat.MeshMaterial).shadows = true;
+			}
+			models.set(m.entry.path, e);
 		}
-		return e;
+		return e.clone();
 	}
 
+	var textures : Map<String, h3d.mat.Texture> = new Map();
 	function loadTexture( modelPath : String, texPath : String ) {
-		var t : h3d.mat.Texture;
+		var t = textures.get(modelPath);
+		if(t == null) {
+			try {
+				t = Res.load(texPath).toTexture();
+			} catch( e : hxd.res.NotFound ) {
+				var s1 = modelPath.split("/");
+				s1.pop();
+				var s2 = texPath.split("/");
+				texPath = "";
+				for (s in s1) texPath += s + "/";
+				texPath += s2[s2.length - 1];
+				t = Res.load(texPath).toTexture();
+			}
 
-		try {
-			t = Res.load(texPath).toTexture();
-		} catch( e : hxd.res.NotFound ) {
-			var s1 = modelPath.split("/");
-			s1.pop();
-			var s2 = texPath.split("/");
-			texPath = "";
-			for (s in s1) texPath += s + "/";
-			texPath += s2[s2.length - 1];
-			t = Res.load(texPath).toTexture();
+			if(t != null) {
+				t.wrap = Repeat;
+				textures.set(modelPath, t);
+			}
 		}
-
-		if(t != null)
-			t.wrap = Repeat;
 		return t;
 	}
 
@@ -171,7 +193,8 @@ class Game extends hxd.App {
 		super.update(dt);
 
 		keys(dt);
-		world.update(dt);
 		hero.update(dt);
+		for( f in fighters)
+			f.update(dt);
 	}
 }
