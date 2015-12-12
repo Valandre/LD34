@@ -7,7 +7,8 @@ class World
 	var game : Game;
 	var width : Int;
 	var root : h3d.scene.Object;
-	var grid : hxd.Pixels;
+	var map : hxd.Pixels;
+	var grid : Array<Int>;
 	var rnd : hxd.Rand;
 	public var startPoint : h2d.col.Point;
 
@@ -36,7 +37,7 @@ class World
 			for( i in -deep...deep)
 				for( j in -deep...deep) {
 					if(Math.abs(i) != deep && Math.abs(j) != deep) continue;
-					if(grid.getPixel(x + i, y + j) != -1 && grid.getPixel(x + i + 1, y + j) != -1 && grid.getPixel(x + i, y + j + 1) != -1)
+					if(map.getPixel(x + i, y + j) != -1 && map.getPixel(x + i + 1, y + j) != -1 && map.getPixel(x + i, y + j + 1) != -1)
 						return new h2d.col.Point(x + i, y + j);
 				}
 			deep++;
@@ -49,12 +50,13 @@ class World
 		reset();
 
 		setGround();
-		grid = buildCity(seed);
+		map = buildCity(seed);
 		startPoint = getStartingPoint();
 
-		var models = [Res.city.build01, Res.city.build01, Res.city.tree01];
+		var models = [Res.city.build01, Res.city.build01, Res.city.tree01, Res.city.tree02, Res.city.tree03];
+		var roads = [Res.city.road01, Res.city.road02, Res.city.road03, Res.city.road04];
 
-		inline function addBuilding(x: Float, y : Float) {
+		inline function addBuilding(x: Int, y : Int) {
 			var r = rnd.random(models.length);
 			if(x - 1 == startPoint.x && y - 1 == startPoint.y)
 				r = Math.imax(2, r);
@@ -64,12 +66,82 @@ class World
 			if(r < 2)
 				m.setRotate(0, 0, Math.PI * 0.5 * rnd.random(4));
 			root.addChild(m);
+			grid[x + y * width] = 1;
 		}
 
-		for(x in 0...grid.width)
-			for(y in 0...grid.height)
-				if(grid.getPixel(x, y) == -1)
+		inline function addRoad(x: Int, y : Int) {
+			var l = x - 1 >= 0 && map.getPixel(x - 1, y) != -1;
+			var r = x + 1 < width && map.getPixel(x + 1, y) != -1;
+			var u = y - 1 >= 0 && map.getPixel(x, y - 1) != -1;
+			var d = y + 1 < width && map.getPixel(x, y + 1) != -1;
+			var count = 0;
+			if(l) count++;
+			if(r) count++;
+			if(u) count++;
+			if(d) count++;
+
+			var id = 0;
+			var rot = 0;
+			switch(count) {
+				case 1 :
+				case 2 :
+					if((l && r)) {
+						id = 0;
+						rot = 0;
+					}
+					else if((u && d)) {
+						id = 0;
+						rot = 1;
+					}
+					else if((u && r)) {
+						id = 1;
+						rot = 0;
+					}
+					else if((r && d)) {
+						id = 1;
+						rot = 1;
+					}
+					else if((d && l)) {
+						id = 1;
+						rot = 2;
+					}
+					else if((l && u)) {
+						id = 1;
+						rot = 3;
+					}
+				case 3 :
+					id = 2;
+					if((l && u && r))
+						rot = 0;
+					else if((u && r && d))
+						rot = 1;
+					else if((r && d && l))
+						rot = 2;
+					else if((d && l && u))
+						rot = 3;
+
+				case 4:
+					id = 3;
+					rot = 0;
+
+				default : throw "not supported";
+			}
+
+			var m = game.loadModel(roads[id]);
+			m.x = x + 0.5;
+			m.y = y + 0.5;
+			m.setRotate(0, 0, Math.PI * 0.5 * rot);
+			root.addChild(m);
+
+			grid[x + y * width] = 0;
+		}
+
+		grid = [];
+		for(x in 0...map.width)
+			for(y in 0...map.height)
+				if(map.getPixel(x, y) == -1)
 					addBuilding(x, y);
+				else addRoad(x, y);
 	}
 
 	function buildCity(seed) {
@@ -172,6 +244,32 @@ class World
 		m.material.texture = Res.city.groun01.toTexture();
 		m.material.texture.wrap = Repeat;
 		m.material.shadows = true;
+	}
+
+	public function collide(x: Float, y : Float,  ray : Float) {
+
+		inline function isCollide(px : Int, py : Int) {
+			if(grid[px + py * width] == 0) return null;
+			var dx = x - (px + 0.5);
+			var dy = y - (py + 0.5);
+			if(Math.abs(dx) < 0.5 + ray && Math.abs(dy) < 0.5 + ray)
+				return new h2d.col.Point((Std.int(x) - Std.int(px)) * Math.abs(dx), (Std.int(y) - Std.int(py)) * Math.abs(dy));
+			return null;
+		}
+
+		var p = isCollide(Std.int(x + 1), Std.int(y));
+		if(p != null) return p;
+		var p = isCollide(Std.int(x - 1), Std.int(y));
+		if(p != null) return p;
+		var p = isCollide(Std.int(x), Std.int(y - 1));
+		if(p != null) return p;
+		var p = isCollide(Std.int(x), Std.int(y + 1));
+		if(p != null) return p;
+		return null;
+	}
+
+	public function isCollide(x : Float, y : Float) {
+		return grid[Std.int(x) + Std.int(y * width)] != 0;
 	}
 
 	public function update(dt : Float) {

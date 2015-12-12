@@ -5,8 +5,8 @@ import hxd.Res;
 class Game extends hxd.App {
 
 	public static var inst : Game;
-	var world : World;
-	var hero : Hero;
+	public var world : World;
+	public var hero : Hero;
 	var citySize = 8;
 	var width = 0;
 
@@ -54,6 +54,8 @@ class Game extends hxd.App {
 		var cam = s3d.camera;
 		cam.target.x = p.x + 0.5;
 		cam.target.y = p.y + 0.5;
+
+		if( hero != null) hero.remove();
 		hero = new Hero(p.x + 0.5, p.y + 0.5);
 	}
 
