@@ -1,8 +1,7 @@
 package ;
 import hxd.Math;
-import hxd.Key in K;
 
-class Hero
+class Fighter
 {
 	var game : Game;
 	var model : h3d.scene.Mesh;
@@ -64,6 +63,7 @@ class Hero
 
 	public function update(dt : Float) {
 
+		/*
 		if(K.isPressed(K.MOUSE_RIGHT)) {
 			canMove = !canMove;
 		}
@@ -100,6 +100,6 @@ class Hero
 		else {
 			//ATTACK
 
-		}
+		}*/
 	}
 }

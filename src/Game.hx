@@ -7,6 +7,7 @@ class Game extends hxd.App {
 	public static var inst : Game;
 	public var world : World;
 	public var hero : Hero;
+	public var fighters : Array<Fighter>;
 	var citySize = 8;
 	var width = 0;
 
@@ -57,6 +58,11 @@ class Game extends hxd.App {
 
 		if( hero != null) hero.remove();
 		hero = new Hero(p.x + 0.5, p.y + 0.5);
+
+		if(fighters == null)
+			fighters = [];
+		for( f in fighters)
+			f.remove();
 	}
 
 	public function loadModel( m : hxd.res.Model ) {
