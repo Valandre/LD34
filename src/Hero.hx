@@ -1,11 +1,12 @@
 package ;
+import hxd.Res;
 import hxd.Math;
 import hxd.Key in K;
 
 class Hero
 {
 	var game : Game;
-	var model : h3d.scene.Mesh;
+	var model : h3d.scene.Object;
 	public var x(get, set) : Float;
 	public var y(get, set) : Float;
 	public var currentRotation(default, set) : Float = 0;
@@ -40,14 +41,21 @@ class Hero
 	}
 
 	function getModel() {
+		/*
 		var c = new h3d.prim.Cube(size, size * 0.8 , size * 0.6);
 		c.unindex();
 		c.addNormals();
 		c.addUVs();
 		c.translate( -size * 0.5, -size * 0.8 * 0.5, 0);
 		var m = new h3d.scene.Mesh(c, game.s3d);
-		m.material.mainPass.enableLights = true;
-		m.material.shadows = true;
+		*/
+		var m = game.loadModel(Res.bolide.model);
+		for( mat in m.getMaterials()) {
+			mat.mainPass.enableLights = true;
+			mat.shadows = true;
+
+		}
+		game.s3d.addChild(m);
 		return m;
 	}
 
