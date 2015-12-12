@@ -6,7 +6,7 @@ enum MatKind {
 	Default;
 }
 
-class World2 extends h3d.scene.World
+class World extends h3d.scene.World
 {
 	public var models : Map<String, h3d.scene.World.WorldModel>;
 	public var startPoint : h2d.col.Point;
