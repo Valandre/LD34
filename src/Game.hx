@@ -5,13 +5,12 @@ import hxd.Res;
 class Game extends hxd.App {
 
 	public static var inst : Game;
-	var world : h3d.scene.Object;
+	var world : World;
+	var hero : Hero;
 	var citySize = 8;
 	var width = 0;
-	var grid : hxd.Pixels;
 
-	var camOffset = new h3d.Vector(8, 10, 20);
-	var rand : hxd.Rand;
+	var camOffset : h3d.Vector;
 
 	static function main() {
 		hxd.Res.initLocal();
@@ -27,6 +26,7 @@ class Game extends hxd.App {
 		s3d.lightSystem.ambientLight.set(0.74, 0.74, 0.74);
 		s3d.lightSystem.perPixelLighting = true;
 
+		resetCamOffset();
 		var cam = s3d.camera;
 		cam.target.set(width * 0.5, width * 0.5, 0);
 		cam.pos.set(cam.target.x + camOffset.x, cam.target.y + camOffset.y, cam.target.z + camOffset.z);
@@ -34,191 +34,136 @@ class Game extends hxd.App {
 		cam.zNear = 5;
 		cam.zFar = 100;
 
-		world = new h3d.scene.Object(s3d);
 		generate(0);
 	}
 
+	function resetCamOffset() {
+		camOffset = new  h3d.Vector(4, 6, 9);
+		if(hero != null) {
+			s3d.camera.target.x = hero.x;
+			s3d.camera.target.y = hero.y;
+		}
+	}
+
 	function generate(seed) {
-		while(s2d.numChildren > 0)
-			s2d.removeChild(s2d.getChildAt(0));
-		while(world.numChildren > 0)
-			world.removeChild(world.getChildAt(0));
+		if(world == null)
+			world = new World(width);
+		world.generate(seed);
 
-		setGround();
-		grid = buildCity(seed);
-
-		inline function addCube(x: Float, y : Float) {
-			var c = new h3d.prim.Cube(1, 1, 0.1);
-			c.unindex();
-			c.addNormals();
-			c.addUVs();
-			c.translate( -0.5, -0.5, 0);
-			var m = new h3d.scene.Mesh(c, world);
-			m.material.mainPass.enableLights = true;
-			m.material.color.setColor(0x608A36);
-			m.x = x + 0.5;
-			m.y = y + 0.5;
-
-			if(rand.rand() < 0.8) {
-				var c = new h3d.prim.Cube(0.8, 0.8, 0.5 + 0.5 * rand.random(2));
-				c.unindex();
-				c.addNormals();
-				c.addUVs();
-				c.translate( -0.4, -0.4, 0);
-				var m = new h3d.scene.Mesh(c, world);
-				m.material.mainPass.enableLights = true;
-				m.material.color.setColor(0x8CA0A8);
-				m.x = x + 0.5;
-				m.y = y + 0.5;
-			}
-		}
-
-		for(x in 0...grid.width)
-			for(y in 0...grid.height)
-				if(grid.getPixel(x, y) == -1)
-					addCube(x, y);
-
+		var p = world.startPoint;
+		var cam = s3d.camera;
+		cam.target.x = p.x + 0.5;
+		cam.target.y = p.y + 0.5;
+		hero = new Hero(p.x + 0.5, p.y + 0.5);
 	}
 
-	function buildCity(seed) {
-		rand = new hxd.Rand(seed);
-
-		var g = new h2d.Graphics();
-		g.beginFill(0);
-		g.drawRect(0, 0, width, width);
-		g.endFill();
-
-
-		var n = Std.int((width - 1) / 3);
-		g.beginFill(0xFFFFFF);
-		for(i in 0...n) {
-			g.drawRect(i * 3 + 1, 1, 2, width - 2);
-			g.drawRect(1, i * 3 + 1, width - 2, 2);
+	public function loadModel( m : hxd.res.Model ) {
+		var lib = m.toHmd();
+		var e = lib.makeObject(loadTexture.bind(m.entry.path));
+		for( m in e.getMaterials()) {
+			m.mainPass.enableLights = true;
+			m.addPass(new h3d.mat.Pass("depth", m.mainPass));
+			m.addPass(new h3d.mat.Pass("normal", m.mainPass));
+			cast(m, h3d.mat.MeshMaterial).shadows = true;
 		}
-		g.endFill();
-
-		var swapped = [];
-		g.beginFill(0);
-		for(y in 0...n)
-			for(x in 0...n) {
-				if(swapped[x + y * n] == true) continue;
-				swapped[x + y * n] = true;
-				var r = rand.random(3);
-				if(r == 1 && (x == n - 1 || swapped[x + 1 + y * n] == true)) r = 0;
-				if(r == 2 && y == n - 1) r = 0;
-				switch(r) {
-					case 0:
-						if(rand.rand() < 0.8) g.drawRect((x + 1) * 3, y * 3, 1, 4);
-						if(rand.rand() < 0.8) g.drawRect(x * 3, (y + 1) * 3, 4, 1);
-					case 1:
-						var d = rand.random(2) == 0 ? 1 : -1;
-						g.drawRect((x + 1) * 3 + d, y * 3, 1, 4);
-						g.drawRect(x * 3, (y + 1) * 3, 4, 1);
-						if(x < n - 1) {
-							if(rand.rand() < 0.8) g.drawRect((x + 2) * 3, y * 3, 1, 4);
-							if(rand.rand() < 0.8) g.drawRect((x + 1) * 3, (y + 1) * 3, 4, 1);
-						}
-						swapped[x + 1 + y * n] = true;
-					case 2:
-						var d = rand.random(2) == 0 ? 1 : -1;
-						g.drawRect((x + 1) * 3, y * 3, 1, 4);
-						g.drawRect(x * 3, (y + 1) * 3 + d, 4, 1);
-						if(y < n - 1) {
-							if(rand.rand() < 0.8) g.drawRect((x + 1) * 3, (y + 1) * 3, 1, 4);
-							if(rand.rand() < 0.8) g.drawRect(x * 3, (y + 2) * 3, 4, 1);
-						}
-						swapped[x + (y + 1) * n] = true;
-				}
-			}
-
-		g.endFill();
-
-		var tex = new h3d.mat.Texture(width, width, [Target]);
-		g.drawTo(tex);
-		return tex.capturePixels();
+		return e;
 	}
 
-	function setGround() {
-		var prim = new h3d.prim.BigPrimitive(8);
+	function loadTexture( modelPath : String, texPath : String ) {
+		var t : h3d.mat.Texture;
 
-		inline function addVertice(x : Float, y : Float) {
-			prim.addVertexValue(x);
-			prim.addVertexValue(y);
-			prim.addVertexValue(0);
-
-			prim.addVertexValue(0);
-			prim.addVertexValue(0);
-			prim.addVertexValue(1);
-
-			prim.addVertexValue(x);
-			prim.addVertexValue(y);
+		try {
+			t = Res.load(texPath).toTexture();
+		} catch( e : hxd.res.NotFound ) {
+			var s1 = modelPath.split("/");
+			s1.pop();
+			var s2 = texPath.split("/");
+			texPath = "";
+			for (s in s1) texPath += s + "/";
+			texPath += s2[s2.length - 1];
+			t = Res.load(texPath).toTexture();
 		}
 
-		prim.begin(0);
-
-		var w = width;
-		for(y in 0...w + 1 )
-			for(x in 0...w + 1 )
-				addVertice(x, y);
-
-		for(y in 0...w )
-			for(x in 0...w ) {
-				var i = x + y * (w + 1);
-				prim.addIndex(i);
-				prim.addIndex(i + 1);
-				prim.addIndex(i + w + 2);
-				prim.addIndex(i);
-				prim.addIndex(i + w + 2);
-				prim.addIndex(i + w + 1);
-			}
-
-		prim.flush();
-
-
-		var m = new h3d.scene.Mesh(prim, world);
-		m.material.mainPass.enableLights = true;
-		m.material.texture = Res.tile.toTexture();
-		m.material.texture.wrap = Repeat;
-		m.material.shadows = true;
+		if(t != null)
+			t.wrap = Repeat;
+		return t;
 	}
 
+	public function getMousePicker() {
+		var mx = s2d.mouseX;
+		var my = s2d.mouseY;
+		var cam = s3d.camera;
+		var p = new h2d.col.Point( -1 + 2 * mx / s2d.width, 1 - 2 * my / s2d.height);
+		var pn = cam.unproject(p.x, p.y, 0);
+		var pf = cam.unproject(p.x, p.y, 1);
+		var pMin = pn;
+		var pMax = pf;
+		var dir = pMax.sub(pMin);
+		dir.normalize();
+		dir.scale3(0.01);
+		while( pMin.sub(pMax).dot3(dir) < 0 ) {
+			if( pMin.z < 0)	return pMin;
+			pMin.x += dir.x;
+			pMin.y += dir.y;
+			pMin.z += dir.z;
+		}
+		return null;
+	}
 
-	override function update(dt:Float) {
-		super.update(dt);
+	function keys(dt : Float) {
 		var cam = s3d.camera;
 
 		if(K.isDown(K.CTRL) && K.isPressed("F".code))
 			engine.fullScreen = !engine.fullScreen;
 
-		if(K.isDown(K.NUMPAD_ADD))
-			cam.forward(dt);
-		if(K.isDown(K.NUMPAD_SUB))
-			cam.backward(dt);
+		if(K.isDown(K.NUMPAD_ADD)) {
+			camOffset.x *= 0.95;
+			camOffset.y *= 0.95;
+			camOffset.z *= 0.95;
+		}
+		if(K.isDown(K.NUMPAD_SUB)) {
+			camOffset.x *= 1.05;
+			camOffset.y *= 1.05;
+			camOffset.z *= 1.05;
+		}
 
+		if(K.isPressed(K.BACKSPACE))
+			resetCamOffset();
+
+		if(hero != null) {
+			cam.target.x = hero.x;
+			cam.target.y = hero.y;
+		}
 		var a = Math.atan2(cam.target.y - cam.pos.y, cam.target.x - cam.pos.x);
 		var d = 0.01 * Math.distance(cam.target.x - cam.pos.x, cam.target.y - cam.pos.y, cam.target.z - cam.pos.z);
 
 		if(K.isDown(K.UP)) {
 			cam.target.x += d * Math.cos(a) * dt; cam.target.y += d * Math.sin(a) * dt;
-			cam.pos.x += d * Math.cos(a) * dt; cam.pos.y += d * Math.sin(a) * dt;
 		}
 		else if(K.isDown(K.DOWN)) {
 			cam.target.x -= d * Math.cos(a) * dt; cam.target.y -= d* Math.sin(a) * dt;
-			cam.pos.x -= d * Math.cos(a) * dt; cam.pos.y -= d* Math.sin(a) * dt;
 		}
 
 		if(K.isDown(K.RIGHT)) {
 			a += Math.PI * 0.5;
 			cam.target.x += d * Math.cos(a) * dt; cam.target.y += d * Math.sin(a) * dt;
-			cam.pos.x += d * Math.cos(a) * dt; cam.pos.y += d * Math.sin(a) * dt;
 		}
 		else if(K.isDown(K.LEFT)) {
 			a += Math.PI * 0.5;
 			cam.target.x -= d * Math.cos(a) * dt; cam.target.y -= d * Math.sin(a) * dt;
-			cam.pos.x -= d * Math.cos(a) * dt; cam.pos.y -= d * Math.sin(a) * dt;
 		}
+
+		cam.pos.set(cam.target.x + camOffset.x, cam.target.y + camOffset.y, cam.target.z + camOffset.z);
 
 		if(K.isPressed(K.SPACE))
 			generate(Std.random(0xFFFFFF));
+	}
+
+	override function update(dt:Float) {
+		super.update(dt);
+
+		keys(dt);
+		world.update(dt);
+		hero.update(dt);
 	}
 }

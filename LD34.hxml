@@ -1,6 +1,6 @@
 -cp src
 -swf LD34.swf
--swf-header 800:600:60:FFFFFF
+-swf-header 1024:768:60:FFFFFF
 --flash-strict
 -swf-version 12
 -main Game
