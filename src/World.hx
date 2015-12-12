@@ -74,29 +74,6 @@ class World extends h3d.scene.World
 		}
 		return model;
 	}
-/*
-	function addElements(c:h3d.scene.World.WorldChunk) {
-		var index = Std.int(c.x / chunkSize) + Std.int(c.y / chunkSize) * Std.int(worldSize / chunkSize);
-		var elements = data.chunks.get(index);
-		if(elements == null) return;
-
-		for(e in elements) {
-			var m = models.get(e.modelPath);
-			if( m == null ) {
-				m = getModel(@:privateAccess Res.loader.loadModel(e.modelPath));
-				models.set(e.modelPath, m);
-			}
-			add(m, e.x, e.y, e.z, e.scale, e.rotation);
-		}
-	}*/
-/*
-	override function loadMaterialTexture(r, mat) {
-		var wmat = super.loadMaterialTexture(r, mat);
-		var dirs = r.entry.directory.split("/");
-		wmat.name = ~/[0-9]+/g.replace(dirs.pop(), "");
-		return wmat;
-	}*/
-
 
 	function reset() {
 		models = new Map();

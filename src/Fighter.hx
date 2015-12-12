@@ -63,6 +63,8 @@ class Fighter
 
 		var m = game.loadModel(Res.bolide.model);
 		for( mat in m.getMaterials()) {
+			mat.addPass(new h3d.mat.Pass("depth", mat.mainPass));
+			mat.addPass(new h3d.mat.Pass("normal", mat.mainPass));
 			mat.mainPass.enableLights = true;
 			mat.shadows = true;
 			cast(mat, h3d.mat.MeshMaterial).texture = Res.bolide.texture02.toTexture();

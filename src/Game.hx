@@ -39,13 +39,13 @@ class Game extends hxd.App {
 		cam.pos.set(cam.target.x + camOffset.x, cam.target.y + camOffset.y, cam.target.z + camOffset.z);
 		cam.fovY = 36;
 		cam.zNear = 1;
-		cam.zFar = 100;
+		cam.zFar = 20;
 
 		generate(0);
 	}
 
 	function resetCamOffset() {
-		camOffset = new  h3d.Vector(4, 6, 9);
+		camOffset = new  h3d.Vector(4, 6, 8);
 		if(hero != null) {
 			s3d.camera.target.x = hero.x;
 			s3d.camera.target.y = hero.y;
