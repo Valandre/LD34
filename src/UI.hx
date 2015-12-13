@@ -55,6 +55,9 @@ class UI
 		armor = new h2d.Sprite(ingame);
 		var tile = Res.UI.counter_bg.toTile();
 		var bg = new h2d.Bitmap(tile, armor);
+		var tile = Res.UI.counter_repair.toTile();
+		var ico = new h2d.Bitmap(tile, armor);
+		ico.x -= 5; ico.y -= 2;
 		armorTxt = new h2d.Sprite(armor);
 		armorTxt.x = 70; armorTxt.y = 10;
 		setValue(game.hero.life, armorTxt);
@@ -64,7 +67,7 @@ class UI
 		var bg = new h2d.Bitmap(tile, fuel);
 		var tile = Res.UI.counter_fuel.toTile();
 		var ico = new h2d.Bitmap(tile, fuel);
-		ico.y -= 8;
+		ico.y -= 14;
 		fuelTxt = new h2d.Sprite(fuel);
 		fuelTxt.x = armorTxt.x; fuelTxt.y = armorTxt.y;
 		setValue(Math.ceil(game.hero.fuel), fuelTxt);
@@ -134,6 +137,9 @@ class UI
 	}
 
 	public function update(dt : Float) {
+
+		if(game.hero == null) return;
+
 		if(currArmor != game.hero.life) {
 			while(armorTxt.numChildren > 0)
 				armorTxt.getChildAt(0).remove();

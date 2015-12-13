@@ -55,7 +55,21 @@ class Game extends hxd.App {
 
 		entities = [];
 		bonus = [];
+
+		world = new World(16, width, s3d);
+		//menu();
 		generate(0);
+	}
+
+	function menu() {
+		world.generate(Std.random(0xFFFFFF));
+		resetCamOffset();
+
+		fighters = [];
+		for( i in 0...12) {
+			var p = world.getFreePos();
+			fighters.push(new Fighter(p.x + 0.5, p.y + 0.5));
+		}
 	}
 
 	function resetCamOffset() {
@@ -65,12 +79,15 @@ class Game extends hxd.App {
 			s3d.camera.target.x = hero.x;
 			s3d.camera.target.y = hero.y;
 		}
+		else {
+			s3d.camera.target.x = width * 0.5;
+			s3d.camera.target.y = width * 0.5;
+		}
 	}
 
-	public function generate(seed) {
-		if(world == null)
-			world = new World(16, width, s3d);
+	public function generate(seed : Int) {
 		world.generate(seed);
+		trace("seed : " + seed);
 
 		var p = world.startPoint;
 		var cam = s3d.camera;
@@ -190,6 +207,7 @@ class Game extends hxd.App {
 		if(K.isPressed(K.BACKSPACE))
 			resetCamOffset();
 
+
 		if(hero != null) {
 			cam.target.x = hero.x;
 			cam.target.y = hero.y;
@@ -198,6 +216,11 @@ class Game extends hxd.App {
 		}
 
 		cam.pos.set(cam.target.x + camOffset.x, cam.target.y + camOffset.y, cam.target.z + camOffset.z);
+
+		if(K.isPressed("K".code))
+			if(fighters != null)
+				while(fighters.length > 0)
+					fighters[0].remove();
 
 		if(K.isPressed(K.SPACE))
 			generate(Std.random(0xFFFFFF));

@@ -88,7 +88,7 @@ class Fighter extends Entity
 		if(sleep > 0) return;
 
 		time -= dt;
-		var dist = Math.distance(game.hero.x - x, game.hero.y - y);
+		var dist = game.hero == null ? 10000 : Math.distance(game.hero.x - x, game.hero.y - y);
 		if(dist < 1 && canMove) time = 0;
 		if(time < 0 && canMove && currentRotation == rotation && Math.random() < (dist < 1 ? 0.1 : 0.01)) {
 			canMove = false;
