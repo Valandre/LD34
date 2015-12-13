@@ -155,6 +155,9 @@ class World extends h3d.scene.World
 		while(true) {
 			var x = rnd.random(worldSize);
 			var y = rnd.random(worldSize);
+
+			if(game.hero != null && Math.distance(x - game.hero.x, y - game.hero.y) < 5)
+				continue;
 			if(grid[x + y * worldSize] == 0)
 				return new h2d.col.Point(x, y);
 		}
@@ -235,8 +238,6 @@ class World extends h3d.scene.World
 			var r = rnd.random(models.length);
 			if(x - 1 == startPoint.x && y - 1 == startPoint.y)
 				r = Math.imax(2, r);
-			//var m = getModelPath(models[r].entry.path);
-			//add(m, x + 0.5, y + 0.5, 0, 1, r < 2 ? Math.PI * 0.5 * rnd.random(4) : 0);
 			createElement(models[r].entry.path, x + 0.5, y + 0.5, 0, 1, r < 2 ? Math.PI * 0.5 * rnd.random(4) : 0);
 			grid[x + y * worldSize] = 1;
 		}
@@ -255,6 +256,7 @@ class World extends h3d.scene.World
 			var id = 0;
 			var rot = 0;
 			switch(count) {
+				case 0 :
 				case 1 :
 					id = 4;
 					if(r) rot = 0;
@@ -304,10 +306,12 @@ class World extends h3d.scene.World
 				default : throw "not supported";
 			}
 
-			//var m = getModelPath(roads[id].entry.path);
-			//add(m, x + 0.5, y + 0.5, 0, 1, Math.PI * 0.5 * rot);
-			createElement(roads[id].entry.path, x + 0.5, y + 0.5, 0, 1, Math.PI * 0.5 * rot);
-			grid[x + y * worldSize] = 0;
+			if(count == 0)
+				addBuilding(x, y);
+			else {
+				createElement(roads[id].entry.path, x + 0.5, y + 0.5, 0, 1, Math.PI * 0.5 * rot);
+				grid[x + y * worldSize] = 0;
+			}
 		}
 
 		grid = [];
@@ -379,10 +383,10 @@ class World extends h3d.scene.World
 
 	public function collide(x: Float, y : Float,  ray : Float) {
 
-		if(x < 0) return new h2d.col.Point(0.05, 0);
-		if(x > worldSize) return new h2d.col.Point( -0.05, 0);
-		if(y < 0) return new h2d.col.Point(0, 0.05);
-		if(y > worldSize) return new h2d.col.Point(0, -0.05);
+		if(x < 0.2) return new h2d.col.Point(0.05, 0);
+		if(x > worldSize - 0.2) return new h2d.col.Point( -0.05, 0);
+		if(y < 0.2) return new h2d.col.Point(0, 0.05);
+		if(y > worldSize - 0.2) return new h2d.col.Point(0, -0.05);
 
 		inline function isCollide(px : Int, py : Int) {
 			if(grid[px + py * worldSize] == 0) return null;

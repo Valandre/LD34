@@ -6,11 +6,22 @@ class Entity
 {
 	var game : Game;
 	public var model : h3d.scene.Object;
-	public var x(get, set) : Float;
-	public var y(get, set) : Float;
+	public var x(default, set) : Float;
+	public var y(default, set) : Float;
 	public var currentRotation(default, set) : Float = 0;
-	var ray = 0.35;
-	var life = 100;
+	public var ray = 0.35;
+	public var life = 100;
+	var maxSpeed = 0.05;
+	var speed = 0.;
+	var size = 0.5;
+
+	var canMove = true;
+	var isMeca = false;
+	var delay = 0.;
+	var currGun = 0;
+	var oldRot = 0.;
+	var rotation = 0.;
+	public var impact : h2d.col.Point;
 
 	public function new(x, y) {
 		game = Game.inst;
@@ -22,17 +33,25 @@ class Entity
 
 		game.entities.push(this);
 	}
-
-	function get_x() return model.x;
-	function set_x(v : Float) return model.x = v;
-	function get_y() return model.y;
-	function set_y(v : Float) return model.y = v;
+	function set_x(v : Float) {
+		model.x = v;
+		return x = v;
+	}
+	function set_y(v : Float) {
+		model.y = v;
+		return y = v;
+	}
 	function set_currentRotation(v : Float) {
 		model.setRotate(0, 0, v);
 		return currentRotation = v;
 	}
 
+	public function isDead() {
+		return life <= 0;
+	}
+
 	public function remove() {
+		if(model == null) return;
 		game.entities.remove(this);
 		model.remove();
 		model.dispose();
@@ -47,6 +66,7 @@ class Entity
 			mat.addPass(new h3d.mat.Pass("depth", mat.mainPass));
 			mat.addPass(new h3d.mat.Pass("normal", mat.mainPass));
 		}
+		currentRotation = rotation = oldRot;
 		return m;
 	}
 
@@ -57,6 +77,8 @@ class Entity
 			mat.addPass(new h3d.mat.Pass("normal", mat.mainPass));
 			mat.mainPass.enableLights = true;
 			mat.shadows = true;
+			if(mat.name == "Cannon")
+				cast(mat, h3d.mat.MeshMaterial).texture = Res.meca.cannon.toTexture();
 		}
 		return m;
 	}
@@ -73,18 +95,26 @@ class Entity
 	}
 
 	public function hurt(dmg : Int) {
-		life -= dmg;
+		life = Math.imax(0, life - dmg);
 		if(life <= 0)
 			remove();
 	}
 
 	public function collide(tx : Float, ty : Float, tz : Float) {
-		if(Math.distance(tx - x, ty - y) < ray && tz < 0.4)
+		if(Math.distance(tx - x, ty - y) < ray)
 			return true;
 		return false;
 	}
 
 	public function update(dt:Float) {
+		delay -= dt;
+
+		if(impact != null) {
+			x += impact.x * (isMeca ? 0.5 : 1);
+			y += impact.y * (isMeca ? 0.5 : 1);
+			impact.x *= Math.pow(0.9, dt);
+			impact.y *= Math.pow(0.9, dt);
+		}
 	}
 
 }

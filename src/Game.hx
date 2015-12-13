@@ -17,6 +17,7 @@ class Game extends hxd.App {
 	var camOffset : h3d.Vector;
 	public var renderer : Composite;
 	public var mpos: h3d.Vector;
+	public var ui: UI;
 
 	static function main() {
 		hxd.Res.initLocal();
@@ -48,6 +49,8 @@ class Game extends hxd.App {
 		cam.zNear = 1;
 		cam.zFar = 20;
 
+		ui = new UI();
+
 		entities = [];
 		generate(0);
 	}
@@ -61,7 +64,7 @@ class Game extends hxd.App {
 		}
 	}
 
-	function generate(seed) {
+	public function generate(seed) {
 		if(world == null)
 			world = new World(16, width, s3d);
 		world.generate(seed);
@@ -71,20 +74,20 @@ class Game extends hxd.App {
 		cam.target.x = p.x + 0.5;
 		cam.target.y = p.y + 0.5;
 
+		if(fighters != null)
+			while(fighters.length > 0)
+				fighters[0].remove();
+		fighters = [];
+
 		if( hero != null) hero.remove();
 		hero = new Hero(p.x + 0.5, p.y + 0.5);
 
-		if(fighters == null)
-			fighters = [];
-		for( f in fighters) {
-			f.remove();
-			fighters.remove(f);
-		}
-
-		for( i in 0...10) {
+		for( i in 0...9) { //no more than 9
 			var p = world.getFreePos();
 			fighters.push(new Fighter(p.x + 0.5, p.y + 0.5));
 		}
+
+		ui.init();
 	}
 
 	var models : Map<String, h3d.scene.Object> = new Map();
@@ -149,6 +152,12 @@ class Game extends hxd.App {
 		return null;
 	}
 
+	override function onResize() {
+		super.onResize();
+		if(ui != null)
+			ui.onResize();
+	}
+
 	function keys(dt : Float) {
 		var cam = s3d.camera;
 
@@ -172,6 +181,8 @@ class Game extends hxd.App {
 		if(hero != null) {
 			cam.target.x = hero.x;
 			cam.target.y = hero.y;
+			//cam.target.x = fighters[1].x;
+			//cam.target.y = fighters[1].y;
 		}
 		/*
 		var a = Math.atan2(cam.target.y - cam.pos.y, cam.target.x - cam.pos.x);
@@ -204,6 +215,7 @@ class Game extends hxd.App {
 		mpos = getMousePicker();
 
 		keys(dt);
+		ui.update(dt);
 		event.update(dt);
 		for( e in entities)
 			e.update(dt);

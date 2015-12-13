@@ -4,24 +4,28 @@ import hxd.Math;
 
 class Fighter extends Entity
 {
-	var rotation = 0.;
-	var maxSpeed = 0.03;
-	var speed = 0.;
-	var size = 0.5;
-
-	var canMove = true;
 	var lastCell : h2d.col.Point;
 	var targetCell : h2d.col.Point;
 
+	var time = 0.;
+	var sleep = 180.;
+	var rotWait = 0.;
+
 	public function new(x, y) {
 		super(x, y);
-		life = 100;
+		life = 25;
+
+		maxSpeed = 0.03;
 
 		var a = Res.bolide.anim_run.toHmd().loadAnimation();
 		model.playAnimation(a);
+		model.currentAnimation.speed = 0;
 
-		targetCell = new h2d.col.Point(Std.int(x), Std.int(y));
-		lastCell = new h2d.col.Point(Std.int(x - 1), Std.int(y));
+		lastCell = targetCell = new h2d.col.Point(Std.int(x), Std.int(y));
+		targetCell = getNextCell();
+		currentRotation = Math.atan2(targetCell.y - Std.int(y), targetCell.x - Std.int(x));
+
+		time = 300 + 300 * Math.random();
 	}
 
 	override public function remove() {
@@ -34,6 +38,22 @@ class Fighter extends Entity
 		for( mat in m.getMaterials())
 			cast(mat, h3d.mat.MeshMaterial).texture = Res.bolide.texture02.toTexture();
 		return m;
+	}
+
+	override function getMeca() {
+		var m = super.getMeca();
+		for( mat in m.getMaterials()) {
+			if(mat.name != "Cannon")
+				cast(mat, h3d.mat.MeshMaterial).texture = Res.meca.texture02.toTexture();
+		}
+		return m;
+	}
+
+	public function mecaAttack() {
+		if(delay > 0) return;
+		delay = 5;
+		currGun = 1 - currGun;
+		new Gun(this, currentRotation, currGun);
 	}
 
 	function getNextCell() {
@@ -59,11 +79,55 @@ class Fighter extends Entity
 
 	override public function update(dt : Float) {
 		super.update(dt);
+		if(isDead())
+			return;
+
+		sleep -= dt;
+		if(sleep > 0) return;
+
+		time -= dt;
+		if(time < 0 && canMove && currentRotation == rotation && Math.random() < 0.01) {
+			canMove = false;
+			time = 300 + 300 * Math.random();
+		}
+		if(time < 0 && !canMove && Math.random() < 0.01) {
+			if(!game.hero.isDead() && Math.distance(game.hero.x - x, game.hero.y - y) < 5) {
+				time += 60;
+				return;
+			}
+			model.getChildAt(0).remove();
+			model.addChild(getBolide());
+			var a = Res.bolide.anim_run.toHmd().loadAnimation();
+			model.playAnimation(a);
+			isMeca = false;
+			canMove = true;
+			time = 300 + 300 * Math.random();
+		}
+
 		if(targetCell.x == Std.int(x) && targetCell.y == Std.int(y))
 			targetCell = getNextCell();
 
-		if(canMove)
+		if(canMove) {
+			if(currentRotation == rotation)
+				for(f in game.fighters) {
+					if(Std.is(f, this)) continue;
+					if(f.isDead()) continue;
+					if(Std.int(f.x) == targetCell.x && Std.int(f.y) == targetCell.y) {
+						var tmp = targetCell;
+						targetCell = lastCell;
+						lastCell = targetCell;
+
+						game.event.waitUntil(function(dt) {
+							speed = 0;
+							if(currentRotation == rotation) return true;
+							return false;
+						});
+						break;
+					}
+
+				}
 			speed += (maxSpeed - speed) * 0.03 * dt;
+		}
 		else {
 			speed *= Math.pow(0.95, dt);
 			if( speed < 0.004)
@@ -71,29 +135,26 @@ class Fighter extends Entity
 		}
 
 		var da = Math.angle(currentRotation - rotation);
-		model.currentAnimation.speed = Math.max(speed / maxSpeed, da != 0 ? 1 : 0);
-
 		if(canMove)
 			rotation = Math.atan2(targetCell.y - lastCell.y, targetCell.x - lastCell.x);
 
 		if(canMove || speed != 0) {
 			//MOVE
+			model.currentAnimation.speed = Math.max(speed / maxSpeed, da != 0 ? 1 : 0);
 			currentRotation = Math.angleMove(currentRotation, rotation, 0.07 * dt);
 			x += speed * Math.cos(currentRotation);
 			y += speed * Math.sin(currentRotation);
 
 			if(currentRotation == rotation) {
 				var r = currentRotation / Math.PI;
-				var dx = 0.;
-				var dy = 0.;
-				/*switch(r) {
-					case 0 : dy = 0.25;
-					case 1 : dy = -0.25;
-					case 0.5 : dx = -0.25;
-					case -0.5 : dx = 0.25;
-				}*/
-				//x += ((targetCell.x + 0.5 + dx) - x) * 0.01 * dt;
-				//y += ((targetCell.y + 0.5 + dy) - y) * 0.01 * dt;
+				var dx = 1.;
+				var dy = 1.;
+				switch(r) {
+					case 0, 1 : dx = 0.;
+					default : dy = 0.;
+				}
+				x += ((targetCell.x + 0.5) - x) * 0.01 * dt * dx;
+				y += ((targetCell.y + 0.5) - y) * 0.01 * dt * dy;
 			}
 			var c = game.world.collide(x, y, size * 0.5 * model.scaleX);
 			if(c != null) {
@@ -106,7 +167,41 @@ class Fighter extends Entity
 			}
 		}
 		else {
+			if(!isMeca) {
+				isMeca = true;
+				model.getChildAt(0).remove();
+				model.addChild(getMeca());
+				var a = Res.meca.anim_shoot.toHmd().loadAnimation();
+				model.playAnimation(a);
+				model.currentAnimation.speed = 0;
+				rotWait = 60 + 120 * Math.random();
+				return;
+			}
+
+			var d = Math.distance(game.hero.x - x, game.hero.y - y);
+			currentRotation = Math.angleMove(currentRotation, rotation, 0.05 * dt);
+
 			//ATTACK
+			if(d > 6 || game.hero.isDead()) {
+				rotWait -= dt;
+				if(rotWait < 0) {
+					rotWait = 60 + 120 * Math.random();
+					rotation += Math.srand(Math.PI);
+				}
+			}
+			else {
+				rotation = Math.atan2(game.hero.y - y, game.hero.x - x);
+
+				if(Math.abs(Math.angle(rotation - currentRotation)) < 0.1)
+					mecaAttack();
+			}
+			/*
+			if(K.isDown(K.MOUSE_LEFT)) {
+				mecaAttack();
+				model.currentAnimation.speed += (1.5 - model.currentAnimation.speed) * 0.25 * dt;
+			}
+			else model.currentAnimation.speed *= Math.pow(0.9, dt);
+			*/
 		}
 	}
 }

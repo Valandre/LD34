@@ -5,11 +5,14 @@ class Gun
 {
 	var game : Game;
 	var m :h3d.scene.Mesh;
-	var dmg = 10;
+	var dmg = 1;
+	var owner : Entity;
 
 	public function new( owner : Entity, rot : Float, currGun : Float)
 	{
 		game = Game.inst;
+		this.owner = owner;
+
 		var c = new h3d.prim.Cube(0.2, 0.025, 0.025);
 		c.unindex();
 		c.addNormals();
@@ -27,7 +30,7 @@ class Gun
 			m.setRotate(0, 0, rot);
 		else {
 			var dx = Math.distance(game.mpos.x - m.x, game.mpos.y - m.y);
-			dz = Math.min(0.35, Math.atan2(m.z, dx) * 0.5);
+			//dz = Math.min(0.35, Math.atan2(m.z, dx) * 0.5);
 			m.setRotate(0, dz, rot);
 		}
 
@@ -52,7 +55,7 @@ class Gun
 			return true;
 
 		for(e in game.entities) {
-			if(Std.is(e, this)) continue;
+			if(e == owner) continue;
 			if(e.collide(m.x, m.y, m.z)) {
 				e.hurt(dmg);
 				return true;
