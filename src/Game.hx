@@ -57,43 +57,51 @@ class Game extends hxd.App {
 		bonus = [];
 
 		world = new World(16, width, s3d);
-		//menu();
-		generate(0);
+		menu();
 	}
 
 	function menu() {
-		world.generate(Std.random(0xFFFFFF));
+		reset();
+		hero = null;
+
+		//world.generate(5759748);
+		world.generate(16486732);
 		resetCamOffset();
 
 		fighters = [];
-		for( i in 0...12) {
+		for( i in 0...8) {
 			var p = world.getFreePos();
 			fighters.push(new Fighter(p.x + 0.5, p.y + 0.5));
 		}
+
+		ui.setMenu();
 	}
 
 	function resetCamOffset() {
 		var c = 0.6;
-		camOffset = new  h3d.Vector(4 * c, 6 * c, 8 * c);
 		if(hero != null) {
+			camOffset = new  h3d.Vector(4 * c, 6 * c, 8 * c);
 			s3d.camera.target.x = hero.x;
 			s3d.camera.target.y = hero.y;
 		}
 		else {
-			s3d.camera.target.x = width * 0.5;
-			s3d.camera.target.y = width * 0.5;
+			camOffset = new  h3d.Vector(4 * c * 1.25, 6 * c * 1.25, 8 * c * 0.8);
+			var px = width * 0.5;
+			var py = width * 0.5;
+			var ray = 0.5;
+			var cpt = Math.PI;
+			event.waitUntil(function(dt) {
+				if(hero != null)
+					return true;
+				s3d.camera.target.x = px + ray * Math.cos(cpt);
+				s3d.camera.target.y = py + ray * Math.sin(cpt);
+				cpt += 0.0006 * dt;
+				return false;
+			});
 		}
 	}
 
-	public function generate(seed : Int) {
-		world.generate(seed);
-		trace("seed : " + seed);
-
-		var p = world.startPoint;
-		var cam = s3d.camera;
-		cam.target.x = p.x + 0.5;
-		cam.target.y = p.y + 0.5;
-
+	function reset() {
 		if(bonus != null)
 			while(bonus.length > 0)
 				bonus[0].remove();
@@ -104,6 +112,19 @@ class Game extends hxd.App {
 		fighters = [];
 
 		if( hero != null) hero.remove();
+	}
+
+	public function generate(seed : Int) {
+		reset();
+
+		world.generate(seed);
+		trace("seed : " + seed);
+
+		var p = world.startPoint;
+		var cam = s3d.camera;
+		cam.target.x = p.x + 0.5;
+		cam.target.y = p.y + 0.5;
+
 		hero = new Hero(p.x + 0.5, p.y + 0.5);
 
 		for( i in 0...9) { //no more than 9
@@ -112,7 +133,7 @@ class Game extends hxd.App {
 		}
 
 		ui.init();
-
+		resetCamOffset();
 	}
 
 	public var anims : Map<String,h3d.anim.Animation> = new Map();
@@ -214,7 +235,6 @@ class Game extends hxd.App {
 			//cam.target.x = fighters[1].x;
 			//cam.target.y = fighters[1].y;
 		}
-
 		cam.pos.set(cam.target.x + camOffset.x, cam.target.y + camOffset.y, cam.target.z + camOffset.z);
 
 		if(K.isPressed("K".code))
@@ -226,8 +246,12 @@ class Game extends hxd.App {
 			generate(Std.random(0xFFFFFF));
 	}
 
-	public function gameOver() {
+	public function start() {
+		generate(Std.random(0xFFFFFF));
+	}
 
+	public function gameOver() {
+		menu();
 	}
 
 	override function update(dt:Float) {
@@ -240,7 +264,7 @@ class Game extends hxd.App {
 		for( e in entities)
 			e.update(dt);
 
-		if(bonus.length < 8)
+		if(hero !=null && bonus.length < 8)
 			new Bonus();
 	}
 }

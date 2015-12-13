@@ -13,7 +13,7 @@ class Fighter extends Entity
 
 	public function new(x, y) {
 		super(x, y);
-		life = 25;
+		life = 20;
 
 		maxSpeed = 0.03;
 
@@ -95,7 +95,7 @@ class Fighter extends Entity
 			time = 300 + 300 * Math.random();
 		}
 		if(time < 0 && !canMove && Math.random() < 0.01) {
-			if(!game.hero.isDead() && dist < 5) {
+			if(game.hero != null && !game.hero.isDead() && dist < 5) {
 				time += 60;
 				return;
 			}
@@ -194,11 +194,10 @@ class Fighter extends Entity
 				return;
 			}
 
-			var d = Math.distance(game.hero.x - x, game.hero.y - y);
 			currentRotation = Math.angleMove(currentRotation, rotation, 0.05 * dt);
 
 			//ATTACK
-			if(d > 6 || game.hero.isDead()) {
+			if(dist > 6 || game.hero.isDead()) {
 				rotWait -= dt;
 				if(rotWait < 0) {
 					rotWait = 60 + 120 * Math.random();

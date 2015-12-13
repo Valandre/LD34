@@ -1,11 +1,17 @@
 package ;
 import hxd.Res;
 import hxd.Math;
+import hxd.Key in K;
 
 class UI
 {
 	var game : Game;
+	var menu : h2d.Sprite;
 	var ingame : h2d.Sprite;
+
+	var buttons : h2d.Sprite;
+	var btStart : h2d.Interactive;
+
 	var life : h2d.Sprite;
 	var hlife : h2d.Sprite;
 	var mlife : h2d.Sprite;
@@ -24,6 +30,7 @@ class UI
 	var currCredits = 0;
 	var currMobs = 0;
 
+
 	public function new() {
 		game = Game.inst;
 	}
@@ -32,6 +39,65 @@ class UI
 		if(ingame != null)
 			while(ingame.numChildren > 0)
 				ingame.removeChild(ingame.getChildAt(0));
+		if(menu != null)
+			while(menu.numChildren > 0)
+				menu.removeChild(menu.getChildAt(0));
+	}
+
+	public function setMenu() {
+		reset();
+
+		menu = new h2d.Sprite(game.s2d);
+		var t = Res.UI.title.toTile();
+		var title = new h2d.Bitmap(t, menu);
+		title.x = 50; title.y = 50;
+
+		buttons = new h2d.Sprite(menu);
+
+		var t = Res.UI.bt_controls.toTile();
+		var help = new h2d.Bitmap(t, buttons);
+		help.blendMode = Alpha;
+		help.x = -t.width; help.y = -t.height;
+
+		var t = Res.UI.bt_credits.toTile();
+		var credits = new h2d.Bitmap(t, buttons);
+		credits.blendMode = Alpha;
+		credits.x = -t.width; credits.y = help.y - 100;
+
+		var t = Res.UI.bt_start.toTile();
+		var start = new h2d.Bitmap(t, buttons);
+		start.blendMode = Alpha;
+		start.x = -t.width; start.y = credits.y - 100;
+
+		btStart = new h2d.Interactive(t.width, t.height, buttons);
+		btStart.x = start.x; btStart.y = start.y;
+		btStart.onOver = function(e : hxd.Event) {
+			start.colorAdd = new h3d.Vector(200, 200, 200);
+			start.alpha = 0.9;
+			var cpt = 0.;
+			game.event.waitUntil(function(dt) {
+				if(start.colorAdd == null)
+					return true;
+				if(cpt > 3) {
+					start.colorAdd.x = 200 - start.colorAdd.x;
+					start.colorAdd.y = 200 - start.colorAdd.y;
+					start.colorAdd.z = 200 - start.colorAdd.z;
+					start.alpha = start.alpha == 1 ? 0.9 : 1;
+					cpt = 0;
+				}
+				cpt += dt;
+				return false;
+			});
+		}
+		btStart.onOut = function(e : hxd.Event) {
+			start.colorAdd = null;
+			start.alpha = 1;
+		}
+		btStart.onClick = function(e : hxd.Event) {
+			game.start();
+		}
+
+		onResize();
 	}
 
 	public function init() {
@@ -118,21 +184,20 @@ class UI
 	}
 
 	public function onResize() {
-		if(life != null) {
+		if(ingame != null) {
 			life.x = game.s2d.width * 0.5;
 			life.y = 30;
-		}
-		if(ammo != null) {
 			ammo.x = 60;
 			ammo.y = game.s2d.height - 150;
-		}
-		if(fuel != null) {
 			fuel.x = ammo.x;
 			fuel.y = ammo.y - 70;
-		}
-		if(armor != null) {
 			armor.x = fuel.x;
 			armor.y = fuel.y - 70;
+		}
+
+		if(menu != null) {
+			buttons.x = game.s2d.width - 400;
+			buttons.y = game.s2d.height - 150;
 		}
 	}
 

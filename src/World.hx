@@ -231,15 +231,15 @@ class World extends h3d.scene.World
 
 		startPoint = getStartingPoint();
 
-		var models = [Res.city.build01, Res.city.build02, Res.city.tree01, Res.city.tree02, Res.city.tree03];
+		var models = [Res.city.build01, Res.city.build02, Res.city.build01, Res.city.build02, Res.city.build01, Res.city.build02, Res.city.tree01, Res.city.tree02, Res.city.tree03, Res.city.tree04, Res.city.tree05, Res.city.tree06];
 		var roads = [Res.city.road01, Res.city.road02, Res.city.road03, Res.city.road04, Res.city.road05];
 
 		inline function addBuilding(x: Int, y : Int) {
 			var r = rnd.random(models.length);
 			if(x - 1 == startPoint.x && y - 1 == startPoint.y)
 				r = Math.imax(2, r);
-			createElement(models[r].entry.path, x + 0.5, y + 0.5, 0, 1, r < 2 ? Math.PI * 0.5 * rnd.random(4) : 0);
-			var k = r < 2 ? 2 : 1;
+			createElement(models[r].entry.path, x + 0.5, y + 0.5, 0, 1, r < 6 ? Math.PI * 0.5 * rnd.random(4) : 0);
+			var k = r < 6 ? 2 : 1;
 			grid[x + y * worldSize] = k;
 		}
 
