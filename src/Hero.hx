@@ -43,7 +43,8 @@ class Hero extends Entity
 		super.remove();
 		if(life <= 0) {
 			game.event.wait(3, function() {
-				if(game.credits-- > 0)
+				game.credits = Math.imax(0, game.credits - 1);
+				if(game.credits >= 0)
 					game.generate(Std.random(0xFFFFFF));
 				else game.gameOver();
 			});

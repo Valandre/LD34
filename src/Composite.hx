@@ -74,6 +74,7 @@ class Composite extends h3d.scene.Renderer {
 	var game : Game;
 
 	public var waterReflection : shaders.SSReflection;
+	public var globalColorAdd : h3d.shader.ColorAdd;
 
 	var ambientOcclusion = new h3d.pass.ScalableAO();
 	var ambientOcclusionBlur = new h3d.pass.Blur(2, 3, 2);
@@ -110,6 +111,8 @@ class Composite extends h3d.scene.Renderer {
 		ambientOcclusion.shader.sampleRadius = 0.25;
 
 		waterReflection = new shaders.SSReflection();
+
+		globalColorAdd = new h3d.shader.ColorAdd(0xBA2010);
 	}
 
 	override function render() {

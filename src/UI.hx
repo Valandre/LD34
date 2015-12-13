@@ -121,7 +121,7 @@ class UI
 		}
 		if(ammo != null) {
 			ammo.x = 60;
-			ammo.y = game.s2d.height - 100;
+			ammo.y = game.s2d.height - 150;
 		}
 		if(fuel != null) {
 			fuel.x = ammo.x;

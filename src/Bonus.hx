@@ -60,13 +60,13 @@ class Bonus
 		switch(kind) {
 			case Ammo :
 				game.hero.ammo = Math.imin(game.hero.ammoMax, game.hero.ammo + 150);
-				res = Res.fx.speed.model;
+				res = Res.fx.ammo.model;
 			case Fuel :
 				game.hero.fuel = Math.min(game.hero.fuelMax, game.hero.fuel + 100);
-				res = Res.fx.speed.model;
+				res = Res.fx.fuel.model;
 			case Repair :
 				game.hero.life = Math.imin(game.hero.lifeMax, game.hero.life + 100);
-				res = Res.fx.speed.model;
+				res = Res.fx.repair.model;
 			case Speed :
 				game.hero.boost = 60 * 10;
 				res = Res.fx.speed.model;

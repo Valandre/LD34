@@ -93,8 +93,19 @@ class Entity
 		}
 	}
 
+	public function blink() {
+		for(m in model.getMaterials())
+			m.mainPass.addShader(game.renderer.globalColorAdd);
+		game.event.wait(0.05, function() {
+			if(model == null) return;
+			for(m in model.getMaterials())
+				m.mainPass.removeShader(game.renderer.globalColorAdd);
+		});
+	}
+
 	public function hurt(dmg : Int) {
 		life = Math.imax(0, life - dmg);
+		blink();
 		if(life <= 0)
 			remove();
 	}
