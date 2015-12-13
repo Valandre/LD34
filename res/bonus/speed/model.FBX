@@ -12,9 +12,9 @@ FBXHeaderExtension:  {
 		Month: 12
 		Day: 13
 		Hour: 16
-		Minute: 37
-		Second: 4
-		Millisecond: 178
+		Minute: 38
+		Second: 14
+		Millisecond: 479
 	}
 	Creator: "FBX SDK/FBX Plugins version 2013.1"
 	SceneInfo: "SceneInfo::GlobalInfo", "UserData" {
@@ -36,13 +36,13 @@ FBXHeaderExtension:  {
 			P: "Original|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "Original|ApplicationName", "KString", "", "", "3ds Max"
 			P: "Original|ApplicationVersion", "KString", "", "", "2013"
-			P: "Original|DateTime_GMT", "DateTime", "", "", "13/12/2015 15:37:04.178"
+			P: "Original|DateTime_GMT", "DateTime", "", "", "13/12/2015 15:38:14.478"
 			P: "Original|FileName", "KString", "", "", "D:\Projects\LD34\trunk\res\bonus\speed\model.FBX"
 			P: "LastSaved", "Compound", "", ""
 			P: "LastSaved|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "LastSaved|ApplicationName", "KString", "", "", "3ds Max"
 			P: "LastSaved|ApplicationVersion", "KString", "", "", "2013"
-			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "13/12/2015 15:37:04.178"
+			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "13/12/2015 15:38:14.478"
 		}
 	}
 }
@@ -73,7 +73,7 @@ GlobalSettings:  {
 
 Documents:  {
 	Count: 1
-	Document: 2215990536, "", "Scene" {
+	Document: 2215990080, "", "Scene" {
 		Properties70:  {
 			P: "SourceObject", "object", "", ""
 			P: "ActiveAnimStackName", "KString", "", "", ""
@@ -309,10 +309,10 @@ Definitions:  {
 ;------------------------------------------------------------------
 
 Objects:  {
-	NodeAttribute: 2061009912, "NodeAttribute::", "Null" {
+	NodeAttribute: 2067260096, "NodeAttribute::", "Null" {
 		TypeFlags: "Null"
 	}
-	Geometry: 686612888, "Geometry::", "Mesh" {
+	Geometry: 680942136, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.835294117647059,0.603921568627451,0.898039215686275
 		}
@@ -385,7 +385,7 @@ Objects:  {
 			}
 		}
 	}
-	Model: 2195774560, "Model::Root", "Null" {
+	Model: 2196905752, "Model::Root", "Null" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
@@ -396,7 +396,7 @@ Objects:  {
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Model: 2195775912, "Model::Plate", "Mesh" {
+	Model: 2196907104, "Model::Plate", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
@@ -407,7 +407,7 @@ Objects:  {
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Material: 1941759336, "Material::PlateSpeed", "" {
+	Material: 1941769528, "Material::PlateSpeed", "" {
 		Version: 102
 		ShadingModel: "phong"
 		MultiLayer: 0
@@ -417,6 +417,7 @@ Objects:  {
 			P: "AmbientColor", "ColorRGB", "Color", "",0.588235318660736,0.588235318660736,0.588235318660736
 			P: "DiffuseColor", "ColorRGB", "Color", "",0.588235318660736,0.588235318660736,0.588235318660736
 			P: "TransparentColor", "ColorRGB", "Color", "",1,1,1
+			P: "TransparencyFactor", "double", "Number", "",0.0100000500679016
 			P: "SpecularColor", "ColorRGB", "Color", "",0.899999976158142,0.899999976158142,0.899999976158142
 			P: "SpecularFactor", "double", "Number", "",0
 			P: "ShininessExponent", "double", "Number", "",1.99999991737042
@@ -425,11 +426,11 @@ Objects:  {
 			P: "Diffuse", "Vector3D", "Vector", "",0.588235318660736,0.588235318660736,0.588235318660736
 			P: "Specular", "Vector3D", "Vector", "",0,0,0
 			P: "Shininess", "double", "Number", "",1.99999991737042
-			P: "Opacity", "double", "Number", "",1
+			P: "Opacity", "double", "Number", "",0.989999949932098
 			P: "Reflectivity", "double", "Number", "",0
 		}
 	}
-	Video: 677735512, "Video::Map PlateSpeed", "Clip" {
+	Video: 675293824, "Video::Map PlateSpeed", "Clip" {
 		Type: "Clip"
 		Properties70:  {
 			P: "Path", "KString", "XRefUrl", "", "D:\Projects\LD34\trunk\res\bonus\speed\plate[ADD].jpg"
@@ -438,7 +439,7 @@ Objects:  {
 		Filename: "D:\Projects\LD34\trunk\res\bonus\speed\plate[ADD].jpg"
 		RelativeFilename: "plate[ADD].jpg"
 	}
-	Texture: 1944878256, "Texture::Map PlateSpeed", "" {
+	Texture: 2073744640, "Texture::Map PlateSpeed", "" {
 		Type: "TextureVideoClip"
 		Version: 202
 		TextureName: "Texture::Map PlateSpeed"
@@ -454,7 +455,7 @@ Objects:  {
 		Texture_Alpha_Source: "None"
 		Cropping: 0,0,0,0
 	}
-	CollectionExclusive: 1949016088, "DisplayLayer::__Camera", "DisplayLayer" {
+	CollectionExclusive: 2206938648, "DisplayLayer::__Camera", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.0235294117647059,0.529411764705882,0.0235294117647059
 			P: "Show", "bool", "", "",1
@@ -462,7 +463,7 @@ Objects:  {
 			P: "LODBox", "bool", "", "",0
 		}
 	}
-	CollectionExclusive: 1949016600, "DisplayLayer::Artisan", "DisplayLayer" {
+	CollectionExclusive: 2206939160, "DisplayLayer::Artisan", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.0235294117647059,0.529411764705882,0.0235294117647059
 			P: "Show", "bool", "", "",1
@@ -470,7 +471,7 @@ Objects:  {
 			P: "LODBox", "bool", "", "",0
 		}
 	}
-	CollectionExclusive: 1949016984, "DisplayLayer::Bolide", "DisplayLayer" {
+	CollectionExclusive: 2206939544, "DisplayLayer::Bolide", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.423529411764706,0.0313725490196078,0.533333333333333
 			P: "Show", "bool", "", "",1
@@ -478,7 +479,7 @@ Objects:  {
 			P: "LODBox", "bool", "", "",0
 		}
 	}
-	CollectionExclusive: 2067434728, "DisplayLayer::Camera", "DisplayLayer" {
+	CollectionExclusive: 2206939928, "DisplayLayer::Camera", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.0235294117647059,0.529411764705882,0.0235294117647059
 			P: "Show", "bool", "", "",1
@@ -494,32 +495,32 @@ Objects:  {
 Connections:  {
 	
 	;Model::Root, Model::RootNode
-	C: "OO",2195774560,0
+	C: "OO",2196905752,0
 	
 	;AnimLayer::BaseLayer, AnimStack::model
-	C: "OO",2061612472,2070954136
+	C: "OO",1704515368,2198434776
 	
 	;Model::Plate, Model::Root
-	C: "OO",2195775912,2195774560
+	C: "OO",2196907104,2196905752
 	
 	;NodeAttribute::, Model::Root
-	C: "OO",2061009912,2195774560
+	C: "OO",2067260096,2196905752
 	
 	;Geometry::, Model::Plate
-	C: "OO",686612888,2195775912
+	C: "OO",680942136,2196907104
 	
 	;Material::PlateSpeed, Model::Plate
-	C: "OO",1941759336,2195775912
+	C: "OO",1941769528,2196907104
 	
 	;Texture::Map PlateSpeed, Material::PlateSpeed
-	C: "OP",1944878256,1941759336, "DiffuseColor"
+	C: "OP",2073744640,1941769528, "DiffuseColor"
 	
 	;Video::Map PlateSpeed, Texture::Map PlateSpeed
-	C: "OO",677735512,1944878256
+	C: "OO",675293824,2073744640
 	
 	;Model::Root, DisplayLayer::Bolide
-	C: "OO",2195774560,1949016984
+	C: "OO",2196905752,2206939544
 	
 	;Model::Plate, DisplayLayer::Bolide
-	C: "OO",2195775912,1949016984
+	C: "OO",2196907104,2206939544
 }
