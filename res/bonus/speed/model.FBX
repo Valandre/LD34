@@ -12,9 +12,9 @@ FBXHeaderExtension:  {
 		Month: 12
 		Day: 13
 		Hour: 17
-		Minute: 36
-		Second: 2
-		Millisecond: 221
+		Minute: 59
+		Second: 14
+		Millisecond: 94
 	}
 	Creator: "FBX SDK/FBX Plugins version 2013.1"
 	SceneInfo: "SceneInfo::GlobalInfo", "UserData" {
@@ -36,13 +36,13 @@ FBXHeaderExtension:  {
 			P: "Original|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "Original|ApplicationName", "KString", "", "", "3ds Max"
 			P: "Original|ApplicationVersion", "KString", "", "", "2013"
-			P: "Original|DateTime_GMT", "DateTime", "", "", "13/12/2015 16:36:02.220"
+			P: "Original|DateTime_GMT", "DateTime", "", "", "13/12/2015 16:59:14.093"
 			P: "Original|FileName", "KString", "", "", "D:\Projects\LD34\trunk\res\bonus\speed\model.FBX"
 			P: "LastSaved", "Compound", "", ""
 			P: "LastSaved|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "LastSaved|ApplicationName", "KString", "", "", "3ds Max"
 			P: "LastSaved|ApplicationVersion", "KString", "", "", "2013"
-			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "13/12/2015 16:36:02.220"
+			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "13/12/2015 16:59:14.093"
 		}
 	}
 }
@@ -60,7 +60,7 @@ GlobalSettings:  {
 		P: "UnitScaleFactor", "double", "Number", "",100
 		P: "OriginalUnitScaleFactor", "double", "Number", "",100.00000066
 		P: "AmbientColor", "ColorRGB", "Color", "",0.768627524375916,0.713725507259369,0.650980412960052
-		P: "DefaultCamera", "KString", "", "", "Camera001"
+		P: "DefaultCamera", "KString", "", "", "Producer Perspective"
 		P: "TimeMode", "enum", "", "",6
 		P: "TimeSpanStart", "KTime", "Time", "",0
 		P: "TimeSpanStop", "KTime", "Time", "",92372316000
@@ -73,7 +73,7 @@ GlobalSettings:  {
 
 Documents:  {
 	Count: 1
-	Document: 2216004216, "", "Scene" {
+	Document: 2216000568, "", "Scene" {
 		Properties70:  {
 			P: "SourceObject", "object", "", ""
 			P: "ActiveAnimStackName", "KString", "", "", ""
@@ -315,10 +315,10 @@ Definitions:  {
 ;------------------------------------------------------------------
 
 Objects:  {
-	NodeAttribute: 2195072992, "NodeAttribute::", "Null" {
+	NodeAttribute: 916222504, "NodeAttribute::", "Null" {
 		TypeFlags: "Null"
 	}
-	Geometry: 686626352, "Geometry::", "Mesh" {
+	Geometry: 686639816, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.835294117647059,0.603921568627451,0.898039215686275
 		}
@@ -391,7 +391,7 @@ Objects:  {
 			}
 		}
 	}
-	Geometry: 686645360, "Geometry::", "Mesh" {
+	Geometry: 686649584, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.552941176470588,0.0274509803921569,0.227450980392157
 		}
@@ -493,7 +493,7 @@ Objects:  {
 			}
 		}
 	}
-	Model: 1711993072, "Model::Root", "Null" {
+	Model: 914300664, "Model::Root", "Null" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
@@ -504,7 +504,7 @@ Objects:  {
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Model: 1711994424, "Model::Plate", "Mesh" {
+	Model: 914302016, "Model::Plate", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
@@ -515,7 +515,7 @@ Objects:  {
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Model: 2204636248, "Model::Speed", "Mesh" {
+	Model: 914303368, "Model::Speed", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
@@ -529,7 +529,7 @@ Objects:  {
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Material: 1941773688, "Material::PlateGrowup", "" {
+	Material: 2067413312, "Material::PlateSpeed", "" {
 		Version: 102
 		ShadingModel: "phong"
 		MultiLayer: 0
@@ -552,7 +552,7 @@ Objects:  {
 			P: "Reflectivity", "double", "Number", "",0
 		}
 	}
-	Material: 1941758296, "Material::Speed", "" {
+	Material: 2067413520, "Material::Speed", "" {
 		Version: 102
 		ShadingModel: "phong"
 		MultiLayer: 0
@@ -574,16 +574,16 @@ Objects:  {
 			P: "Reflectivity", "double", "Number", "",0
 		}
 	}
-	Video: 1941165504, "Video::Map PlateGrowup", "Clip" {
+	Video: 1941168744, "Video::Map PlateSpeed", "Clip" {
 		Type: "Clip"
 		Properties70:  {
-			P: "Path", "KString", "XRefUrl", "", "D:\Projects\LD34\trunk\res\bonus\growup\plate[ADD].jpg"
+			P: "Path", "KString", "XRefUrl", "", "D:\Projects\LD34\trunk\res\bonus\speed\plate[ADD].jpg"
 		}
 		UseMipMap: 0
-		Filename: "D:\Projects\LD34\trunk\res\bonus\growup\plate[ADD].jpg"
-		RelativeFilename: "..\growup\plate[ADD].jpg"
+		Filename: "D:\Projects\LD34\trunk\res\bonus\speed\plate[ADD].jpg"
+		RelativeFilename: "plate[ADD].jpg"
 	}
-	Video: 677734864, "Video::Map Speed", "Clip" {
+	Video: 675294256, "Video::Map Speed", "Clip" {
 		Type: "Clip"
 		Properties70:  {
 			P: "Path", "KString", "XRefUrl", "", "D:\Projects\LD34\trunk\res\bonus\speed\texture.jpg"
@@ -592,23 +592,23 @@ Objects:  {
 		Filename: "D:\Projects\LD34\trunk\res\bonus\speed\texture.jpg"
 		RelativeFilename: "texture.jpg"
 	}
-	Texture: 1949796760, "Texture::Map PlateGrowup", "" {
+	Texture: 1939707856, "Texture::Map PlateSpeed", "" {
 		Type: "TextureVideoClip"
 		Version: 202
-		TextureName: "Texture::Map PlateGrowup"
+		TextureName: "Texture::Map PlateSpeed"
 		Properties70:  {
 			P: "UVSet", "KString", "", "", "UVChannel_1"
 			P: "UseMaterial", "bool", "", "",1
 		}
-		Media: "Video::Map PlateGrowup"
-		FileName: "D:\Projects\LD34\trunk\res\bonus\growup\plate[ADD].jpg"
-		RelativeFilename: "..\growup\plate[ADD].jpg"
+		Media: "Video::Map PlateSpeed"
+		FileName: "D:\Projects\LD34\trunk\res\bonus\speed\plate[ADD].jpg"
+		RelativeFilename: "plate[ADD].jpg"
 		ModelUVTranslation: 0,0
 		ModelUVScaling: 1,1
 		Texture_Alpha_Source: "None"
 		Cropping: 0,0,0,0
 	}
-	Texture: 2038448232, "Texture::Map Speed", "" {
+	Texture: 1939708512, "Texture::Map Speed", "" {
 		Type: "TextureVideoClip"
 		Version: 202
 		TextureName: "Texture::Map Speed"
@@ -624,15 +624,15 @@ Objects:  {
 		Texture_Alpha_Source: "None"
 		Cropping: 0,0,0,0
 	}
-	AnimationStack: 1935991288, "AnimStack::model", "" {
+	AnimationStack: 493739064, "AnimStack::model", "" {
 		Properties70:  {
 			P: "LocalStop", "KTime", "Time", "",92372316000
 			P: "ReferenceStop", "KTime", "Time", "",92372316000
 		}
 	}
-	AnimationLayer: 2038451184, "AnimLayer::BaseLayer", "" {
+	AnimationLayer: 677853448, "AnimLayer::BaseLayer", "" {
 	}
-	AnimationCurveNode: 2023706912, "AnimCurveNode::T", "" {
+	AnimationCurveNode: 2062383760, "AnimCurveNode::T", "" {
 		Properties70:  {
 			P: "d", "Compound", "", ""
 			P: "d|X", "Number", "", "A",0.00767707824707031
@@ -640,7 +640,7 @@ Objects:  {
 			P: "d|Z", "Number", "", "A",0.218083202838898
 		}
 	}
-	AnimationCurve: 915051344, "AnimCurve::", "" {
+	AnimationCurve: 1707366744, "AnimCurve::", "" {
 		Default: 0
 		KeyVer: 4007
 		KeyTime: *61 {
@@ -660,7 +660,7 @@ Objects:  {
 			a: 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 		} 
 	}
-	AnimationCurve: 915040640, "AnimCurve::", "" {
+	AnimationCurve: 1707366504, "AnimCurve::", "" {
 		Default: 0
 		KeyVer: 4007
 		KeyTime: *61 {
@@ -680,7 +680,7 @@ Objects:  {
 			a: 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 		} 
 	}
-	AnimationCurve: 915023024, "AnimCurve::", "" {
+	AnimationCurve: 1707367224, "AnimCurve::", "" {
 		Default: 0
 		KeyVer: 4007
 		KeyTime: *61 {
@@ -701,7 +701,7 @@ Objects:  {
 			a: 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 		} 
 	}
-	CollectionExclusive: 2215800992, "DisplayLayer::__Camera", "DisplayLayer" {
+	CollectionExclusive: 925259464, "DisplayLayer::__Camera", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.0235294117647059,0.529411764705882,0.0235294117647059
 			P: "Show", "bool", "", "",1
@@ -709,7 +709,7 @@ Objects:  {
 			P: "LODBox", "bool", "", "",0
 		}
 	}
-	CollectionExclusive: 2215800288, "DisplayLayer::Artisan", "DisplayLayer" {
+	CollectionExclusive: 925258760, "DisplayLayer::Artisan", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.0235294117647059,0.529411764705882,0.0235294117647059
 			P: "Show", "bool", "", "",1
@@ -717,7 +717,7 @@ Objects:  {
 			P: "LODBox", "bool", "", "",0
 		}
 	}
-	CollectionExclusive: 2215799968, "DisplayLayer::Bolide", "DisplayLayer" {
+	CollectionExclusive: 925258440, "DisplayLayer::Bolide", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.423529411764706,0.0313725490196078,0.533333333333333
 			P: "Show", "bool", "", "",1
@@ -725,7 +725,7 @@ Objects:  {
 			P: "LODBox", "bool", "", "",0
 		}
 	}
-	CollectionExclusive: 2215800800, "DisplayLayer::Camera", "DisplayLayer" {
+	CollectionExclusive: 925259272, "DisplayLayer::Camera", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.0235294117647059,0.529411764705882,0.0235294117647059
 			P: "Show", "bool", "", "",1
@@ -741,67 +741,67 @@ Objects:  {
 Connections:  {
 	
 	;Model::Root, Model::RootNode
-	C: "OO",1711993072,0
+	C: "OO",914300664,0
 	
 	;AnimLayer::BaseLayer, AnimStack::model
-	C: "OO",2038451184,1935991288
+	C: "OO",677853448,493739064
 	
 	;AnimCurveNode::T, AnimLayer::BaseLayer
-	C: "OO",2023706912,2038451184
+	C: "OO",2062383760,677853448
 	
 	;Model::Plate, Model::Root
-	C: "OO",1711994424,1711993072
+	C: "OO",914302016,914300664
 	
 	;Model::Speed, Model::Root
-	C: "OO",2204636248,1711993072
+	C: "OO",914303368,914300664
 	
 	;NodeAttribute::, Model::Root
-	C: "OO",2195072992,1711993072
+	C: "OO",916222504,914300664
 	
 	;Geometry::, Model::Plate
-	C: "OO",686626352,1711994424
+	C: "OO",686639816,914302016
 	
-	;Material::PlateGrowup, Model::Plate
-	C: "OO",1941773688,1711994424
+	;Material::PlateSpeed, Model::Plate
+	C: "OO",2067413312,914302016
 	
 	;Geometry::, Model::Speed
-	C: "OO",686645360,2204636248
+	C: "OO",686649584,914303368
 	
 	;Material::Speed, Model::Speed
-	C: "OO",1941758296,2204636248
+	C: "OO",2067413520,914303368
 	
 	;AnimCurveNode::T, Model::Speed
-	C: "OP",2023706912,2204636248, "Lcl Translation"
+	C: "OP",2062383760,914303368, "Lcl Translation"
 	
-	;Texture::Map PlateGrowup, Material::PlateGrowup
-	C: "OP",1949796760,1941773688, "DiffuseColor"
+	;Texture::Map PlateSpeed, Material::PlateSpeed
+	C: "OP",1939707856,2067413312, "DiffuseColor"
 	
-	;Video::Map PlateGrowup, Texture::Map PlateGrowup
-	C: "OO",1941165504,1949796760
+	;Video::Map PlateSpeed, Texture::Map PlateSpeed
+	C: "OO",1941168744,1939707856
 	
 	;Texture::Map Speed, Material::Speed
-	C: "OP",2038448232,1941758296, "DiffuseColor"
+	C: "OP",1939708512,2067413520, "DiffuseColor"
 	
 	;Video::Map Speed, Texture::Map Speed
-	C: "OO",677734864,2038448232
+	C: "OO",675294256,1939708512
 	
 	;Model::Speed, DisplayLayer::Bolide
-	C: "OO",2204636248,2215799968
+	C: "OO",914303368,925258440
 	
 	;Model::Root, DisplayLayer::Bolide
-	C: "OO",1711993072,2215799968
+	C: "OO",914300664,925258440
 	
 	;Model::Plate, DisplayLayer::Bolide
-	C: "OO",1711994424,2215799968
+	C: "OO",914302016,925258440
 	
 	;AnimCurve::, AnimCurveNode::T
-	C: "OP",915051344,2023706912, "d|X"
+	C: "OP",1707366744,2062383760, "d|X"
 	
 	;AnimCurve::, AnimCurveNode::T
-	C: "OP",915040640,2023706912, "d|Y"
+	C: "OP",1707366504,2062383760, "d|Y"
 	
 	;AnimCurve::, AnimCurveNode::T
-	C: "OP",915023024,2023706912, "d|Z"
+	C: "OP",1707367224,2062383760, "d|Z"
 }
 ;Takes section
 ;----------------------------------------------------
