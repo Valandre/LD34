@@ -7,13 +7,16 @@ class Game extends hxd.App {
 	public static var inst : Game;
 	public var inspector : hxd.net.SceneInspector;
 	public var world : World;
+	public var entities : Array<Entity>;
 	public var hero : Hero;
 	public var fighters : Array<Fighter>;
 	var citySize = 8;
 	var width = 0;
+	public var event : WaitEvent;
 
 	var camOffset : h3d.Vector;
 	public var renderer : Composite;
+	public var mpos: h3d.Vector;
 
 	static function main() {
 		hxd.Res.initLocal();
@@ -22,16 +25,20 @@ class Game extends hxd.App {
 	}
 
 	override function init() {
+		event = new WaitEvent();
 		inspector = new hxd.net.SceneInspector(s3d);
 		width = 3 * citySize + 1;
 
 		var light = new h3d.scene.DirLight(new h3d.Vector( 0.3, -0.4, -0.9), s3d);
-		light.color.set(0.28, 0.28, 0.28);
-		s3d.lightSystem.ambientLight.set(0.74, 0.74, 0.74);
+		light.color.setColor(0x8EA59E);
+		s3d.lightSystem.ambientLight.setColor(0x5C5C5C);
 		s3d.lightSystem.perPixelLighting = true;
 
 		renderer = new Composite();
 		s3d.renderer = renderer;
+
+		var shadow = Std.instance(s3d.renderer.getPass("shadow"), h3d.pass.ShadowMap);
+		shadow.color.setColor(0x74717A);
 
 		resetCamOffset();
 		var cam = s3d.camera;
@@ -41,6 +48,7 @@ class Game extends hxd.App {
 		cam.zNear = 1;
 		cam.zFar = 20;
 
+		entities = [];
 		generate(0);
 	}
 
@@ -54,7 +62,7 @@ class Game extends hxd.App {
 
 	function generate(seed) {
 		if(world == null)
-			world = new World(width >> 1, width, s3d);
+			world = new World(16, width, s3d);
 		world.generate(seed);
 
 		var p = world.startPoint;
@@ -72,7 +80,7 @@ class Game extends hxd.App {
 			fighters.remove(f);
 		}
 
-		for( i in 0...5) {
+		for( i in 0...10) {
 			var p = world.getFreePos();
 			fighters.push(new Fighter(p.x + 0.5, p.y + 0.5));
 		}
@@ -164,6 +172,7 @@ class Game extends hxd.App {
 			cam.target.x = hero.x;
 			cam.target.y = hero.y;
 		}
+		/*
 		var a = Math.atan2(cam.target.y - cam.pos.y, cam.target.x - cam.pos.x);
 		var d = 0.01 * Math.distance(cam.target.x - cam.pos.x, cam.target.y - cam.pos.y, cam.target.z - cam.pos.z);
 
@@ -181,7 +190,7 @@ class Game extends hxd.App {
 		else if(K.isDown(K.LEFT)) {
 			a += Math.PI * 0.5;
 			cam.target.x -= d * Math.cos(a) * dt; cam.target.y -= d * Math.sin(a) * dt;
-		}
+		}*/
 
 		cam.pos.set(cam.target.x + camOffset.x, cam.target.y + camOffset.y, cam.target.z + camOffset.z);
 
@@ -191,10 +200,11 @@ class Game extends hxd.App {
 
 	override function update(dt:Float) {
 		super.update(dt);
+		mpos = getMousePicker();
 
 		keys(dt);
-		hero.update(dt);
-		for( f in fighters)
-			f.update(dt);
+		event.update(dt);
+		for( e in entities)
+			e.update(dt);
 	}
 }

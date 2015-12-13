@@ -2,15 +2,10 @@ package ;
 import hxd.Res;
 import hxd.Math;
 
-class Fighter
+class Fighter extends Entity
 {
-	var game : Game;
-	var model : h3d.scene.Object;
-	public var x(get, set) : Float;
-	public var y(get, set) : Float;
-	public var currentRotation(default, set) : Float = 0;
 	var rotation = 0.;
-	var maxSpeed = 0.04;
+	var maxSpeed = 0.03;
 	var speed = 0.;
 	var size = 0.5;
 
@@ -18,15 +13,9 @@ class Fighter
 	var lastCell : h2d.col.Point;
 	var targetCell : h2d.col.Point;
 
-	var life = 100;
-
 	public function new(x, y) {
-		game = Game.inst;
-		model = new h3d.scene.Object(game.s3d);
-		model.addChild(getBolide());
-		this.x = x;
-		this.y = y;
-		currentRotation = 0;
+		super(x, y);
+		life = 100;
 
 		var a = Res.bolide.anim_run.toHmd().loadAnimation();
 		model.playAnimation(a);
@@ -35,52 +24,16 @@ class Fighter
 		lastCell = new h2d.col.Point(Std.int(x - 1), Std.int(y));
 	}
 
-	function get_x() return model.x;
-	function set_x(v : Float) return model.x = v;
-	function get_y() return model.y;
-	function set_y(v : Float) return model.y = v;
-	function set_currentRotation(v : Float) {
-		model.setRotate(0, 0, v);
-		return currentRotation = v;
+	override public function remove() {
+		super.remove();
+		game.fighters.remove(this);
 	}
 
-	public function remove() {
-		model.remove();
-		model.dispose();
-		model = null;
-	}
-
-	function getBolide() {
-		/*
-		var c = new h3d.prim.Cube(size, size * 0.8 , size * 0.6);
-		c.unindex();
-		c.addNormals();
-		c.addUVs();
-		c.translate( -size * 0.5, -size * 0.8 * 0.5, 0);
-		var m = new h3d.scene.Mesh(c, game.s3d);
-		m.material.mainPass.enableLights = true;
-		m.material.shadows = true;*/
-
-		var m = game.loadModel(Res.bolide.model);
-		for( mat in m.getMaterials()) {
-			mat.addPass(new h3d.mat.Pass("depth", mat.mainPass));
-			mat.addPass(new h3d.mat.Pass("normal", mat.mainPass));
-			mat.mainPass.enableLights = true;
-			mat.shadows = true;
+	override function getBolide() {
+		var m = super.getBolide();
+		for( mat in m.getMaterials())
 			cast(mat, h3d.mat.MeshMaterial).texture = Res.bolide.texture02.toTexture();
-		}
 		return m;
-	}
-
-	function repell(dx : Float, dy : Float, r : Float) {
-		var d = dx * dx + dy * dy;
-		if ( d < r * r * 0.99 ) {
-			var r = -(r - Math.sqrt(d));
-			dx *= r;
-			dy *= r;
-			x -= dx;
-			y -= dy;
-		}
 	}
 
 	function getNextCell() {
@@ -104,7 +57,8 @@ class Fighter
 		return cells[Std.random(cells.length)];
 	}
 
-	public function update(dt : Float) {
+	override public function update(dt : Float) {
+		super.update(dt);
 		if(targetCell.x == Std.int(x) && targetCell.y == Std.int(y))
 			targetCell = getNextCell();
 
@@ -124,7 +78,7 @@ class Fighter
 
 		if(canMove || speed != 0) {
 			//MOVE
-			currentRotation = Math.angleMove(currentRotation, rotation, 0.06 * dt);
+			currentRotation = Math.angleMove(currentRotation, rotation, 0.07 * dt);
 			x += speed * Math.cos(currentRotation);
 			y += speed * Math.sin(currentRotation);
 

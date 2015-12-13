@@ -3,100 +3,37 @@ import hxd.Res;
 import hxd.Math;
 import hxd.Key in K;
 
-class Hero
+class Hero extends Entity
 {
-	var game : Game;
-	var model : h3d.scene.Object;
-	public var x(get, set) : Float;
-	public var y(get, set) : Float;
-	public var currentRotation(default, set) : Float = 0;
 	var rotation = 0.;
 	var subRotation = 0.;
 	var maxSpeed = 0.05;
 	var speed = 0.;
 	var size = 0.5;
 
-	var life = 250;
 
 	var canMove = true;
 	var isMeca = false;
+	var delay = 0.;
+	var currGun = 0;
 
 	public function new(x, y) {
-		game = Game.inst;
-		model = new h3d.scene.Object(game.s3d);
-		model.addChild(getBolide());
-		this.x = x;
-		this.y = y;
-		currentRotation = 0;
+		super(x, y);
+		life = 250;
 		var a = Res.bolide.anim_run.toHmd().loadAnimation();
 		model.playAnimation(a);
 	}
 
-	function get_x() return model.x;
-	function set_x(v : Float) return model.x = v;
-	function get_y() return model.y;
-	function set_y(v : Float) return model.y = v;
-	function set_currentRotation(v : Float) {
-		model.setRotate(0, 0, v);
-		return currentRotation = v;
+	public function mecaAttack() {
+		if(delay > 0) return;
+		delay = 5;
+		currGun = 1 - currGun;
+		new Gun(this, currentRotation, currGun);
 	}
 
-	public function remove() {
-		model.remove();
-		model.dispose();
-		model = null;
-	}
-
-	function getBolide() {
-		/*
-		var c = new h3d.prim.Cube(size, size * 0.8 , size * 0.6);
-		c.unindex();
-		c.addNormals();
-		c.addUVs();
-		c.translate( -size * 0.5, -size * 0.8 * 0.5, 0);
-		var m = new h3d.scene.Mesh(c, game.s3d);
-		*/
-		var m = game.loadModel(Res.bolide.model);
-		for( mat in m.getMaterials()) {
-			mat.mainPass.enableLights = true;
-			mat.shadows = true;
-			mat.addPass(new h3d.mat.Pass("depth", mat.mainPass));
-			mat.addPass(new h3d.mat.Pass("normal", mat.mainPass));
-		}
-		return m;
-	}
-
-	function getMeca() {
-		/*
-		var c = new h3d.prim.Cube(size, size * 0.8 , size * 0.6);
-		c.unindex();
-		c.addNormals();
-		c.addUVs();
-		c.translate( -size * 0.5, -size * 0.8 * 0.5, 0);
-		var m = new h3d.scene.Mesh(c, game.s3d);
-		*/
-		var m = game.loadModel(Res.meca.model);
-		for( mat in m.getMaterials()) {
-			mat.addPass(new h3d.mat.Pass("depth", mat.mainPass));
-			mat.addPass(new h3d.mat.Pass("normal", mat.mainPass));
-			mat.mainPass.enableLights = true;
-			mat.shadows = true;
-		}
-		return m;
-	}
-
-	function repell(dx : Float, dy : Float, r : Float) {
-		var d = dx * dx + dy * dy;
-		if ( d < r * r * 0.99 ) {
-			var r = -(r - Math.sqrt(d));
-			dx *= r;
-			dy *= r;
-			x -= dx;
-			y -= dy;
-		}
-	}
-
-	public function update(dt : Float) {
+	override public function update(dt : Float) {
+		super.update(dt);
+		delay -= dt;
 
 		if(K.isPressed(K.MOUSE_RIGHT)) {
 			canMove = !canMove;
@@ -117,11 +54,10 @@ class Hero
 		}
 
 
-		var mpos = game.getMousePicker();
 		var da = Math.angle(currentRotation - rotation);
 		//subRotation += ( -da * 0.8 - subRotation) * Math.min(1, (0.05 + 0.5 * (1 - speed / maxSpeed)) * dt);
 		//model.getChildAt(0).setRotate(0, 0, subRotation);
-		if(mpos != null) rotation = Math.atan2(mpos.y - y, mpos.x - x);
+		if(game.mpos != null) rotation = Math.atan2(game.mpos.y - y, game.mpos.x - x);
 
 		if(canMove || speed != 0) {
 			//MOVE
@@ -151,9 +87,12 @@ class Hero
 				model.currentAnimation.speed = 0;
 			}
 			//ATTACK
-			if(K.isDown(K.MOUSE_LEFT))
+			if(K.isDown(K.MOUSE_LEFT)) {
+				mecaAttack();
 				model.currentAnimation.speed += (1.5 - model.currentAnimation.speed) * 0.25 * dt;
+			}
 			else model.currentAnimation.speed *= Math.pow(0.9, dt);
+
 		}
 	}
 }

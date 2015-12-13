@@ -92,22 +92,22 @@ class Composite extends h3d.scene.Renderer {
 		ambient.shader.hasFOG = true;
 		ambient.shader.hasBLOOM = true;
 
-		ambient.shader.global_brightness = 0.;
-		ambient.shader.global_contrast = 1.;
-		ambient.shader.global_saturation = 1.;
-		ambient.shader.bloomPower = 3;
-		ambient.shader.bloomAmount = 0;
-		ambient.shader.fogStart = 0.04;
-		ambient.shader.fogPower = 4.98;
-		ambient.shader.fogAmount = 1.81;
-		ambient.shader.dofStart = 0.1;
+		ambient.shader.global_brightness = 0.25;
+		ambient.shader.global_contrast = 1.5;
+		ambient.shader.global_saturation = 1.1;
+		ambient.shader.bloomPower = 3.107;
+		ambient.shader.bloomAmount = 0.5;
+		ambient.shader.fogStart = 0.0352;
+		ambient.shader.fogPower = 3.5;
+		ambient.shader.fogAmount = 2;
+		ambient.shader.dofStart = 0.;
 		ambient.shader.dofPower = 2;
-		ambient.shader.dofAmount = 0.8;
-		ambient.shader.fogColor = new h3d.Vector(0.72, 0.83, 0.89);
+		ambient.shader.dofAmount = 1.5;
+		ambient.shader.fogColor.setColor(0x4B1C6B);
 
-		ambientOcclusion.shader.sampleRadius = 1;
-		ambientOcclusion.shader.intensity = 0.6;
-		ambientOcclusion.shader.bias = 0.05;
+		ambientOcclusion.shader.bias = 0.04;
+		ambientOcclusion.shader.intensity = 0.5;
+		ambientOcclusion.shader.sampleRadius = 0.25;
 
 		waterReflection = new shaders.SSReflection();
 	}
@@ -139,27 +139,21 @@ class Composite extends h3d.scene.Renderer {
 		h3d.pass.Copy.run(saoTarget, colorTex, Multiply);
 
 	//water
-	/*
+
 		var wreflect = allocTarget("wreflect", 0, false);
 		setTarget(wreflect);
 		clear(1, 1);
 		waterReflection.rcolor = colorTex;
 		waterReflection.rdepth = depthTex;
-		waterReflection.skybox = skybox;
-		waterReflection.hasSkybox = skybox != null;
+		//waterReflection.skybox = skybox;
+		waterReflection.hasSkybox = false;// skybox != null;
 		ctx.extraShaders = new hxsl.ShaderList(waterReflection);
 		draw("waterReflect");
 		ctx.extraShaders = null;
 		waterReflectBlur.apply(wreflect, allocTarget("blurtmp", 1, false));
 
 		setTarget(colorTex);
-		waterFoam.foamTex = Res.map.test.water_foam.toTexture();
-		waterFoam.foamTex.wrap = Repeat;
-		waterFoam.depthTex = depthTex;
-		ctx.extraShaders = new hxsl.ShaderList(new SSTexture(wreflect), new hxsl.ShaderList(waterFoam));
-		draw("water");
-		ctx.extraShaders = null;
-*/
+		draw("reflect");
 
 	//fxaa
 		var final = allocTarget("final", 0, false);

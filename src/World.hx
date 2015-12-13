@@ -3,6 +3,7 @@ import hxd.Res;
 using hxd.Math;
 
 enum MatKind {
+	Road;
 	Default;
 }
 
@@ -42,13 +43,12 @@ class World extends h3d.scene.World
 		mesh.material.allocPass("normal");
 	}
 
-/*
+
 	function resolveMaterialKind(name : String) {
 		name = name.split(".").shift().split("_").shift();
 		name = ~/[0-9]+/g.replace(name.split("/").pop(), "");
 		return switch(name) {
-			//case "Tree", "Herb" : MK_Wind;
-			//case "Grass", "Bush", "Clover", "WaterLily" : MK_Wind_Nolight_NoShadow;
+			case "road" : Road;
 			default : Default;
 		}
 	}
@@ -56,9 +56,14 @@ class World extends h3d.scene.World
 	function setMaterial(model : h3d.scene.World.WorldModel) {
 		var matKind = resolveMaterialKind(model.r.name);
 		switch(matKind) {
+			case Road:
+				/*
+				for( g in model.geometries) {
+					g.m.updateBits();
+				}*/
 			case Default:
 		}
-	}*/
+	}
 
 	public function getModel(r : hxd.res.Model) {
 		return getModelPath(r.entry.path);
@@ -69,7 +74,7 @@ class World extends h3d.scene.World
 		if(model == null) {
 			var r = @:privateAccess Res.loader.loadModel(path);
 			model = loadModel(r);
-			//setMaterial(model);
+			setMaterial(model);
 			models.set(path, model);
 		}
 		return model;
@@ -288,7 +293,7 @@ class World extends h3d.scene.World
 
 	public function isCollide(x : Float, y : Float) {
 		if(x < 0 || x >= worldSize || y < 0 || y >= worldSize) return true;
-		return grid[Std.int(x) + Std.int(y * worldSize)] != 0;
+		return grid[Std.int(x) + Std.int(y) * worldSize] != 0;
 	}
 
 
