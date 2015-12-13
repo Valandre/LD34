@@ -29,9 +29,9 @@ class Game extends hxd.App {
 		inspector = new hxd.net.SceneInspector(s3d);
 		width = 3 * citySize + 1;
 
-		var light = new h3d.scene.DirLight(new h3d.Vector( 0.3, -0.4, -0.9), s3d);
-		light.color.setColor(0x8EA59E);
-		s3d.lightSystem.ambientLight.setColor(0x5C5C5C);
+		//var light = new h3d.scene.DirLight(new h3d.Vector( 0.3, -0.4, -0.9), s3d);
+		//light.color.setColor(0x8EA59E);
+		s3d.lightSystem.ambientLight.setColor(0xA0A0A0);
 		s3d.lightSystem.perPixelLighting = true;
 
 		renderer = new Composite();
@@ -53,7 +53,8 @@ class Game extends hxd.App {
 	}
 
 	function resetCamOffset() {
-		camOffset = new  h3d.Vector(4, 6, 8);
+		var c = 0.6;
+		camOffset = new  h3d.Vector(4 * c, 6 * c, 8 * c);
 		if(hero != null) {
 			s3d.camera.target.x = hero.x;
 			s3d.camera.target.y = hero.y;

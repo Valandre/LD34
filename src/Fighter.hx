@@ -83,8 +83,17 @@ class Fighter extends Entity
 			y += speed * Math.sin(currentRotation);
 
 			if(currentRotation == rotation) {
-				x += ((targetCell.x + 0.5) - x) * 0.01 * dt;
-				y += ((targetCell.y + 0.5) - y) * 0.01 * dt;
+				var r = currentRotation / Math.PI;
+				var dx = 0.;
+				var dy = 0.;
+				/*switch(r) {
+					case 0 : dy = 0.25;
+					case 1 : dy = -0.25;
+					case 0.5 : dx = -0.25;
+					case -0.5 : dx = 0.25;
+				}*/
+				//x += ((targetCell.x + 0.5 + dx) - x) * 0.01 * dt;
+				//y += ((targetCell.y + 0.5 + dy) - y) * 0.01 * dt;
 			}
 			var c = game.world.collide(x, y, size * 0.5 * model.scaleX);
 			if(c != null) {

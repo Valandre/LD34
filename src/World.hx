@@ -7,6 +7,24 @@ enum MatKind {
 	Default;
 }
 
+class Element {
+	public var modelPath : String;
+	public var x : Float;
+	public var y : Float;
+	public var z : Float;
+	public var scale : Float;
+	public var rotation : Float;
+
+	public function new(path : String, x, y, z, s, r) {
+		this.modelPath = path;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.scale = s;
+		this.rotation = r;
+	}
+}
+
 class World extends h3d.scene.World
 {
 	public var models : Map<String, h3d.scene.World.WorldModel>;
@@ -15,16 +33,63 @@ class World extends h3d.scene.World
 	var grid : Array<Int>;
 	var rnd : hxd.Rand;
 	var game : Game;
+	public var elements : Map<Int, Array<Element>>;
 
 	public function new( chunkSize : Int, worldSize : Int, ?parent ) {
 		super(chunkSize, worldSize, parent);
 		game = Game.inst;
 		enableSpecular = true;
 		models = new Map();
-		initChunksBounds();
 	}
 
 	override function initChunk(c:h3d.scene.World.WorldChunk) {
+		addElements(c);
+	}
+
+	override function initChunksBounds() {
+		var n = Math.ceil(worldSize / chunkSize);
+		for(x in 0...n)
+			for(y in 0...n) {
+				var c = getChunk(x * chunkSize, y * chunkSize, true);
+
+				//add heightmap bounds
+				for(dx in 0...chunkSize)
+					for(dy in 0...chunkSize)
+						c.bounds.addPoint(new h3d.col.Point(c.x + dx, c.y + dy, 0));
+
+				//add elements bounds
+				var elts = elements.get(x + y * n);
+				if(elts == null) continue;
+				for(e in elts) {
+					var m = models.get(e.modelPath);
+					if( m == null ) continue;
+					updateChunkBounds(c, m, e.rotation, e.scale);
+				}
+			}
+	}
+
+	function addElements(c:h3d.scene.World.WorldChunk) {
+		var index = Std.int(c.x / chunkSize) + Std.int(c.y / chunkSize) * Math.ceil(worldSize / chunkSize);
+		var elts = elements.get(index);
+		if(elts == null) return;
+		for(e in elts) {
+			var m = models.get(e.modelPath);
+			if( m == null ) {
+				m = getModel(@:privateAccess Res.loader.loadModel(e.modelPath));
+				models.set(e.modelPath, m);
+			}
+			add(m, e.x, e.y, e.z, e.scale, e.rotation);
+		}
+	}
+
+	function createElement(path : String, x = 0., y = 0., z = 0., scale = 1., rotation = 0.) {
+		var index = Std.int(x / chunkSize) + Std.int(y / chunkSize) * Math.ceil(worldSize / chunkSize);
+		var c = elements.get(index);
+		if(c == null) {
+			c = [];
+			elements.set(index, c);
+		}
+		c.push(new Element(path, x, y, z, scale, rotation));
 	}
 
 	override function initMaterial( mesh : h3d.scene.Mesh, mat ) {
@@ -82,6 +147,7 @@ class World extends h3d.scene.World
 
 	function reset() {
 		models = new Map();
+		elements = new Map();
 		dispose();
 	}
 
@@ -116,6 +182,50 @@ class World extends h3d.scene.World
 		reset();
 
 		map = buildCity(seed);
+
+		//add building on borders
+		var index = 0;
+		for(x in 0...map.height) {
+			if(x <= index) continue;
+			index = x;
+			var draw = rnd.rand() < 0.15;
+			while(map.getPixel(index, 1) == -1) {
+				if(draw) map.setPixel(index, 0, -1);
+				index++;
+			}
+		}
+		var index = 0;
+		for(x in 0...map.height) {
+			if(x <= index) continue;
+			index = x;
+			var draw = rnd.rand() < 0.15;
+			while(map.getPixel(index, map.width - 2) == -1) {
+				if(draw) map.setPixel(index, map.width - 1, -1);
+				index++;
+			}
+		}
+		var index = 0;
+		for(y in 0...map.height) {
+			if(y <= index) continue;
+			index = y;
+			var draw = rnd.rand() < 0.15;
+			while(map.getPixel(1, index) == -1) {
+				if(draw) map.setPixel(0, index, -1);
+				index++;
+			}
+		}
+		var index = 0;
+		for(y in 0...map.height) {
+			if(y <= index) continue;
+			index = y;
+			var draw = rnd.rand() < 0.15;
+			while(map.getPixel(map.width - 2, index) == -1) {
+				if(draw) map.setPixel(map.width - 1, index, -1);
+				index++;
+			}
+		}
+		//
+
 		startPoint = getStartingPoint();
 
 		var models = [Res.city.build01, Res.city.build01, Res.city.tree01, Res.city.tree02, Res.city.tree03];
@@ -125,8 +235,9 @@ class World extends h3d.scene.World
 			var r = rnd.random(models.length);
 			if(x - 1 == startPoint.x && y - 1 == startPoint.y)
 				r = Math.imax(2, r);
-			var m = getModelPath(models[r].entry.path);
-			add(m, x + 0.5, y + 0.5, 0, 1, r < 2 ? Math.PI * 0.5 * rnd.random(4) : 0);
+			//var m = getModelPath(models[r].entry.path);
+			//add(m, x + 0.5, y + 0.5, 0, 1, r < 2 ? Math.PI * 0.5 * rnd.random(4) : 0);
+			createElement(models[r].entry.path, x + 0.5, y + 0.5, 0, 1, r < 2 ? Math.PI * 0.5 * rnd.random(4) : 0);
 			grid[x + y * worldSize] = 1;
 		}
 
@@ -193,8 +304,9 @@ class World extends h3d.scene.World
 				default : throw "not supported";
 			}
 
-			var m = getModelPath(roads[id].entry.path);
-			add(m, x + 0.5, y + 0.5, 0, 1, Math.PI * 0.5 * rot);
+			//var m = getModelPath(roads[id].entry.path);
+			//add(m, x + 0.5, y + 0.5, 0, 1, Math.PI * 0.5 * rot);
+			createElement(roads[id].entry.path, x + 0.5, y + 0.5, 0, 1, Math.PI * 0.5 * rot);
 			grid[x + y * worldSize] = 0;
 		}
 
@@ -204,6 +316,8 @@ class World extends h3d.scene.World
 				if(map.getPixel(x, y) == -1)
 					addBuilding(x, y);
 				else addRoad(x, y);
+
+		initChunksBounds();
 	}
 
 	function buildCity(seed) {
@@ -256,7 +370,6 @@ class World extends h3d.scene.World
 						swapped[x + (y + 1) * n] = true;
 				}
 			}
-
 		g.endFill();
 
 		var tex = new h3d.mat.Texture(worldSize, worldSize, [Target]);
@@ -298,6 +411,11 @@ class World extends h3d.scene.World
 
 
 	override function sync(ctx) {
-
+		for( c in allChunks ) {
+			if( !c.initialized) {
+				c.initialized = true;
+				initChunk(c);
+			}
+		}
 	}
 }
