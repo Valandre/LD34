@@ -11,10 +11,10 @@ FBXHeaderExtension:  {
 		Year: 2015
 		Month: 12
 		Day: 13
-		Hour: 19
-		Minute: 54
-		Second: 7
-		Millisecond: 42
+		Hour: 21
+		Minute: 5
+		Second: 22
+		Millisecond: 683
 	}
 	Creator: "FBX SDK/FBX Plugins version 2013.1"
 	SceneInfo: "SceneInfo::GlobalInfo", "UserData" {
@@ -36,13 +36,13 @@ FBXHeaderExtension:  {
 			P: "Original|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "Original|ApplicationName", "KString", "", "", "3ds Max"
 			P: "Original|ApplicationVersion", "KString", "", "", "2013"
-			P: "Original|DateTime_GMT", "DateTime", "", "", "13/12/2015 18:54:07.042"
+			P: "Original|DateTime_GMT", "DateTime", "", "", "13/12/2015 20:05:22.682"
 			P: "Original|FileName", "KString", "", "", "D:\Projects\LD34\trunk\res\city\build01.FBX"
 			P: "LastSaved", "Compound", "", ""
 			P: "LastSaved|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "LastSaved|ApplicationName", "KString", "", "", "3ds Max"
 			P: "LastSaved|ApplicationVersion", "KString", "", "", "2013"
-			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "13/12/2015 18:54:07.042"
+			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "13/12/2015 20:05:22.682"
 		}
 	}
 }
@@ -73,7 +73,7 @@ GlobalSettings:  {
 
 Documents:  {
 	Count: 1
-	Document: 2215999200, "", "Scene" {
+	Document: 2216009840, "", "Scene" {
 		Properties70:  {
 			P: "SourceObject", "object", "", ""
 			P: "ActiveAnimStackName", "KString", "", "", ""
@@ -93,7 +93,7 @@ References:  {
 
 Definitions:  {
 	Version: 100
-	Count: 12
+	Count: 14
 	ObjectType: "GlobalSettings" {
 		Count: 1
 	}
@@ -269,7 +269,7 @@ Definitions:  {
 		}
 	}
 	ObjectType: "CollectionExclusive" {
-		Count: 4
+		Count: 6
 	}
 	ObjectType: "Video" {
 		Count: 1
@@ -299,7 +299,7 @@ Definitions:  {
 ;------------------------------------------------------------------
 
 Objects:  {
-	Geometry: 686650112, "Geometry::", "Mesh" {
+	Geometry: 686641136, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.450980392156863,0.450980392156863,0.450980392156863
 		}
@@ -404,7 +404,7 @@ Objects:  {
 			}
 		}
 	}
-	Model: 2193115320, "Model::build01", "Mesh" {
+	Model: 2036255056, "Model::build01", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
@@ -416,7 +416,7 @@ Objects:  {
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Material: 2067410608, "Material::Build01", "" {
+	Material: 563517576, "Material::Build01", "" {
 		Version: 102
 		ShadingModel: "phong"
 		MultiLayer: 0
@@ -438,7 +438,7 @@ Objects:  {
 			P: "Reflectivity", "double", "Number", "",0
 		}
 	}
-	Video: 675291880, "Video::Map Build01", "Clip" {
+	Video: 675292096, "Video::Map Build01", "Clip" {
 		Type: "Clip"
 		Properties70:  {
 			P: "Path", "KString", "XRefUrl", "", "D:\Projects\LD34\trunk\res\city\build01.jpg"
@@ -447,7 +447,7 @@ Objects:  {
 		Filename: "D:\Projects\LD34\trunk\res\city\build01.jpg"
 		RelativeFilename: "build01.jpg"
 	}
-	Texture: 2199373568, "Texture::Map Build01", "" {
+	Texture: 1939761752, "Texture::Map Build01", "" {
 		Type: "TextureVideoClip"
 		Version: 202
 		TextureName: "Texture::Map Build01"
@@ -463,7 +463,7 @@ Objects:  {
 		Texture_Alpha_Source: "None"
 		Cropping: 0,0,0,0
 	}
-	CollectionExclusive: 2243874200, "DisplayLayer::__Camera", "DisplayLayer" {
+	CollectionExclusive: 2036298712, "DisplayLayer::__Camera", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.0235294117647059,0.529411764705882,0.0235294117647059
 			P: "Show", "bool", "", "",1
@@ -471,7 +471,7 @@ Objects:  {
 			P: "LODBox", "bool", "", "",0
 		}
 	}
-	CollectionExclusive: 2243877912, "DisplayLayer::Artisan", "DisplayLayer" {
+	CollectionExclusive: 2036299224, "DisplayLayer::Artisan", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.0235294117647059,0.529411764705882,0.0235294117647059
 			P: "Show", "bool", "", "",1
@@ -479,7 +479,7 @@ Objects:  {
 			P: "LODBox", "bool", "", "",0
 		}
 	}
-	CollectionExclusive: 2243878296, "DisplayLayer::Bolide", "DisplayLayer" {
+	CollectionExclusive: 2036299608, "DisplayLayer::Bolide", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.423529411764706,0.0313725490196078,0.533333333333333
 			P: "Show", "bool", "", "",1
@@ -487,9 +487,25 @@ Objects:  {
 			P: "LODBox", "bool", "", "",0
 		}
 	}
-	CollectionExclusive: 2243878680, "DisplayLayer::Camera", "DisplayLayer" {
+	CollectionExclusive: 2036299992, "DisplayLayer::Camera", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.0235294117647059,0.529411764705882,0.0235294117647059
+			P: "Show", "bool", "", "",1
+			P: "Freeze", "bool", "", "",0
+			P: "LODBox", "bool", "", "",0
+		}
+	}
+	CollectionExclusive: 2036300376, "DisplayLayer::ground", "DisplayLayer" {
+		Properties70:  {
+			P: "Color", "ColorRGB", "Color", "",0.443137254901961,0.529411764705882,0.0235294117647059
+			P: "Show", "bool", "", "",1
+			P: "Freeze", "bool", "", "",0
+			P: "LODBox", "bool", "", "",0
+		}
+	}
+	CollectionExclusive: 2036300760, "DisplayLayer::tree", "DisplayLayer" {
+		Properties70:  {
+			P: "Color", "ColorRGB", "Color", "",0.603921568627451,0.603921568627451,0.898039215686275
 			P: "Show", "bool", "", "",1
 			P: "Freeze", "bool", "", "",0
 			P: "LODBox", "bool", "", "",0
@@ -503,23 +519,23 @@ Objects:  {
 Connections:  {
 	
 	;Model::build01, Model::RootNode
-	C: "OO",2193115320,0
+	C: "OO",2036255056,0
 	
 	;AnimLayer::BaseLayer, AnimStack::model
-	C: "OO",1713369528,2060748000
+	C: "OO",2213781904,2207480840
 	
 	;Geometry::, Model::build01
-	C: "OO",686650112,2193115320
+	C: "OO",686641136,2036255056
 	
 	;Material::Build01, Model::build01
-	C: "OO",2067410608,2193115320
+	C: "OO",563517576,2036255056
 	
 	;Texture::Map Build01, Material::Build01
-	C: "OP",2199373568,2067410608, "DiffuseColor"
+	C: "OP",1939761752,563517576, "DiffuseColor"
 	
 	;Video::Map Build01, Texture::Map Build01
-	C: "OO",675291880,2199373568
+	C: "OO",675292096,1939761752
 	
 	;Model::build01, DisplayLayer::Artisan
-	C: "OO",2193115320,2243877912
+	C: "OO",2036255056,2036299224
 }
