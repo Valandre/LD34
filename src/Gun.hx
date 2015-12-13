@@ -8,10 +8,12 @@ class Gun
 	var dmg = 1;
 	var owner : Entity;
 
-	public function new( owner : Entity, rot : Float, currGun : Float)
+	public function new( owner : Entity, rot : Float, currGun : Float, boost = false)
 	{
 		game = Game.inst;
 		this.owner = owner;
+		if(boost)
+			dmg *= 2;
 
 		var c = new h3d.prim.Cube(0.2, 0.025, 0.025);
 		c.unindex();
@@ -51,7 +53,7 @@ class Gun
 	}
 
 	function hit() {
-		if(game.world.isCollide(m.x, m.y))
+		if(game.world.isCollide(m.x, m.y, true))
 			return true;
 
 		for(e in game.entities) {

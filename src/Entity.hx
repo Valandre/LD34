@@ -66,7 +66,6 @@ class Entity
 			mat.addPass(new h3d.mat.Pass("depth", mat.mainPass));
 			mat.addPass(new h3d.mat.Pass("normal", mat.mainPass));
 		}
-		currentRotation = rotation = oldRot;
 		return m;
 	}
 

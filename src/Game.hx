@@ -8,9 +8,10 @@ class Game extends hxd.App {
 	public var inspector : hxd.net.SceneInspector;
 	public var world : World;
 	public var entities : Array<Entity>;
+	public var bonus : Array<Bonus>;
 	public var hero : Hero;
 	public var fighters : Array<Fighter>;
-	var citySize = 8;
+	var citySize = 7;
 	var width = 0;
 	public var event : WaitEvent;
 
@@ -18,6 +19,7 @@ class Game extends hxd.App {
 	public var renderer : Composite;
 	public var mpos: h3d.Vector;
 	public var ui: UI;
+	public var credits = 3;
 
 	static function main() {
 		hxd.Res.initLocal();
@@ -52,6 +54,7 @@ class Game extends hxd.App {
 		ui = new UI();
 
 		entities = [];
+		bonus = [];
 		generate(0);
 	}
 
@@ -74,6 +77,10 @@ class Game extends hxd.App {
 		cam.target.x = p.x + 0.5;
 		cam.target.y = p.y + 0.5;
 
+		if(bonus != null)
+			while(bonus.length > 0)
+				bonus[0].remove();
+
 		if(fighters != null)
 			while(fighters.length > 0)
 				fighters[0].remove();
@@ -88,8 +95,10 @@ class Game extends hxd.App {
 		}
 
 		ui.init();
+
 	}
 
+	public var anims : Map<String,h3d.anim.Animation> = new Map();
 	var models : Map<String, h3d.scene.Object> = new Map();
 	public function loadModel( m : hxd.res.Model ) {
 		var e = models.get(m.entry.path);
@@ -103,6 +112,9 @@ class Game extends hxd.App {
 				cast(m, h3d.mat.MeshMaterial).shadows = true;
 			}
 			models.set(m.entry.path, e);
+			var a = lib.loadAnimation();
+			if(a != null)
+				anims.set(m.entry.path, a);
 		}
 		return e.clone();
 	}
@@ -184,30 +196,15 @@ class Game extends hxd.App {
 			//cam.target.x = fighters[1].x;
 			//cam.target.y = fighters[1].y;
 		}
-		/*
-		var a = Math.atan2(cam.target.y - cam.pos.y, cam.target.x - cam.pos.x);
-		var d = 0.01 * Math.distance(cam.target.x - cam.pos.x, cam.target.y - cam.pos.y, cam.target.z - cam.pos.z);
-
-		if(K.isDown(K.UP)) {
-			cam.target.x += d * Math.cos(a) * dt; cam.target.y += d * Math.sin(a) * dt;
-		}
-		else if(K.isDown(K.DOWN)) {
-			cam.target.x -= d * Math.cos(a) * dt; cam.target.y -= d* Math.sin(a) * dt;
-		}
-
-		if(K.isDown(K.RIGHT)) {
-			a += Math.PI * 0.5;
-			cam.target.x += d * Math.cos(a) * dt; cam.target.y += d * Math.sin(a) * dt;
-		}
-		else if(K.isDown(K.LEFT)) {
-			a += Math.PI * 0.5;
-			cam.target.x -= d * Math.cos(a) * dt; cam.target.y -= d * Math.sin(a) * dt;
-		}*/
 
 		cam.pos.set(cam.target.x + camOffset.x, cam.target.y + camOffset.y, cam.target.z + camOffset.z);
 
 		if(K.isPressed(K.SPACE))
 			generate(Std.random(0xFFFFFF));
+	}
+
+	public function gameOver() {
+
 	}
 
 	override function update(dt:Float) {
@@ -219,5 +216,8 @@ class Game extends hxd.App {
 		event.update(dt);
 		for( e in entities)
 			e.update(dt);
+
+		if(bonus.length < 8)
+			new Bonus();
 	}
 }

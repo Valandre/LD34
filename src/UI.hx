@@ -46,7 +46,7 @@ class UI
 
 		hlife = new h2d.Sprite(life);
 		hlife.x = -210; hlife.y = 20;
-		setBigValue(game.hero.credits, hlife);
+		setBigValue(game.credits, hlife);
 
 		mlife = new h2d.Sprite(life);
 		mlife.x = 210; mlife.y = 20;
@@ -86,7 +86,6 @@ class UI
 	function setBigValue(v:Int, s : h2d.Sprite) {
 		var t = getLifeTile(v);
 		var bg = new h2d.Bitmap(t, s);
-		//bg.filter = true;
 		bg.x = -t.width * 0.5;
 	}
 
@@ -97,7 +96,6 @@ class UI
 		for(i in 0...tiles.length) {
 			var t = tiles[i];
 			var bg = new h2d.Bitmap(t, s);
-			//bg.filter = true;
 
 			if(i != 0 && nums[i] == "1") dx += 8;
 			else if(nums[i] == "4") dx += 4;
@@ -155,10 +153,10 @@ class UI
 			setValue(currAmmo, ammoTxt);
 		}
 
-		if(currCredits != game.hero.credits) {
+		if(currCredits != game.credits) {
 			while(hlife.numChildren > 0)
 				hlife.getChildAt(0).remove();
-			currCredits = game.hero.credits;
+			currCredits = game.credits;
 			setBigValue(currCredits, hlife);
 		}
 

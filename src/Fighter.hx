@@ -37,6 +37,7 @@ class Fighter extends Entity
 		var m = super.getBolide();
 		for( mat in m.getMaterials())
 			cast(mat, h3d.mat.MeshMaterial).texture = Res.bolide.texture02.toTexture();
+		currentRotation = rotation = oldRot;
 		return m;
 	}
 
@@ -46,6 +47,7 @@ class Fighter extends Entity
 			if(mat.name != "Cannon")
 				cast(mat, h3d.mat.MeshMaterial).texture = Res.meca.texture02.toTexture();
 		}
+		oldRot = currentRotation;
 		return m;
 	}
 
@@ -86,12 +88,14 @@ class Fighter extends Entity
 		if(sleep > 0) return;
 
 		time -= dt;
-		if(time < 0 && canMove && currentRotation == rotation && Math.random() < 0.01) {
+		var dist = Math.distance(game.hero.x - x, game.hero.y - y);
+		if(dist < 1 && canMove) time = 0;
+		if(time < 0 && canMove && currentRotation == rotation && Math.random() < (dist < 1 ? 0.1 : 0.01)) {
 			canMove = false;
 			time = 300 + 300 * Math.random();
 		}
 		if(time < 0 && !canMove && Math.random() < 0.01) {
-			if(!game.hero.isDead() && Math.distance(game.hero.x - x, game.hero.y - y) < 5) {
+			if(!game.hero.isDead() && dist < 5) {
 				time += 60;
 				return;
 			}
@@ -140,10 +144,22 @@ class Fighter extends Entity
 
 		if(canMove || speed != 0) {
 			//MOVE
+
 			model.currentAnimation.speed = Math.max(speed / maxSpeed, da != 0 ? 1 : 0);
 			currentRotation = Math.angleMove(currentRotation, rotation, 0.07 * dt);
-			x += speed * Math.cos(currentRotation);
-			y += speed * Math.sin(currentRotation);
+
+			var cos = Math.cos(currentRotation);
+			var sin = Math.sin(currentRotation);
+
+			if(dist < 3) {
+				var v1 = new h2d.col.Point(game.hero.x - x, game.hero.y - y);
+				var v2 = new h2d.col.Point(cos, sin);
+				if(v1.dot(v2) > 0.8)
+					canMove = false;
+			}
+
+			x += speed * cos;
+			y += speed * sin;
 
 			if(currentRotation == rotation) {
 				var r = currentRotation / Math.PI;

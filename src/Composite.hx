@@ -128,7 +128,6 @@ class Composite extends h3d.scene.Renderer {
 		setTarget(colorTex);
 		clear(0, 1);
 		draw("default");
-		draw("additive");
 
 	//ssao
 		var saoTarget = allocTarget("sao", 1, false);
@@ -137,6 +136,10 @@ class Composite extends h3d.scene.Renderer {
 		ambientOcclusionBlur.apply(saoTarget, allocTarget("saoBlurTmp", 1, false), null);
 		ambientOcclusionBlur.depthBlur = { depths : depthTex, normals : normalTex, camera: ctx.camera};
 		h3d.pass.Copy.run(saoTarget, colorTex, Multiply);
+
+		setTarget(colorTex);
+		draw("noSAO");
+		draw("additive");
 
 	//water
 

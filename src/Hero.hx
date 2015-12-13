@@ -8,22 +8,33 @@ class Hero extends Entity
 	var subRotation = 0.;
 	var deadTime = 180.;
 
-	public var credits = 3;
-	public var fuel = 100.;
-	public var ammo = 150;
+	public var fuelMax = 0.;
+	public var ammoMax = 0;
+	public var fuel = 0.;
+	public var ammo = 0;
+	public var boost = 0.;
+	public var lifeMax = 0;
+
+	var maxSpeedRef = 0.;
+	var scale = 1.;
 
 	public function new(x, y) {
 		super(x, y);
-		life = 100;
+		life = lifeMax = 100;
+		fuel = fuelMax = 100;
+		ammo = ammoMax = 150;
+
+		maxSpeedRef = maxSpeed = 0.04;
+
 		var a = Res.bolide.anim_run.toHmd().loadAnimation();
 		model.playAnimation(a);
 	}
 
 	public function mecaAttack() {
 		if(delay > 0) return;
-		delay = 5;
+		delay = 5 - (boost > 0 ? 1 : 0);
 		currGun = 1 - currGun;
-		new Gun(this, currentRotation, currGun);
+		new Gun(this, currentRotation, currGun, boost > 0 ? true : false);
 		ammo = Math.imax(0, ammo - 1);
 	}
 
@@ -32,18 +43,31 @@ class Hero extends Entity
 		super.remove();
 		if(life <= 0) {
 			game.event.wait(3, function() {
-				game.generate(Std.random(0xFFFFFF));
+				if(game.credits-- > 0)
+					game.generate(Std.random(0xFFFFFF));
+				else game.gameOver();
 			});
 		}
 	}
 
+	var oldBoost = 0.;
 	override public function update(dt : Float) {
 		super.update(dt);
 
 		if(isDead())
 			return;
 
-		fuel -= (speed + 0.01) * 0.5 * dt;
+		fuel = Math.max(0, fuel - (speed + 0.01) * 0.5 * dt);
+		boost -= dt;
+		maxSpeed = maxSpeedRef * (boost > 0 ? 1.5 : 1);
+		if(fuel <= 0)
+			maxSpeed *= 0.5;
+		if(boost > 0 && oldBoost < 0)
+			speed = maxSpeed * 1.5;
+		oldBoost = boost;
+		scale = boost > 0 ? 1.3 : 1.;
+		model.setScale(model.scaleX + (scale-model.scaleX) * 0.25 * dt);
+
 
 		if(K.isPressed(K.MOUSE_RIGHT)) {
 			canMove = !canMove;
@@ -96,7 +120,7 @@ class Hero extends Entity
 			}
 			//ATTACK
 			if(K.isDown(K.MOUSE_LEFT)) {
-				mecaAttack();
+				if(ammo > 0) mecaAttack();
 				model.currentAnimation.speed += (1.5 - model.currentAnimation.speed) * 0.25 * dt;
 			}
 			else model.currentAnimation.speed *= Math.pow(0.9, dt);
@@ -127,5 +151,11 @@ class Hero extends Entity
 				f.repell((f.x - x) * 0.1, (f.y - y) * 0.1, size * 0.5 + f.size * 0.5);
 			}
 		}
+
+		for(b in game.bonus)
+			if(Math.distance(b.model.x - x, b.model.y - y) < 0.5)
+				b.loot();
+
+
 	}
 }

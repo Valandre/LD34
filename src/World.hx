@@ -231,7 +231,7 @@ class World extends h3d.scene.World
 
 		startPoint = getStartingPoint();
 
-		var models = [Res.city.build01, Res.city.build01, Res.city.tree01, Res.city.tree02, Res.city.tree03];
+		var models = [Res.city.build01, Res.city.build02, Res.city.tree01, Res.city.tree02, Res.city.tree03];
 		var roads = [Res.city.road01, Res.city.road02, Res.city.road03, Res.city.road04, Res.city.road05];
 
 		inline function addBuilding(x: Int, y : Int) {
@@ -239,7 +239,8 @@ class World extends h3d.scene.World
 			if(x - 1 == startPoint.x && y - 1 == startPoint.y)
 				r = Math.imax(2, r);
 			createElement(models[r].entry.path, x + 0.5, y + 0.5, 0, 1, r < 2 ? Math.PI * 0.5 * rnd.random(4) : 0);
-			grid[x + y * worldSize] = 1;
+			var k = r < 2 ? 2 : 1;
+			grid[x + y * worldSize] = k;
 		}
 
 		inline function addRoad(x: Int, y : Int) {
@@ -408,8 +409,10 @@ class World extends h3d.scene.World
 		return null;
 	}
 
-	public function isCollide(x : Float, y : Float) {
+	public function isCollide(x : Float, y : Float, special = false) {
 		if(x < 0 || x >= worldSize || y < 0 || y >= worldSize) return true;
+		if(special)
+			return grid[Std.int(x) + Std.int(y) * worldSize] > 1;
 		return grid[Std.int(x) + Std.int(y) * worldSize] != 0;
 	}
 
