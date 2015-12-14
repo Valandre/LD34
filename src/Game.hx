@@ -21,6 +21,8 @@ class Game extends hxd.App {
 	public var ui: UI;
 	public var credits = 3;
 
+	var bg : h3d.scene.Object;
+
 	static function main() {
 		hxd.Res.initLocal();
 		hxd.res.Resource.LIVE_UPDATE = true;
@@ -56,6 +58,8 @@ class Game extends hxd.App {
 		entities = [];
 		bonus = [];
 
+		bg = loadModel(Res.city.bg);
+		s3d.addChild(bg);
 		world = new World(16, width, s3d);
 		menu();
 	}
