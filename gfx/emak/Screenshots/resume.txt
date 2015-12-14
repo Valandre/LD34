@@ -1,0 +1,27 @@
+Tokyo Wars - Valandre - Jam Entry 
+
+Move: mouse
+Attack: left clic 
+Accelarate: right clic 
+
+Mute music: M
+Fullscreen: F11 
+
+---------------------- 
+TokyoWars is our entry for the Ludum Dare #34 -2 buttons control 
+I'ts an arena-shooter game, in a japanese stylised world. 
+ 
+
+Rules: 
+- Destroy all black car before they kill you.
+
+
+Hope you'll enjoy. 
+
+---------------------- 
+
+Development (Haxe): Bernard "Valandre" Stouls  
+Art, Modeling 3D: Etienne "E-MAK" Makowski 
+Music & sound: Camille "Shakkam" Schoell 
+
+Very best thanks to our bosses, familly & friend.
