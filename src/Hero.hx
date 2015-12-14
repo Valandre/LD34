@@ -67,7 +67,7 @@ class Hero extends Entity
 		rocket = 2;
 		mine = 0;
 		ammoId = 2;
-		//game.ui.updateIco(ammoId);
+		game.ui.updateIco(ammoId);
 
 		inline function initRocket(r : Rocket) {
 			if(r == null || r.launched)
@@ -123,6 +123,7 @@ class Hero extends Entity
 		mine--;
 		if(mine == 0) {
 			ammoId = 0;
+			delay = 30;
 			game.ui.updateIco(ammoId);
 		}
 	}
@@ -139,6 +140,7 @@ class Hero extends Entity
 		}
 		if(rocket == 0) {
 			ammoId = 0;
+			delay = 30;
 			game.ui.updateIco(ammoId);
 		}
 	}

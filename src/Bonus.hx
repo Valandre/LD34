@@ -105,6 +105,8 @@ class Bonus
 		if(looted) return;
 		looted = true;
 
+		Sounds.play("Bonuss");
+
 		var x = model.x;
 		var y = model.y;
 		model.remove();

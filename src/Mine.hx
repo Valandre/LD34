@@ -41,6 +41,7 @@ class Mine
 		game.event.waitUntil(function(dt) {
 			if(explode) return true;
 			if(m.z < 0) {
+				Sounds.play("Mines");
 				m.z = 0;
 				m.setRotate(0, 0, rot);
 				for( mat in m.getMaterials()) {

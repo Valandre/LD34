@@ -30,6 +30,10 @@ class Rocket
 	}
 
 	public function launch(rot : Float) {
+		Sounds.play("Rockets");
+		game.event.wait(0.1, function() {
+			Sounds.play("Rockets2");
+		});
 		launched = true;
 		m.playAnimation(game.anims.get(Res.rocket.model.entry.path));
 		m.currentAnimation.speed = 1.5;
@@ -107,6 +111,8 @@ class Rocket
 	}
 
 	function explode() {
+		Sounds.stop("Rockets2");
+		Sounds.play("Explode");
 		exploded = true;
 		m.remove();
 	}

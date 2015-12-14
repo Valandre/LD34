@@ -23,14 +23,30 @@ class Bump extends S {
 @:keep @:sound("res/sfx/carcrash3.mp3")
 class Bump2 extends S {
 }
-@:keep @:sound("res/sfx/explode3.mp3")
+@:keep @:sound("res/sfx/explode7.mp3")
 class Explode extends S {
+}
+@:keep @:sound("res/sfx/bonus1.mp3")
+class Bonuss extends S {
+}
+@:keep @:sound("res/sfx/mine1.mp3")
+class Mines extends S {
+}
+@:keep @:sound("res/sfx/rocketLaunch.mp3")
+class Rockets extends S {
+}
+@:keep @:sound("res/sfx/rocketLaunchEnd.mp3")
+class Rockets2 extends S {
+}
+@:keep @:sound("res/sfx/ting3.mp3")
+class Ting extends S {
 }
 
 class Sounds {
 
 	static var sounds:Map<String, S> = new Map();
 	static var musicChannel:C;
+	static var rocketChannel:C;
 
 
 	public static function play( name : String ) {
@@ -46,7 +62,7 @@ class Sounds {
 		switch(name) {
 			case "Loop":
 				var t = new T();
-				t.volume = 0.7;
+				t.volume = 0.5;
 				musicChannel = s.play(0, 99999, t);
 			case "MenuClick":
 				s.play(0, 0);
@@ -68,6 +84,26 @@ class Sounds {
 				var t = new T();
 				t.volume = 0.6;
 				s.play(0, 0, t);
+			case "Bonuss":
+				var t = new T();
+				t.volume = 0.7;
+				s.play(0, 0, t);
+			case "Mines":
+				var t = new T();
+				t.volume = 0.6;
+				s.play(0, 0, t);
+			case "Rockets":
+				var t = new T();
+				t.volume = 0.7;
+				s.play(0, 0, t);
+			case "Rockets2":
+				var t = new T();
+				t.volume = 1.5;
+				rocketChannel = s.play(0, 0, t);
+			case "Ting":
+				var t = new T();
+				t.volume = 0.2;
+				s.play(0, 0, t);
 
 		}
 	}
@@ -81,6 +117,8 @@ class Sounds {
 		switch(name) {
 			case "Loop":
 				musicChannel.stop();
+			case "Rockets2":
+				rocketChannel.stop();
 		}
 	}
 }

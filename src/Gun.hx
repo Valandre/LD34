@@ -65,6 +65,7 @@ class Gun
 			if(e == owner) continue;
 			if(e.collide(m.x, m.y, m.z)) {
 				e.hurt(dmg);
+				Sounds.play("Ting");
 				return true;
 			}
 		}
