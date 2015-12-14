@@ -141,9 +141,79 @@ class Entity
 
 	function explode() {
 		Sounds.play("Explode");
-		remove();
-		if(game.fighters.length == 0 && game.hero != null)
-			game.victory();
+		model.visible = false;
+		rifle.visible = false;
+
+		var fx = game.loadModel(Res.fx.xplosion.model);
+		fx.x = x;
+		fx.y = y;
+		for( mat in fx.getMaterials()) {
+			mat.mainPass.enableLights = true;
+			mat.shadows = false;
+			mat.mainPass.setPassName("noSAO");
+			cast(mat, h3d.mat.MeshMaterial).blendMode = Add;
+		}
+		fx.getObjectByName("Box013").toMesh().material.texture = Res.fx.xplosion.flame_ADD_.toTexture();
+
+		fx.playAnimation(game.anims.get(Res.fx.xplosion.model.entry.path));
+		fx.currentAnimation.onAnimEnd = function() {
+			fx.remove();
+			remove();
+			if(game.fighters.length == 0 && game.hero != null)
+				game.victory();
+		}
+		game.s3d.addChild(fx);
+
+		for(i in 0...16)
+			addExplodeSmoke(i / 16 * Math.PI * 2);
+	}
+
+	function addExplodeSmoke(a : Float) {
+		trace("addExplodeSmoke");
+		var fx = game.loadModel(Res.fx.smoke.model);
+		fx.x = x;
+		fx.y = y;
+		fx.z = 0.3 + Math.srand() * 0.1;
+		for( mat in fx.getMaterials()) {
+			mat.mainPass.enableLights = true;
+			mat.shadows = false;
+			mat.mainPass.setPassName("noSAO");
+		}
+
+		var sc = 0.;
+		fx.setScale(sc);
+		fx.setRotate(0, 0, Math.srand(Math.PI));
+		var d = 0.08 + 0.01 * Math.srand();
+		var sp = 0.05 + Math.srand() * 0.01;
+		var cos = Math.cos(a);
+		var sin = Math.sin(a);
+		game.event.waitUntil(function(dt) {
+			sc += d * dt;
+			fx.setScale(sc);
+			fx.x += sp * cos * dt;
+			fx.y += sp * sin * dt;
+			if(sc > 1) {
+				d = 0.04 + 0.01 * Math.srand();
+				game.event.waitUntil(function(dt) {
+					sc = Math.max(0, sc - 0.05 * dt);
+					fx.setScale(sc);
+					if(sc == 0) {
+						fx.remove();
+						return true;
+					}
+					fx.x += sp * cos;
+					fx.y += sp * sin;
+					sp = Math.max(0, sp - 0.002 * dt);
+					return false;
+				});
+				return true;
+			}
+			sp = Math.max(0, sp - 0.002 * dt);
+
+			return false;
+		});
+		game.fxs.push(fx);
+		game.s3d.addChild(fx);
 	}
 
 	public function hurt(dmg : Int) {

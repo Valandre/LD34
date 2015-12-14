@@ -39,6 +39,7 @@ class Hero extends Entity
 
 		var a = Res.bolide.anim_run.toHmd().loadAnimation();
 		model.playAnimation(a);
+		model.currentAnimation.speed = 0;
 
 		wmine = game.loadModel(Res.mine.model);
 		wmine.x = x;

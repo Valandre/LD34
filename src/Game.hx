@@ -257,7 +257,7 @@ class Game extends hxd.App {
 
 		if(K.isDown(K.CTRL) && K.isPressed("F".code))
 			engine.fullScreen = !engine.fullScreen;
-
+/*
 		if(K.isDown(K.NUMPAD_ADD)) {
 			camOffset.x *= 0.95;
 			camOffset.y *= 0.95;
@@ -271,7 +271,7 @@ class Game extends hxd.App {
 
 		if(K.isPressed(K.BACKSPACE))
 			resetCamOffset();
-
+*/
 
 		if(hero != null && cam.follow == null) {
 			cam.target.x = hero.x;
@@ -281,19 +281,19 @@ class Game extends hxd.App {
 		}
 		if(cam.follow == null)
 			cam.pos.set(cam.target.x + camOffset.x, cam.target.y + camOffset.y, cam.target.z + camOffset.z);
-
+/*
 		if(K.isPressed("K".code)) {
 			if(fighters != null)
 				while(fighters.length > 0)
 					fighters[0].remove();
 			if(hero != null)
 				hero.cheat = true;
-		}
-
+		}*/
+/*
 		if(K.isPressed(K.SPACE)) {
 			Sounds.stop("Loop");
 			start();
-		}
+		}*/
 	}
 
 	public function start() {
