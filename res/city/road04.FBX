@@ -10,11 +10,11 @@ FBXHeaderExtension:  {
 		Version: 1000
 		Year: 2015
 		Month: 12
-		Day: 12
-		Hour: 11
-		Minute: 33
-		Second: 48
-		Millisecond: 560
+		Day: 14
+		Hour: 14
+		Minute: 18
+		Second: 39
+		Millisecond: 882
 	}
 	Creator: "FBX SDK/FBX Plugins version 2013.1"
 	SceneInfo: "SceneInfo::GlobalInfo", "UserData" {
@@ -36,13 +36,13 @@ FBXHeaderExtension:  {
 			P: "Original|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "Original|ApplicationName", "KString", "", "", "3ds Max"
 			P: "Original|ApplicationVersion", "KString", "", "", "2013"
-			P: "Original|DateTime_GMT", "DateTime", "", "", "12/12/2015 10:33:48.559"
+			P: "Original|DateTime_GMT", "DateTime", "", "", "14/12/2015 13:18:39.882"
 			P: "Original|FileName", "KString", "", "", "D:\Projects\LD34\trunk\res\city\road04.FBX"
 			P: "LastSaved", "Compound", "", ""
 			P: "LastSaved|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "LastSaved|ApplicationName", "KString", "", "", "3ds Max"
 			P: "LastSaved|ApplicationVersion", "KString", "", "", "2013"
-			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "12/12/2015 10:33:48.559"
+			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "14/12/2015 13:18:39.882"
 		}
 	}
 }
@@ -60,10 +60,10 @@ GlobalSettings:  {
 		P: "UnitScaleFactor", "double", "Number", "",100
 		P: "OriginalUnitScaleFactor", "double", "Number", "",100.00000066
 		P: "AmbientColor", "ColorRGB", "Color", "",0.768627524375916,0.713725507259369,0.650980412960052
-		P: "DefaultCamera", "KString", "", "", "Producer Perspective"
+		P: "DefaultCamera", "KString", "", "", "Camera001"
 		P: "TimeMode", "enum", "", "",6
 		P: "TimeSpanStart", "KTime", "Time", "",0
-		P: "TimeSpanStop", "KTime", "Time", "",30790772000
+		P: "TimeSpanStop", "KTime", "Time", "",36948926400
 		P: "CustomFrameRate", "double", "Number", "",-1
 	}
 }
@@ -73,7 +73,7 @@ GlobalSettings:  {
 
 Documents:  {
 	Count: 1
-	Document: 925506568, "", "Scene" {
+	Document: 2243700920, "", "Scene" {
 		Properties70:  {
 			P: "SourceObject", "object", "", ""
 			P: "ActiveAnimStackName", "KString", "", "", ""
@@ -93,7 +93,7 @@ References:  {
 
 Definitions:  {
 	Version: 100
-	Count: 26
+	Count: 15
 	ObjectType: "GlobalSettings" {
 		Count: 1
 	}
@@ -269,7 +269,7 @@ Definitions:  {
 		}
 	}
 	ObjectType: "CollectionExclusive" {
-		Count: 18
+		Count: 7
 	}
 	ObjectType: "Video" {
 		Count: 1
@@ -299,7 +299,7 @@ Definitions:  {
 ;------------------------------------------------------------------
 
 Objects:  {
-	Geometry: 671210480, "Geometry::", "Mesh" {
+	Geometry: 686649584, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.0235294117647059,0.529411764705882,0.443137254901961
 		}
@@ -385,19 +385,19 @@ Objects:  {
 			}
 		}
 	}
-	Model: 1555543224, "Model::Road04", "Mesh" {
+	Model: 2255106296, "Model::Road04", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
 			P: "ScalingMax", "Vector3D", "Vector", "",0,0,0
 			P: "DefaultAttributeIndex", "int", "Integer", "",0
-			P: "Lcl Translation", "Lcl Translation", "", "A",0,1.19209289550781e-007,0
+			P: "Lcl Scaling", "Lcl Scaling", "", "A",1.00999999046326,1.00999999046326,0.799999892711639
 			P: "MaxHandle", "int", "Integer", "UH",2539
 		}
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Material: 552240240, "Material::Road01", "" {
+	Material: 2074202240, "Material::Road01", "" {
 		Version: 102
 		ShadingModel: "phong"
 		MultiLayer: 0
@@ -419,7 +419,7 @@ Objects:  {
 			P: "Reflectivity", "double", "Number", "",0
 		}
 	}
-	Video: 662557880, "Video::Map Road01", "Clip" {
+	Video: 1703689016, "Video::Map Road01", "Clip" {
 		Type: "Clip"
 		Properties70:  {
 			P: "Path", "KString", "XRefUrl", "", "D:\Projects\LD34\trunk\res\city\road01.jpg"
@@ -428,7 +428,7 @@ Objects:  {
 		Filename: "D:\Projects\LD34\trunk\res\city\road01.jpg"
 		RelativeFilename: "road01.jpg"
 	}
-	Texture: 1935932272, "Texture::Map Road01", "" {
+	Texture: 2256395728, "Texture::Map Road01", "" {
 		Type: "TextureVideoClip"
 		Version: 202
 		TextureName: "Texture::Map Road01"
@@ -444,7 +444,15 @@ Objects:  {
 		Texture_Alpha_Source: "None"
 		Cropping: 0,0,0,0
 	}
-	CollectionExclusive: 1935874192, "DisplayLayer::__Camera", "DisplayLayer" {
+	CollectionExclusive: 2258789760, "DisplayLayer::__Camera", "DisplayLayer" {
+		Properties70:  {
+			P: "Color", "ColorRGB", "Color", "",0.0235294117647059,0.529411764705882,0.0235294117647059
+			P: "Show", "bool", "", "",0
+			P: "Freeze", "bool", "", "",0
+			P: "LODBox", "bool", "", "",0
+		}
+	}
+	CollectionExclusive: 2258789568, "DisplayLayer::Artisan", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.0235294117647059,0.529411764705882,0.0235294117647059
 			P: "Show", "bool", "", "",1
@@ -452,7 +460,15 @@ Objects:  {
 			P: "LODBox", "bool", "", "",0
 		}
 	}
-	CollectionExclusive: 1935874704, "DisplayLayer::Artisan", "DisplayLayer" {
+	CollectionExclusive: 2258789504, "DisplayLayer::Bolide", "DisplayLayer" {
+		Properties70:  {
+			P: "Color", "ColorRGB", "Color", "",0.423529411764706,0.0313725490196078,0.533333333333333
+			P: "Show", "bool", "", "",1
+			P: "Freeze", "bool", "", "",0
+			P: "LODBox", "bool", "", "",0
+		}
+	}
+	CollectionExclusive: 2258788672, "DisplayLayer::Camera", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.0235294117647059,0.529411764705882,0.0235294117647059
 			P: "Show", "bool", "", "",1
@@ -460,7 +476,15 @@ Objects:  {
 			P: "LODBox", "bool", "", "",0
 		}
 	}
-	CollectionExclusive: 1935875088, "DisplayLayer::tree", "DisplayLayer" {
+	CollectionExclusive: 2258788096, "DisplayLayer::ground", "DisplayLayer" {
+		Properties70:  {
+			P: "Color", "ColorRGB", "Color", "",0.443137254901961,0.529411764705882,0.0235294117647059
+			P: "Show", "bool", "", "",1
+			P: "Freeze", "bool", "", "",0
+			P: "LODBox", "bool", "", "",0
+		}
+	}
+	CollectionExclusive: 2258785472, "DisplayLayer::tree", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.603921568627451,0.603921568627451,0.898039215686275
 			P: "Show", "bool", "", "",1
@@ -468,122 +492,10 @@ Objects:  {
 			P: "LODBox", "bool", "", "",0
 		}
 	}
-	CollectionExclusive: 1935875472, "DisplayLayer::Weapons", "DisplayLayer" {
+	CollectionExclusive: 2258793728, "DisplayLayer::BG", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.882352941176471,0.776470588235294,0.341176470588235
-			P: "Show", "bool", "", "",1
-			P: "Freeze", "bool", "", "",0
-			P: "LODBox", "bool", "", "",0
-		}
-	}
-	CollectionExclusive: 1935875856, "DisplayLayer::Warrior", "DisplayLayer" {
-		Properties70:  {
-			P: "Color", "ColorRGB", "Color", "",0.894117647058824,0.83921568627451,0.6
-			P: "Show", "bool", "", "",1
-			P: "Freeze", "bool", "", "",0
-			P: "LODBox", "bool", "", "",0
-		}
-	}
-	CollectionExclusive: 1935876304, "DisplayLayer::DefaultHair", "DisplayLayer" {
-		Properties70:  {
-			P: "Color", "ColorRGB", "Color", "",0.345098039215686,0.694117647058824,0.105882352941176
-			P: "Show", "bool", "", "",1
-			P: "Freeze", "bool", "", "",0
-			P: "LODBox", "bool", "", "",0
-		}
-	}
-	CollectionExclusive: 1935876688, "DisplayLayer::Woodcutter", "DisplayLayer" {
-		Properties70:  {
-			P: "Color", "ColorRGB", "Color", "",0.529411764705882,0.0235294117647059,0.0235294117647059
-			P: "Show", "bool", "", "",1
-			P: "Freeze", "bool", "", "",0
-			P: "LODBox", "bool", "", "",0
-		}
-	}
-	CollectionExclusive: 1935876240, "DisplayLayer::Cook", "DisplayLayer" {
-		Properties70:  {
-			P: "Color", "ColorRGB", "Color", "",0.345098039215686,0.780392156862745,0.882352941176471
-			P: "Show", "bool", "", "",1
-			P: "Freeze", "bool", "", "",0
-			P: "LODBox", "bool", "", "",0
-		}
-	}
-	CollectionExclusive: 1935877392, "DisplayLayer::Forager", "DisplayLayer" {
-		Properties70:  {
-			P: "Color", "ColorRGB", "Color", "",0.109803921568627,0.349019607843137,0.694117647058824
-			P: "Show", "bool", "", "",1
-			P: "Freeze", "bool", "", "",0
-			P: "LODBox", "bool", "", "",0
-		}
-	}
-	CollectionExclusive: 1935877776, "DisplayLayer::Smith", "DisplayLayer" {
-		Properties70:  {
-			P: "Color", "ColorRGB", "Color", "",0.0235294117647059,0.529411764705882,0.0235294117647059
-			P: "Show", "bool", "", "",1
-			P: "Freeze", "bool", "", "",0
-			P: "LODBox", "bool", "", "",0
-		}
-	}
-	CollectionExclusive: 1935878160, "DisplayLayer::Carpenter", "DisplayLayer" {
-		Properties70:  {
-			P: "Color", "ColorRGB", "Color", "",0.6,0.894117647058824,0.6
-			P: "Show", "bool", "", "",1
-			P: "Freeze", "bool", "", "",0
-			P: "LODBox", "bool", "", "",0
-		}
-	}
-	CollectionExclusive: 1935878544, "DisplayLayer::Miner", "DisplayLayer" {
-		Properties70:  {
-			P: "Color", "ColorRGB", "Color", "",0.650980392156863,0.898039215686275,0.898039215686275
-			P: "Show", "bool", "", "",1
-			P: "Freeze", "bool", "", "",0
-			P: "LODBox", "bool", "", "",0
-		}
-	}
-	CollectionExclusive: 1935878928, "DisplayLayer::Ranger", "DisplayLayer" {
-		Properties70:  {
-			P: "Color", "ColorRGB", "Color", "",0.105882352941176,0.694117647058824,0.345098039215686
-			P: "Show", "bool", "", "",1
-			P: "Freeze", "bool", "", "",0
-			P: "LODBox", "bool", "", "",0
-		}
-	}
-	CollectionExclusive: 1935879312, "DisplayLayer::Farmer", "DisplayLayer" {
-		Properties70:  {
-			P: "Color", "ColorRGB", "Color", "",0.23921568627451,0.529411764705882,0.0235294117647059
-			P: "Show", "bool", "", "",1
-			P: "Freeze", "bool", "", "",0
-			P: "LODBox", "bool", "", "",0
-		}
-	}
-	CollectionExclusive: 1935879696, "DisplayLayer::Brewer", "DisplayLayer" {
-		Properties70:  {
-			P: "Color", "ColorRGB", "Color", "",0.105882352941176,0.694117647058824,0.345098039215686
-			P: "Show", "bool", "", "",1
-			P: "Freeze", "bool", "", "",0
-			P: "LODBox", "bool", "", "",0
-		}
-	}
-	CollectionExclusive: 1935880080, "DisplayLayer::Camera", "DisplayLayer" {
-		Properties70:  {
-			P: "Color", "ColorRGB", "Color", "",0.0235294117647059,0.529411764705882,0.0235294117647059
 			P: "Show", "bool", "", "",0
-			P: "Freeze", "bool", "", "",0
-			P: "LODBox", "bool", "", "",0
-		}
-	}
-	CollectionExclusive: 1935880464, "DisplayLayer::ground", "DisplayLayer" {
-		Properties70:  {
-			P: "Color", "ColorRGB", "Color", "",0.443137254901961,0.529411764705882,0.0235294117647059
-			P: "Show", "bool", "", "",0
-			P: "Freeze", "bool", "", "",0
-			P: "LODBox", "bool", "", "",0
-		}
-	}
-	CollectionExclusive: 1935880848, "DisplayLayer::Map ete", "DisplayLayer" {
-		Properties70:  {
-			P: "Color", "ColorRGB", "Color", "",0.105882352941176,0.694117647058824,0.345098039215686
-			P: "Show", "bool", "", "",1
 			P: "Freeze", "bool", "", "",0
 			P: "LODBox", "bool", "", "",0
 		}
@@ -596,23 +508,23 @@ Objects:  {
 Connections:  {
 	
 	;Model::Road04, Model::RootNode
-	C: "OO",1555543224,0
+	C: "OO",2255106296,0
 	
-	;AnimLayer::BaseLayer, AnimStack::city
-	C: "OO",918564664,918440704
+	;AnimLayer::BaseLayer, AnimStack::model
+	C: "OO",2253613064,2299936192
 	
 	;Geometry::, Model::Road04
-	C: "OO",671210480,1555543224
+	C: "OO",686649584,2255106296
 	
 	;Material::Road01, Model::Road04
-	C: "OO",552240240,1555543224
+	C: "OO",2074202240,2255106296
 	
 	;Texture::Map Road01, Material::Road01
-	C: "OP",1935932272,552240240, "DiffuseColor"
+	C: "OP",2256395728,2074202240, "DiffuseColor"
 	
 	;Video::Map Road01, Texture::Map Road01
-	C: "OO",662557880,1935932272
+	C: "OO",1703689016,2256395728
 	
 	;Model::Road04, DisplayLayer::Artisan
-	C: "OO",1555543224,1935874704
+	C: "OO",2255106296,2258789568
 }
