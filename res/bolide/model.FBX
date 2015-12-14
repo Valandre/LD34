@@ -10,11 +10,11 @@ FBXHeaderExtension:  {
 		Version: 1000
 		Year: 2015
 		Month: 12
-		Day: 12
+		Day: 14
 		Hour: 18
-		Minute: 23
-		Second: 22
-		Millisecond: 28
+		Minute: 27
+		Second: 49
+		Millisecond: 695
 	}
 	Creator: "FBX SDK/FBX Plugins version 2013.1"
 	SceneInfo: "SceneInfo::GlobalInfo", "UserData" {
@@ -36,13 +36,13 @@ FBXHeaderExtension:  {
 			P: "Original|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "Original|ApplicationName", "KString", "", "", "3ds Max"
 			P: "Original|ApplicationVersion", "KString", "", "", "2013"
-			P: "Original|DateTime_GMT", "DateTime", "", "", "12/12/2015 17:23:22.027"
+			P: "Original|DateTime_GMT", "DateTime", "", "", "14/12/2015 17:27:49.694"
 			P: "Original|FileName", "KString", "", "", "D:\Projects\LD34\trunk\res\bolide\model.FBX"
 			P: "LastSaved", "Compound", "", ""
 			P: "LastSaved|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "LastSaved|ApplicationName", "KString", "", "", "3ds Max"
 			P: "LastSaved|ApplicationVersion", "KString", "", "", "2013"
-			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "12/12/2015 17:23:22.027"
+			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "14/12/2015 17:27:49.694"
 		}
 	}
 }
@@ -60,7 +60,7 @@ GlobalSettings:  {
 		P: "UnitScaleFactor", "double", "Number", "",100
 		P: "OriginalUnitScaleFactor", "double", "Number", "",100.00000066
 		P: "AmbientColor", "ColorRGB", "Color", "",0.768627524375916,0.713725507259369,0.650980412960052
-		P: "DefaultCamera", "KString", "", "", "Producer Perspective"
+		P: "DefaultCamera", "KString", "", "", "Camera001"
 		P: "TimeMode", "enum", "", "",6
 		P: "TimeSpanStart", "KTime", "Time", "",0
 		P: "TimeSpanStop", "KTime", "Time", "",27711694800
@@ -73,7 +73,7 @@ GlobalSettings:  {
 
 Documents:  {
 	Count: 1
-	Document: 559796960, "", "Scene" {
+	Document: 2243712928, "", "Scene" {
 		Properties70:  {
 			P: "SourceObject", "object", "", ""
 			P: "ActiveAnimStackName", "KString", "", "", ""
@@ -93,7 +93,7 @@ References:  {
 
 Definitions:  {
 	Version: 100
-	Count: 22
+	Count: 25
 	ObjectType: "GlobalSettings" {
 		Count: 1
 	}
@@ -279,7 +279,7 @@ Definitions:  {
 		}
 	}
 	ObjectType: "CollectionExclusive" {
-		Count: 4
+		Count: 7
 	}
 	ObjectType: "Video" {
 		Count: 1
@@ -309,10 +309,10 @@ Definitions:  {
 ;------------------------------------------------------------------
 
 Objects:  {
-	NodeAttribute: 1940522944, "NodeAttribute::", "Null" {
+	NodeAttribute: 2256187480, "NodeAttribute::", "Null" {
 		TypeFlags: "Null"
 	}
-	Geometry: 686623184, "Geometry::", "Mesh" {
+	Geometry: 2250884728, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.450980392156863,0.450980392156863,0.450980392156863
 		}
@@ -415,7 +415,7 @@ Objects:  {
 			}
 		}
 	}
-	Geometry: 686603384, "Geometry::", "Mesh" {
+	Geometry: 2250874960, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.450980392156863,0.450980392156863,0.450980392156863
 		}
@@ -518,7 +518,7 @@ Objects:  {
 			}
 		}
 	}
-	Geometry: 686607872, "Geometry::", "Mesh" {
+	Geometry: 2250874696, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.450980392156863,0.450980392156863,0.450980392156863
 		}
@@ -620,7 +620,7 @@ Objects:  {
 			}
 		}
 	}
-	Geometry: 686615792, "Geometry::", "Mesh" {
+	Geometry: 2250875224, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.450980392156863,0.450980392156863,0.450980392156863
 		}
@@ -723,7 +723,7 @@ Objects:  {
 			}
 		}
 	}
-	Geometry: 686616056, "Geometry::", "Mesh" {
+	Geometry: 2250875488, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.450980392156863,0.450980392156863,0.450980392156863
 		}
@@ -862,46 +862,48 @@ Objects:  {
 			}
 		}
 	}
-	Model: 1939675704, "Model::Root", "Null" {
+	Model: 2270474200, "Model::Root001", "Null" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
 			P: "ScalingMax", "Vector3D", "Vector", "",0,0,0
 			P: "DefaultAttributeIndex", "int", "Integer", "",0
-			P: "MaxHandle", "int", "Integer", "UH",2554
+			P: "Lcl Rotation", "Lcl Rotation", "", "A",0,-0,-2.00358245239005e-005
+			P: "Lcl Scaling", "Lcl Scaling", "", "A",1.00000000000006,1.00000000000006,1
+			P: "MaxHandle", "int", "Integer", "UH",2589
 		}
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Model: 1939677056, "Model::wheel04", "Mesh" {
+	Model: 2270475552, "Model::wheel009", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
 			P: "ScalingMax", "Vector3D", "Vector", "",0,0,0
 			P: "DefaultAttributeIndex", "int", "Integer", "",0
 			P: "Lcl Translation", "Lcl Translation", "", "A",0.124899163842201,0.155689999461174,0.0891161113977432
-			P: "Lcl Rotation", "Lcl Rotation", "", "A",-3.73386705704342e-005,-1.7302843820982e-005,-3.73386695391105e-005
+			P: "Lcl Rotation", "Lcl Rotation", "", "A",-3.73386705704342e-005,-1.7302843820982e-005,-3.73386727959987e-005
 			P: "Lcl Scaling", "Lcl Scaling", "", "A",0.999999940395613,1.00000000000042,0.999999940395613
-			P: "MaxHandle", "int", "Integer", "UH",2552
+			P: "MaxHandle", "int", "Integer", "UH",2584
 		}
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Model: 1939678408, "Model::wheel03", "Mesh" {
+	Model: 2270476904, "Model::wheel010", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
 			P: "ScalingMax", "Vector3D", "Vector", "",0,0,0
 			P: "DefaultAttributeIndex", "int", "Integer", "",0
 			P: "Lcl Translation", "Lcl Translation", "", "A",-0.126497372984886,0.155689999461174,0.0891161113977432
-			P: "Lcl Rotation", "Lcl Rotation", "", "A",-3.73386705704342e-005,-1.7302843820982e-005,-3.73386695391105e-005
+			P: "Lcl Rotation", "Lcl Rotation", "", "A",-3.73386705704342e-005,-1.7302843820982e-005,-3.73386727959987e-005
 			P: "Lcl Scaling", "Lcl Scaling", "", "A",0.999999940395613,1.00000000000042,0.999999940395613
-			P: "MaxHandle", "int", "Integer", "UH",2553
+			P: "MaxHandle", "int", "Integer", "UH",2585
 		}
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Model: 1939679760, "Model::wheel01", "Mesh" {
+	Model: 2270478256, "Model::wheel011", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
@@ -911,12 +913,12 @@ Objects:  {
 			P: "Lcl Translation", "Lcl Translation", "", "A",-0.126497372984886,-0.155688866972923,0.0891161113977432
 			P: "Lcl Rotation", "Lcl Rotation", "", "A",0,-1.73028438209857e-005,0
 			P: "Lcl Scaling", "Lcl Scaling", "", "A",0.999999940395401,1,0.999999940395401
-			P: "MaxHandle", "int", "Integer", "UH",2551
+			P: "MaxHandle", "int", "Integer", "UH",2586
 		}
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Model: 1939681112, "Model::wheel02", "Mesh" {
+	Model: 2270479608, "Model::wheel012", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
@@ -926,12 +928,12 @@ Objects:  {
 			P: "Lcl Translation", "Lcl Translation", "", "A",0.124899163842201,-0.155688866972923,0.0891161113977432
 			P: "Lcl Rotation", "Lcl Rotation", "", "A",0,-1.73028438209857e-005,0
 			P: "Lcl Scaling", "Lcl Scaling", "", "A",0.999999940395401,1,0.999999940395401
-			P: "MaxHandle", "int", "Integer", "UH",2550
+			P: "MaxHandle", "int", "Integer", "UH",2587
 		}
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Model: 1939682464, "Model::body", "Mesh" {
+	Model: 2270480960, "Model::body002", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
@@ -939,12 +941,12 @@ Objects:  {
 			P: "GeometricTranslation", "Vector3D", "Vector", "",0.109131097793579,0,0.163562774658203
 			P: "DefaultAttributeIndex", "int", "Integer", "",0
 			P: "Lcl Translation", "Lcl Translation", "", "A",-0.130170211195946,0,0
-			P: "MaxHandle", "int", "Integer", "UH",2543
+			P: "MaxHandle", "int", "Integer", "UH",2588
 		}
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Material: 1941173984, "Material::Bolide", "" {
+	Material: 2074208688, "Material::Bolide", "" {
 		Version: 102
 		ShadingModel: "phong"
 		MultiLayer: 0
@@ -966,7 +968,7 @@ Objects:  {
 			P: "Reflectivity", "double", "Number", "",0
 		}
 	}
-	Video: 675292312, "Video::Map Bolide", "Clip" {
+	Video: 1703687720, "Video::Map Bolide", "Clip" {
 		Type: "Clip"
 		Properties70:  {
 			P: "Path", "KString", "XRefUrl", "", "D:\Projects\LD34\trunk\res\bolide\texture01.jpg"
@@ -975,7 +977,7 @@ Objects:  {
 		Filename: "D:\Projects\LD34\trunk\res\bolide\texture01.jpg"
 		RelativeFilename: "texture01.jpg"
 	}
-	Texture: 1936041056, "Texture::Map Bolide", "" {
+	Texture: 2220140440, "Texture::Map Bolide", "" {
 		Type: "TextureVideoClip"
 		Version: 202
 		TextureName: "Texture::Map Bolide"
@@ -991,7 +993,15 @@ Objects:  {
 		Texture_Alpha_Source: "None"
 		Cropping: 0,0,0,0
 	}
-	CollectionExclusive: 1935919832, "DisplayLayer::__Camera", "DisplayLayer" {
+	CollectionExclusive: 2297661688, "DisplayLayer::__Camera", "DisplayLayer" {
+		Properties70:  {
+			P: "Color", "ColorRGB", "Color", "",0.0235294117647059,0.529411764705882,0.0235294117647059
+			P: "Show", "bool", "", "",0
+			P: "Freeze", "bool", "", "",0
+			P: "LODBox", "bool", "", "",0
+		}
+	}
+	CollectionExclusive: 2297660856, "DisplayLayer::Artisan", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.0235294117647059,0.529411764705882,0.0235294117647059
 			P: "Show", "bool", "", "",1
@@ -999,15 +1009,7 @@ Objects:  {
 			P: "LODBox", "bool", "", "",0
 		}
 	}
-	CollectionExclusive: 1935919768, "DisplayLayer::Artisan", "DisplayLayer" {
-		Properties70:  {
-			P: "Color", "ColorRGB", "Color", "",0.0235294117647059,0.529411764705882,0.0235294117647059
-			P: "Show", "bool", "", "",1
-			P: "Freeze", "bool", "", "",0
-			P: "LODBox", "bool", "", "",0
-		}
-	}
-	CollectionExclusive: 1935919896, "DisplayLayer::Bolide", "DisplayLayer" {
+	CollectionExclusive: 2297661048, "DisplayLayer::Bolide", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.423529411764706,0.0313725490196078,0.533333333333333
 			P: "Show", "bool", "", "",1
@@ -1015,10 +1017,34 @@ Objects:  {
 			P: "LODBox", "bool", "", "",0
 		}
 	}
-	CollectionExclusive: 1937294784, "DisplayLayer::Camera", "DisplayLayer" {
+	CollectionExclusive: 2297660664, "DisplayLayer::Camera", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.0235294117647059,0.529411764705882,0.0235294117647059
 			P: "Show", "bool", "", "",1
+			P: "Freeze", "bool", "", "",0
+			P: "LODBox", "bool", "", "",0
+		}
+	}
+	CollectionExclusive: 2297660024, "DisplayLayer::ground", "DisplayLayer" {
+		Properties70:  {
+			P: "Color", "ColorRGB", "Color", "",0.443137254901961,0.529411764705882,0.0235294117647059
+			P: "Show", "bool", "", "",1
+			P: "Freeze", "bool", "", "",0
+			P: "LODBox", "bool", "", "",0
+		}
+	}
+	CollectionExclusive: 2297652984, "DisplayLayer::tree", "DisplayLayer" {
+		Properties70:  {
+			P: "Color", "ColorRGB", "Color", "",0.603921568627451,0.603921568627451,0.898039215686275
+			P: "Show", "bool", "", "",1
+			P: "Freeze", "bool", "", "",0
+			P: "LODBox", "bool", "", "",0
+		}
+	}
+	CollectionExclusive: 2297653496, "DisplayLayer::BG", "DisplayLayer" {
+		Properties70:  {
+			P: "Color", "ColorRGB", "Color", "",0.882352941176471,0.776470588235294,0.341176470588235
+			P: "Show", "bool", "", "",0
 			P: "Freeze", "bool", "", "",0
 			P: "LODBox", "bool", "", "",0
 		}
@@ -1030,81 +1056,81 @@ Objects:  {
 
 Connections:  {
 	
-	;Model::Root, Model::RootNode
-	C: "OO",1939675704,0
+	;Model::Root001, Model::RootNode
+	C: "OO",2270474200,0
 	
 	;AnimLayer::BaseLayer, AnimStack::model
-	C: "OO",1940536216,1937210184
+	C: "OO",2237443312,2301690024
 	
-	;Model::wheel04, Model::Root
-	C: "OO",1939677056,1939675704
+	;Model::wheel009, Model::Root001
+	C: "OO",2270475552,2270474200
 	
-	;Model::wheel03, Model::Root
-	C: "OO",1939678408,1939675704
+	;Model::wheel010, Model::Root001
+	C: "OO",2270476904,2270474200
 	
-	;Model::wheel01, Model::Root
-	C: "OO",1939679760,1939675704
+	;Model::wheel011, Model::Root001
+	C: "OO",2270478256,2270474200
 	
-	;Model::wheel02, Model::Root
-	C: "OO",1939681112,1939675704
+	;Model::wheel012, Model::Root001
+	C: "OO",2270479608,2270474200
 	
-	;Model::body, Model::Root
-	C: "OO",1939682464,1939675704
+	;Model::body002, Model::Root001
+	C: "OO",2270480960,2270474200
 	
-	;NodeAttribute::, Model::Root
-	C: "OO",1940522944,1939675704
+	;NodeAttribute::, Model::Root001
+	C: "OO",2256187480,2270474200
 	
-	;Geometry::, Model::wheel04
-	C: "OO",686623184,1939677056
+	;Geometry::, Model::wheel009
+	C: "OO",2250884728,2270475552
 	
-	;Material::Bolide, Model::wheel04
-	C: "OO",1941173984,1939677056
+	;Material::Bolide, Model::wheel009
+	C: "OO",2074208688,2270475552
 	
-	;Geometry::, Model::wheel03
-	C: "OO",686603384,1939678408
+	;Geometry::, Model::wheel010
+	C: "OO",2250874960,2270476904
 	
-	;Material::Bolide, Model::wheel03
-	C: "OO",1941173984,1939678408
+	;Material::Bolide, Model::wheel010
+	C: "OO",2074208688,2270476904
 	
-	;Geometry::, Model::wheel01
-	C: "OO",686607872,1939679760
+	;Geometry::, Model::wheel011
+	C: "OO",2250874696,2270478256
 	
-	;Material::Bolide, Model::wheel01
-	C: "OO",1941173984,1939679760
+	;Material::Bolide, Model::wheel011
+	C: "OO",2074208688,2270478256
 	
-	;Geometry::, Model::wheel02
-	C: "OO",686615792,1939681112
+	;Geometry::, Model::wheel012
+	C: "OO",2250875224,2270479608
 	
-	;Material::Bolide, Model::wheel02
-	C: "OO",1941173984,1939681112
+	;Material::Bolide, Model::wheel012
+	C: "OO",2074208688,2270479608
 	
-	;Geometry::, Model::body
-	C: "OO",686616056,1939682464
+	;Geometry::, Model::body002
+	C: "OO",2250875488,2270480960
 	
-	;Material::Bolide, Model::body
-	C: "OO",1941173984,1939682464
+	;Material::Bolide, Model::body002
+	C: "OO",2074208688,2270480960
 	
 	;Texture::Map Bolide, Material::Bolide
-	C: "OP",1936041056,1941173984, "DiffuseColor"
+	C: "OP",2220140440,2074208688, "DiffuseColor"
 	
 	;Video::Map Bolide, Texture::Map Bolide
-	C: "OO",675292312,1936041056
+	C: "OO",1703687720,2220140440
 	
-	;Model::Root, DisplayLayer::Bolide
-	C: "OO",1939675704,1935919896
+	;Model::Root001, DisplayLayer::Bolide
+	C: "OO",2270474200,2297661048
 	
-	;Model::wheel03, DisplayLayer::Bolide
-	C: "OO",1939678408,1935919896
+	;Model::body002, DisplayLayer::Bolide
+	C: "OO",2270480960,2297661048
 	
-	;Model::wheel04, DisplayLayer::Bolide
-	C: "OO",1939677056,1935919896
+	;Model::wheel012, DisplayLayer::Bolide
+	C: "OO",2270479608,2297661048
 	
-	;Model::wheel02, DisplayLayer::Bolide
-	C: "OO",1939681112,1935919896
+	;Model::wheel011, DisplayLayer::Bolide
+	C: "OO",2270478256,2297661048
 	
-	;Model::wheel01, DisplayLayer::Bolide
-	C: "OO",1939679760,1935919896
+	;Model::wheel010, DisplayLayer::Bolide
+	C: "OO",2270476904,2297661048
 	
-	;Model::body, DisplayLayer::Bolide
-	C: "OO",1939682464,1935919896
+	;Model::wheel009, DisplayLayer::Bolide
+	C: "OO",2270475552,2297661048
 }
