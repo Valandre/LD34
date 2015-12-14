@@ -59,6 +59,11 @@ class Game extends hxd.App {
 		bonus = [];
 
 		bg = loadModel(Res.city.bg);
+		for( mat in bg.getMaterials()) {
+			mat.mainPass.enableLights = true;
+			mat.allocPass("depth");
+			mat.allocPass("normal");
+		}
 		s3d.addChild(bg);
 		world = new World(16, width, s3d);
 		menu();
