@@ -21,6 +21,8 @@ class Game extends hxd.App {
 	public var ui: UI;
 	public var credits = 3;
 
+	public var mines = [];
+
 	var bg : h3d.scene.Object;
 
 	static function main() {
@@ -126,6 +128,11 @@ class Game extends hxd.App {
 		fighters = [];
 
 		if( hero != null) hero.remove();
+
+		if(mines != null)
+			for( m in mines)
+				m.remove();
+		mines = [];
 	}
 
 	public function generate(seed : Int) {
@@ -291,5 +298,11 @@ class Game extends hxd.App {
 
 		if(hero != null && bonus.length < 12)
 			new Bonus();
+
+		for(m in mines) {
+			m.update(dt);
+			if(m.explode)
+				mines.remove(m);
+		}
 	}
 }

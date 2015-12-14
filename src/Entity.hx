@@ -139,8 +139,9 @@ class Entity
 			remove();
 	}
 
-	public function collide(tx : Float, ty : Float, tz : Float) {
-		if(Math.distance(tx - x, ty - y) < ray)
+	public function collide(tx : Float, ty : Float, tz : Float, forceRay : Float = null) {
+		var r = forceRay == null ? ray : forceRay;
+		if(Math.distance(tx - x, ty - y) < r)
 			return true;
 		return false;
 	}

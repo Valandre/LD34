@@ -21,6 +21,8 @@ class Hero extends Entity
 	var scale = 1.;
 	var ammoId = 0;
 
+	var wmine : h3d.scene.Object;
+
 	public var cheat = false;
 
 	public function new(x, y) {
@@ -34,6 +36,21 @@ class Hero extends Entity
 
 		var a = Res.bolide.anim_run.toHmd().loadAnimation();
 		model.playAnimation(a);
+
+		wmine = game.loadModel(Res.mine.model);
+		wmine.x = x;
+		wmine.y = y;
+		wmine.z = 0.3 * model.scaleX;
+		game.s3d.addChild(wmine);
+		for( mat in wmine.getMaterials()) {
+			mat.mainPass.enableLights = true;
+			mat.shadows = true;
+			if(mat.name == "Mine2") cast(mat, h3d.mat.MeshMaterial).texture = Res.mine.texture.toTexture();
+			if(mat.name == "minelight") cast(mat, h3d.mat.MeshMaterial).mainPass.culling = Both;
+		}
+
+		//mine = 100;
+		//ammoId = 1;
 	}
 
 
@@ -62,7 +79,7 @@ class Hero extends Entity
 	}
 
 
-	public function mecaAttack() {
+	function mecaAttack() {
 		if(delay > 0) return;
 		delay = 5 - (boost > 0 ? 1 : 0);
 		currGun = 1 - currGun;
@@ -90,6 +107,23 @@ class Hero extends Entity
 		ammo = Math.imax(0, ammo - 1);
 	}
 
+	function mineSpawn() {
+		game.mines.push(new Mine(this, currentRotation));
+		mine--;
+		if(mine == 0) {
+			ammoId = 0;
+			game.ui.updateIco(ammoId);
+		}
+	}
+
+	function rocketLaunch() {
+		rocket--;
+		if(rocket == 0) {
+			ammoId = 0;
+			game.ui.updateIco(ammoId);
+		}
+	}
+
 	override public function remove() {
 		if(model == null) return;
 		super.remove();
@@ -101,6 +135,8 @@ class Hero extends Entity
 				else game.gameOver();
 			});
 		}
+
+		wmine.remove();
 	}
 
 	var oldBoost = 0.;
@@ -153,15 +189,26 @@ class Hero extends Entity
 				}
 			}
 
-			if(K.isDown(K.MOUSE_LEFT) && ammo > 0) {
-				rifle.currentAnimation.speed = 1.5;
-				mecaAttack();
-			}
-			else {
-				rifle.currentAnimation.speed = 0;
-				for(fx in fxs)
-					fx.remove();
-				fxs = [];
+			switch(ammoId) {
+				case 0:
+					if(K.isDown(K.MOUSE_LEFT) && ammo > 0) {
+						rifle.currentAnimation.speed = 1.5;
+						mecaAttack();
+					}
+					else {
+						rifle.currentAnimation.speed = 0;
+						for(fx in fxs)
+							fx.remove();
+						fxs = [];
+					}
+				case 1:
+					if(K.isPressed(K.MOUSE_LEFT) && mine > 0) {
+						mineSpawn();
+					}
+				case 2:
+					if(K.isPressed(K.MOUSE_LEFT) && rocket > 0) {
+						rocketLaunch();
+					}
 			}
 		}
 
@@ -200,16 +247,28 @@ class Hero extends Entity
 		headlight.setRotate(0, 0, currentRotation);
 		headlight.setScale(model.scaleX);
 
-		rifle.x = model.x;
-		rifle.y = model.y;
-		rifle.setRotate(0, 0, currentRotation);
-		rifle.setScale(model.scaleX);
-
 		for(fx in fxs) {
 			fx.x = model.x;
 			fx.y = model.y;
 			fx.setRotate(0, 0, currentRotation);
 			fx.setScale(model.scaleX);
 		}
+
+		if(rifle != null) {
+			rifle.visible = ammoId == 0;
+			rifle.x = model.x;
+			rifle.y = model.y;
+			rifle.setRotate(0, 0, currentRotation);
+			rifle.setScale(model.scaleX);
+		}
+		if(wmine != null && model != null) {
+			wmine.visible = ammoId == 1;
+			wmine.x = x - 0.1 * Math.cos(currentRotation);
+			wmine.y = y - 0.1 * Math.sin(currentRotation);
+			wmine.z = 0.3 * model.scaleX;
+			wmine.setRotate(0, 0, currentRotation);
+			wmine.setScale(model.scaleX * 0.9);
+		}
+
 	}
 }
