@@ -101,6 +101,54 @@ class UI
 		}
 	}
 
+	public function setGo() {
+		if(ingame != null) {
+			game.event.wait(1.5, function() {
+				var t = Res.UI.battle.toTile();
+				var battle = new h2d.Bitmap(t, ingame);
+				battle.x = -t.width - 100; battle.y = (game.s2d.height - t.height) * 0.5 - 50;
+
+				var t2 = Res.UI.engage.toTile();
+				var engage = new h2d.Bitmap(t2, ingame);
+				engage.x = game.s2d.width + 100; engage.y = (game.s2d.height - t2.height) * 0.5 + 50;
+
+				var txb = game.s2d.width * 0.5 - t.width - 10;
+				var txe = game.s2d.width * 0.5 + 10;
+				var sp = 100;
+				game.event.waitUntil(function(dt) {
+					battle.x += sp * dt;
+					if(battle.x > txb)
+						battle.x = txb;
+					engage.x -= sp * dt;
+					if(engage.x < txe)
+						engage.x = txe;
+
+					if(battle.x == txb && engage.x == txe) {
+						var c = 1.;
+						battle.colorAdd = new h3d.Vector(c, c, c);
+						engage.colorAdd = new h3d.Vector(c, c, c);
+						game.event.waitUntil(function(dt) {
+							if(c == 0) {
+								game.event.wait(1, function() {
+									game.hero.lock = false;
+									battle.remove();
+									engage.remove();
+								});
+								return true;
+							}
+							c = Math.max(0, c - 0.08 * dt);
+							battle.colorAdd = new h3d.Vector(c, c, c);
+							engage.colorAdd = new h3d.Vector(c, c, c);
+							return false;
+						});
+						return true;
+					}
+					return false;
+				});
+			});
+		}
+	}
+
 	public function setHelp() {
 		reset();
 		help = new h2d.Sprite(game.s2d);

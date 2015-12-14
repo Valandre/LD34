@@ -52,8 +52,34 @@ class Hero extends Entity
 			if(mat.name == "Mine2") cast(mat, h3d.mat.MeshMaterial).texture = Res.mine.texture.toTexture();
 			if(mat.name == "minelight") cast(mat, h3d.mat.MeshMaterial).mainPass.culling = Both;
 		}
+		lock = true;
+
+		model.visible = false;
+		rifle.visible = false;
+		headlight.visible = false;
+		game.event.wait(0.8, function() {
+			model.visible = true;
+			rifle.visible = true;
+			headlight.visible = true;
+			spawn();
+		});
 	}
 
+
+	public function spawn() {
+		var fx = game.loadModel(Res.fx.fuel.model);
+		fx.x = x;
+		fx.y = y;
+		for( mat in fx.getMaterials()) {
+			mat.mainPass.enableLights = true;
+			mat.shadows = true;
+			mat.mainPass.setPassName("noSAO");
+		}
+		fx.playAnimation(game.anims.get(Res.fx.fuel.model.entry.path));
+		fx.currentAnimation.onAnimEnd = fx.remove;
+		game.s3d.addChild(fx);
+		game.fxs.push(fx);
+	}
 
 	public function setMine() {
 		mine = 3;

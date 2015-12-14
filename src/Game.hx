@@ -277,8 +277,10 @@ class Game extends hxd.App {
 				hero.cheat = true;
 		}
 
-		if(K.isPressed(K.SPACE))
-			generate(Std.random(0xFFFFFF));
+		if(K.isPressed(K.SPACE)) {
+			Sounds.stop("Loop");
+			start();
+		}
 	}
 
 	public function start() {
@@ -288,6 +290,7 @@ class Game extends hxd.App {
 			Sounds.play("Loop");
 			generate(Std.random(0xFFFFFF));
 			ui.fadeOut();
+			ui.setGo();
 		});
 	}
 
@@ -313,6 +316,7 @@ class Game extends hxd.App {
 			resetCamOffset();
 
 			ui.fadeOut();
+			ui.setGo();
 		});
 	}
 
