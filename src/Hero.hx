@@ -50,8 +50,6 @@ class Hero extends Entity
 			if(mat.name == "Mine2") cast(mat, h3d.mat.MeshMaterial).texture = Res.mine.texture.toTexture();
 			if(mat.name == "minelight") cast(mat, h3d.mat.MeshMaterial).mainPass.culling = Both;
 		}
-
-		setRocket();
 	}
 
 
@@ -67,7 +65,7 @@ class Hero extends Entity
 		rocket = 2;
 		mine = 0;
 		ammoId = 2;
-		//game.ui.updateIco(ammoId);
+		game.ui.updateIco(ammoId);
 
 		inline function initRocket(r : Rocket) {
 			if(r == null || r.launched)
@@ -165,13 +163,13 @@ class Hero extends Entity
 		if(!cheat)
 			fuel = Math.max(0, fuel - (speed + 0.02) * 0.6 * dt);
 		boost -= dt;
-		maxSpeed = maxSpeedRef * (boost > 0 ? 1.5 : 1);
+		maxSpeed = maxSpeedRef * (boost > 0 ? 1.3 : 1);
 		if(fuel <= 0)
 			maxSpeed *= 0.5;
 		if(boost > 0 && oldBoost < 0)
-			speed = maxSpeed * 1.25;
+			speed = maxSpeed * 1.2;
 		oldBoost = boost;
-		scale = boost > 0 ? 1. : 0.8;
+		scale = boost > 0 ? 0.95 : 0.8;
 		model.setScale(model.scaleX + (scale-model.scaleX) * 0.25 * dt);
 
 		if(K.isDown(K.MOUSE_RIGHT) && canMove)

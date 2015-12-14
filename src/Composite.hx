@@ -93,21 +93,21 @@ class Composite extends h3d.scene.Renderer {
 		ambient.shader.hasFOG = true;
 		ambient.shader.hasBLOOM = true;
 
-		ambient.shader.global_brightness = 0.25;
-		ambient.shader.global_contrast = 1.5;
-		ambient.shader.global_saturation = 1.1;
-		ambient.shader.bloomPower = 3.107;
-		ambient.shader.bloomAmount = 0.5;
-		ambient.shader.fogStart = 0.0352;
-		ambient.shader.fogPower = 3.5;
-		ambient.shader.fogAmount = 2;
+		ambient.shader.global_brightness = 0.;
+		ambient.shader.global_contrast = 1.;
+		ambient.shader.global_saturation = 1.4;
+		ambient.shader.bloomPower = 2;
+		ambient.shader.bloomAmount = 1;
+		ambient.shader.fogStart = 0.1;
+		ambient.shader.fogPower = 2;
+		ambient.shader.fogAmount = 5.4;
 		ambient.shader.dofStart = 0.;
-		ambient.shader.dofPower = 2;
-		ambient.shader.dofAmount = 1.5;
-		ambient.shader.fogColor.setColor(0x4B1C6B);
+		ambient.shader.dofPower = 3.45;
+		ambient.shader.dofAmount = 10;
+		ambient.shader.fogColor.setColor(0x4B2E98);
 
 		ambientOcclusion.shader.bias = 0.04;
-		ambientOcclusion.shader.intensity = 0.5;
+		ambientOcclusion.shader.intensity = 0.2;
 		ambientOcclusion.shader.sampleRadius = 0.25;
 
 		waterReflection = new shaders.SSReflection();

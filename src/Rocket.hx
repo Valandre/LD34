@@ -103,7 +103,6 @@ class Rocket
 	function explode() {
 		exploded = true;
 		m.remove();
-
 	}
 
 	function hit() {
