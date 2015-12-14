@@ -264,7 +264,7 @@ class Game extends hxd.App {
 		for( e in entities)
 			e.update(dt);
 
-		if(hero !=null && bonus.length < 8)
+		if(hero != null && bonus.length < 12)
 			new Bonus();
 	}
 }

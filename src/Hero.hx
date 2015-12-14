@@ -22,7 +22,7 @@ class Hero extends Entity
 		super(x, y);
 		life = lifeMax = 100;
 		fuel = fuelMax = 100;
-		ammo = ammoMax = 150;
+		ammo = ammoMax = 100;
 
 		maxSpeedRef = maxSpeed = 0.04;
 
@@ -58,13 +58,13 @@ class Hero extends Entity
 		if(isDead())
 			return;
 
-		fuel = Math.max(0, fuel - (speed + 0.01) * 0.5 * dt);
+		fuel = Math.max(0, fuel - (speed + 0.025) * 0.5 * dt);
 		boost -= dt;
 		maxSpeed = maxSpeedRef * (boost > 0 ? 1.5 : 1);
 		if(fuel <= 0)
 			maxSpeed *= 0.5;
 		if(boost > 0 && oldBoost < 0)
-			speed = maxSpeed * 1.5;
+			speed = maxSpeed * 1.25;
 		oldBoost = boost;
 		scale = boost > 0 ? 1.3 : 1.;
 		model.setScale(model.scaleX + (scale-model.scaleX) * 0.25 * dt);
@@ -120,8 +120,8 @@ class Hero extends Entity
 				model.currentAnimation.speed = 0;
 			}
 			//ATTACK
-			if(K.isDown(K.MOUSE_LEFT)) {
-				if(ammo > 0) mecaAttack();
+			if(K.isDown(K.MOUSE_LEFT) && ammo > 0) {
+				mecaAttack();
 				model.currentAnimation.speed += (1.5 - model.currentAnimation.speed) * 0.25 * dt;
 			}
 			else model.currentAnimation.speed *= Math.pow(0.9, dt);

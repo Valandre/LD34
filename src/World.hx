@@ -4,6 +4,7 @@ using hxd.Math;
 
 enum MatKind {
 	Road;
+	Zebra;
 	Default;
 }
 
@@ -114,6 +115,7 @@ class World extends h3d.scene.World
 		name = ~/[0-9]+/g.replace(name.split("/").pop(), "");
 		return switch(name) {
 			case "road" : Road;
+			case "zebra" : Zebra;
 			default : Default;
 		}
 	}
@@ -122,10 +124,12 @@ class World extends h3d.scene.World
 		var matKind = resolveMaterialKind(model.r.name);
 		switch(matKind) {
 			case Road:
-				/*
-				for( g in model.geometries) {
-					g.m.updateBits();
-				}*/
+			case Zebra:
+					for( g in model.geometries) {
+						g.m.blend = Add;
+						g.m.shadows = false;
+						g.m.updateBits();
+					}
 			case Default:
 		}
 	}
@@ -231,7 +235,7 @@ class World extends h3d.scene.World
 
 		startPoint = getStartingPoint();
 
-		var models = [Res.city.build01, Res.city.build02, Res.city.build01, Res.city.build02, Res.city.build01, Res.city.build02, Res.city.tree01, Res.city.tree02, Res.city.tree03, Res.city.tree04, Res.city.tree05, Res.city.tree06];
+		var models = [Res.city.build01, Res.city.build02, Res.city.build03, Res.city.build04, Res.city.build01, Res.city.build02, Res.city.tree01, Res.city.tree02, Res.city.tree03, Res.city.tree04, Res.city.tree05, Res.city.tree06];
 		var roads = [Res.city.road01, Res.city.road02, Res.city.road03, Res.city.road04, Res.city.road05];
 
 		inline function addBuilding(x: Int, y : Int) {
@@ -291,18 +295,30 @@ class World extends h3d.scene.World
 					}
 				case 3 :
 					id = 2;
-					if((l && u && r))
+					if((l && u && r)) {
 						rot = 0;
-					else if((u && r && d))
+						if(rnd.rand() < 0.2) createElement(Res.city.zebra.entry.path, x + 0.5, y - 1 + 0.5, -0.02, 1, Math.PI * 0.5);
+					}
+					else if((u && r && d)) {
 						rot = 1;
-					else if((r && d && l))
+						if(rnd.rand() < 0.2) createElement(Res.city.zebra.entry.path, x + 1 + 0.5, y + 0.5, -0.02, 1, 0);
+					}
+					else if((r && d && l)) {
 						rot = 2;
-					else if((d && l && u))
+						if(rnd.rand() < 0.2) createElement(Res.city.zebra.entry.path, x + 0.5, y + 1 + 0.5, -0.02, 1, Math.PI * 0.5);
+					}
+					else if((d && l && u)) {
 						rot = 3;
+						if(rnd.rand() < 0.2) createElement(Res.city.zebra.entry.path, x - 1 + 0.5, y + 0.5, -0.02, 1, 0);
+					}
 
 				case 4:
 					id = 3;
 					rot = 0;
+					if(rnd.rand() < 0.25) createElement(Res.city.zebra.entry.path, x + 0.5, y - 1 + 0.5, -0.02, 1, Math.PI * 0.5);
+					if(rnd.rand() < 0.25) createElement(Res.city.zebra.entry.path, x + 0.5, y + 1 + 0.5, -0.02, 1, Math.PI * 0.5);
+					if(rnd.rand() < 0.25) createElement(Res.city.zebra.entry.path, x + 1 + 0.5, y + 0.5, -0.02, 1, 0);
+					if(rnd.rand() < 0.25) createElement(Res.city.zebra.entry.path, x - 1 + 0.5, y + 0.5, -0.02, 1, 0);
 
 				default : throw "not supported";
 			}

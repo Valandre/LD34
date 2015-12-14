@@ -109,6 +109,8 @@ class Bonus
 		if(choice.length == 0)
 			choice = [Ammo, Fuel, Repair, Speed];
 
+		choice.push(Repair); //add one more
+
 		return choice[Std.random(choice.length)];
 	}
 

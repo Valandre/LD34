@@ -30,6 +30,7 @@ class UI
 	var currCredits = 0;
 	var currMobs = 0;
 
+	var scale = 1.;
 
 	public function new() {
 		game = Game.inst;
@@ -184,6 +185,9 @@ class UI
 	}
 
 	public function onResize() {
+		//scale = game.s2d.height / 1080;
+		//trace(scale);
+
 		if(ingame != null) {
 			life.x = game.s2d.width * 0.5;
 			life.y = 30;

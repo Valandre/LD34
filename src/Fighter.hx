@@ -197,7 +197,7 @@ class Fighter extends Entity
 			currentRotation = Math.angleMove(currentRotation, rotation, 0.05 * dt);
 
 			//ATTACK
-			if(dist > 6 || game.hero.isDead()) {
+			if(dist > 4 || game.hero.isDead()) {
 				rotWait -= dt;
 				if(rotWait < 0) {
 					rotWait = 60 + 120 * Math.random();
@@ -206,7 +206,6 @@ class Fighter extends Entity
 			}
 			else {
 				rotation = Math.atan2(game.hero.y - y, game.hero.x - x);
-
 				if(Math.abs(Math.angle(rotation - currentRotation)) < 0.1)
 					mecaAttack();
 			}
