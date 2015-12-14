@@ -218,6 +218,8 @@ class Hero extends Entity
 						if(speed > 0) speed = Math.min(-0.01, -speed * 0.6);
 						else speed = Math.max( 0.01, -speed * 0.6);
 					}
+
+					if(speed < 0) Sounds.play("Bump2");
 				}
 			}
 
@@ -260,6 +262,8 @@ class Hero extends Entity
 					v1 = -v1;
 					v2 = -v2;
 				}
+
+				if(speed > 0.02 || f.speed > 0.02) Sounds.play("Bump");
 
 				f.impact = new h2d.col.Point(n1.x * speed * 2 * v1, n1.y * speed * 2 * v1);
 				f.speed *= Math.pow(0.1, dt);

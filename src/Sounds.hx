@@ -17,6 +17,15 @@ class MenuOver extends S {
 @:keep @:sound("res/sfx/autoshoot2.mp3")
 class Rifle extends S {
 }
+@:keep @:sound("res/sfx/carcrash1.mp3")
+class Bump extends S {
+}
+@:keep @:sound("res/sfx/carcrash3.mp3")
+class Bump2 extends S {
+}
+@:keep @:sound("res/sfx/explode3.mp3")
+class Explode extends S {
+}
 
 class Sounds {
 
@@ -36,16 +45,30 @@ class Sounds {
 
 		switch(name) {
 			case "Loop":
-				musicChannel = s.play(0, 99999);
+				var t = new T();
+				t.volume = 0.7;
+				musicChannel = s.play(0, 99999, t);
 			case "MenuClick":
 				s.play(0, 0);
 			case "MenuOver":
 				s.play(0, 0);
 			case "Rifle":
-				s.play(0, 0);
 				var t = new T();
-				t.volume = 0.2;
+				t.volume = 0.5;
 				s.play(0, 0, t);
+			case "Bump":
+				var t = new T();
+				t.volume = 0.5;
+				s.play(0, 0, t);
+			case "Bump2":
+				var t = new T();
+				t.volume = 0.6;
+				s.play(0, 0, t);
+			case "Explode":
+				var t = new T();
+				t.volume = 0.6;
+				s.play(0, 0, t);
+
 		}
 	}
 

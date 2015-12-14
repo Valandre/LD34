@@ -140,6 +140,7 @@ class Entity
 	}
 
 	function explode() {
+		Sounds.play("Explode");
 		remove();
 	}
 

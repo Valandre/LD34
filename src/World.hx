@@ -5,6 +5,7 @@ using hxd.Math;
 enum MatKind {
 	Road;
 	Zebra;
+	CLight;
 	Default;
 }
 
@@ -115,6 +116,7 @@ class World extends h3d.scene.World
 		name = name.split(".").shift().split("_").shift();
 		name = ~/[0-9]+/g.replace(name.split("/").pop(), "");
 		return switch(name) {
+			case "buildlight" : CLight;
 			case "road" : Road;
 			case "zebra" : Zebra;
 			default : Default;
@@ -125,6 +127,12 @@ class World extends h3d.scene.World
 		var matKind = resolveMaterialKind(model.r.name);
 		switch(matKind) {
 			case Road:
+			case CLight:
+					for( g in model.geometries) {
+						g.m.blend = Add;
+						g.m.shadows = false;
+						g.m.updateBits();
+					}
 			case Zebra:
 					for( g in model.geometries) {
 						g.m.blend = Add;
@@ -245,6 +253,7 @@ class World extends h3d.scene.World
 
 		startPoint = getStartingPoint();
 
+		var citylight = [Res.city.buildlight01, Res.city.buildlight02, Res.city.buildlight03, Res.city.buildlight04];
 		var models = [Res.city.build01, Res.city.build02, Res.city.build03, Res.city.build04, Res.city.build01, Res.city.build02, Res.city.tree01, Res.city.tree02, Res.city.tree03, Res.city.tree04, Res.city.tree05, Res.city.tree06];
 		var roads = [Res.city.road01, Res.city.road02, Res.city.road03, Res.city.road04, Res.city.road05];
 
@@ -252,7 +261,10 @@ class World extends h3d.scene.World
 			var r = rnd.random(models.length);
 			if(x - 1 == startPoint.x && y - 1 == startPoint.y)
 				r = Math.imax(2, r);
-			createElement(models[r].entry.path, x + 0.5, y + 0.5, 0, 1, r < 6 ? Math.PI * 0.5 * rnd.random(4) : 0);
+			var rot = r < 6 ? Math.PI * 0.5 * rnd.random(4) : 0;
+			createElement(models[r].entry.path, x + 0.5, y + 0.5, 0, 1, rot);
+			if(r < citylight.length)
+				createElement(citylight[r].entry.path, x + 0.5, y + 0.5, 0, 1, rot);
 			var k = r < 6 ? 2 : 1;
 			grid[x + y * worldSize] = k;
 		}
