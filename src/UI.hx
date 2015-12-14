@@ -8,11 +8,19 @@ class UI
 	var game : Game;
 	var menu : h2d.Sprite;
 	var ingame : h2d.Sprite;
+	var credits : h2d.Sprite;
+	var help : h2d.Sprite;
+
+	var back : h2d.Bitmap;
 
 	var blackScreen : h2d.Bitmap;
+	var defeatTxt : h2d.Bitmap;
 
 	var buttons : h2d.Sprite;
 	var btStart : h2d.Interactive;
+	var btCredits : h2d.Interactive;
+	var btHelp : h2d.Interactive;
+	var btBack : h2d.Interactive;
 
 	var life : h2d.Sprite;
 	var hlife : h2d.Sprite;
@@ -47,6 +55,12 @@ class UI
 		if(menu != null)
 			while(menu.numChildren > 0)
 				menu.removeChild(menu.getChildAt(0));
+		if(credits != null)
+			while(credits.numChildren > 0)
+				credits.removeChild(credits.getChildAt(0));
+		if(help != null)
+			while(help.numChildren > 0)
+				help.removeChild(help.getChildAt(0));
 	}
 
 	public function fadeIn(instant = false) {
@@ -87,6 +101,110 @@ class UI
 		}
 	}
 
+	public function setHelp() {
+		reset();
+		help = new h2d.Sprite(game.s2d);
+
+		var t = Res.UI.help_title.toTile();
+		var title = new h2d.Bitmap(t, help);
+		title.filter = true;
+		title.x = 80; title.y = 80;
+
+		var t = Res.UI.help_mouse.toTile();
+		var text = new h2d.Bitmap(t, help);
+		text.filter = true;
+		text.x = 80; text.y = 240;
+
+		var t = Res.UI.bt_return.toTile();
+		back = new h2d.Bitmap(t, help);
+		back.blendMode = Alpha;
+		back.x = -t.width; back.y = -t.height;
+
+		btBack = new h2d.Interactive(t.width, t.height, help);
+		btBack.x = back.x; btBack.y = back.y;
+		btBack.onOver = function(e : hxd.Event) {
+			Sounds.play("MenuOver");
+			back.colorAdd = new h3d.Vector(200, 200, 200);
+			back.alpha = 0.9;
+			var cpt = 0.;
+			game.event.waitUntil(function(dt) {
+				if(back.colorAdd == null)
+					return true;
+				if(cpt > 3) {
+					back.colorAdd.x = 200 - back.colorAdd.x;
+					back.colorAdd.y = 200 - back.colorAdd.y;
+					back.colorAdd.z = 200 - back.colorAdd.z;
+					back.alpha = back.alpha == 1 ? 0.9 : 1;
+					cpt = 0;
+				}
+				cpt += dt;
+				return false;
+			});
+		}
+		btBack.onOut = function(e : hxd.Event) {
+			back.colorAdd = null;
+			back.alpha = 1;
+		}
+		btBack.onClick = function(e : hxd.Event) {
+			Sounds.play("MenuClick");
+			game.menuBack();
+		}
+
+		onResize();
+	}
+
+	public function setCredits() {
+		reset();
+		credits = new h2d.Sprite(game.s2d);
+
+		var t = Res.UI.credits_title.toTile();
+		var title = new h2d.Bitmap(t, credits);
+		title.filter = true;
+		title.x = 80; title.y = 80;
+
+		var t = Res.UI.credits_text.toTile();
+		var text = new h2d.Bitmap(t, credits);
+		text.filter = true;
+		text.x = 80; text.y = 240;
+
+		var t = Res.UI.bt_return.toTile();
+		back = new h2d.Bitmap(t, credits);
+		back.blendMode = Alpha;
+		back.x = -t.width; back.y = -t.height;
+
+		btBack = new h2d.Interactive(t.width, t.height, credits);
+		btBack.x = back.x; btBack.y = back.y;
+		btBack.onOver = function(e : hxd.Event) {
+			Sounds.play("MenuOver");
+			back.colorAdd = new h3d.Vector(200, 200, 200);
+			back.alpha = 0.9;
+			var cpt = 0.;
+			game.event.waitUntil(function(dt) {
+				if(back.colorAdd == null)
+					return true;
+				if(cpt > 3) {
+					back.colorAdd.x = 200 - back.colorAdd.x;
+					back.colorAdd.y = 200 - back.colorAdd.y;
+					back.colorAdd.z = 200 - back.colorAdd.z;
+					back.alpha = back.alpha == 1 ? 0.9 : 1;
+					cpt = 0;
+				}
+				cpt += dt;
+				return false;
+			});
+		}
+		btBack.onOut = function(e : hxd.Event) {
+			back.colorAdd = null;
+			back.alpha = 1;
+		}
+		btBack.onClick = function(e : hxd.Event) {
+			Sounds.play("MenuClick");
+			game.menuBack();
+		}
+
+		onResize();
+	}
+
 	public function setMenu() {
 		reset();
 		menu = new h2d.Sprite(game.s2d);
@@ -96,24 +214,88 @@ class UI
 
 		buttons = new h2d.Sprite(menu);
 
-		var t = Res.UI.bt_controls.toTile();
-		var help = new h2d.Bitmap(t, buttons);
-		help.blendMode = Alpha;
-		help.x = -t.width; help.y = -t.height;
-
+	//CREDITS
 		var t = Res.UI.bt_credits.toTile();
 		var credits = new h2d.Bitmap(t, buttons);
 		credits.blendMode = Alpha;
-		credits.x = -t.width; credits.y = help.y - 100;
+		credits.x = -t.width; credits.y = -t.height;
 
+		btCredits = new h2d.Interactive(t.width, t.height, buttons);
+		btCredits.x = credits.x; btCredits.y = credits.y;
+		btCredits.onOver = function(e : hxd.Event) {
+			Sounds.play("MenuOver");
+			credits.colorAdd = new h3d.Vector(200, 200, 200);
+			credits.alpha = 0.9;
+			var cpt = 0.;
+			game.event.waitUntil(function(dt) {
+				if(credits.colorAdd == null)
+					return true;
+				if(cpt > 3) {
+					credits.colorAdd.x = 200 - credits.colorAdd.x;
+					credits.colorAdd.y = 200 - credits.colorAdd.y;
+					credits.colorAdd.z = 200 - credits.colorAdd.z;
+					credits.alpha = credits.alpha == 1 ? 0.9 : 1;
+					cpt = 0;
+				}
+				cpt += dt;
+				return false;
+			});
+		}
+		btCredits.onOut = function(e : hxd.Event) {
+			credits.colorAdd = null;
+			credits.alpha = 1;
+		}
+		btCredits.onClick = function(e : hxd.Event) {
+			Sounds.play("MenuClick");
+			game.creditsPage();
+		}
+
+	//HELP
+		var t = Res.UI.bt_controls.toTile();
+		var help = new h2d.Bitmap(t, buttons);
+		help.blendMode = Alpha;
+		help.x = -t.width; help.y = credits.y - 100;
+
+		btHelp = new h2d.Interactive(t.width, t.height, buttons);
+		btHelp.x = help.x; btHelp.y = help.y;
+		btHelp.onOver = function(e : hxd.Event) {
+			Sounds.play("MenuOver");
+			help.colorAdd = new h3d.Vector(200, 200, 200);
+			help.alpha = 0.9;
+			var cpt = 0.;
+			game.event.waitUntil(function(dt) {
+				if(help.colorAdd == null)
+					return true;
+				if(cpt > 3) {
+					help.colorAdd.x = 200 - help.colorAdd.x;
+					help.colorAdd.y = 200 - help.colorAdd.y;
+					help.colorAdd.z = 200 - help.colorAdd.z;
+					help.alpha = help.alpha == 1 ? 0.9 : 1;
+					cpt = 0;
+				}
+				cpt += dt;
+				return false;
+			});
+		}
+		btHelp.onOut = function(e : hxd.Event) {
+			help.colorAdd = null;
+			help.alpha = 1;
+		}
+		btHelp.onClick = function(e : hxd.Event) {
+			Sounds.play("MenuClick");
+			game.helpPage();
+		}
+
+	//START
 		var t = Res.UI.bt_start.toTile();
 		var start = new h2d.Bitmap(t, buttons);
 		start.blendMode = Alpha;
-		start.x = -t.width; start.y = credits.y - 100;
+		start.x = -t.width; start.y = help.y - 100;
 
 		btStart = new h2d.Interactive(t.width, t.height, buttons);
 		btStart.x = start.x; btStart.y = start.y;
 		btStart.onOver = function(e : hxd.Event) {
+			Sounds.play("MenuOver");
 			start.colorAdd = new h3d.Vector(200, 200, 200);
 			start.alpha = 0.9;
 			var cpt = 0.;
@@ -136,6 +318,7 @@ class UI
 			start.alpha = 1;
 		}
 		btStart.onClick = function(e : hxd.Event) {
+			Sounds.play("MenuClick");
 			game.start();
 		}
 
@@ -235,11 +418,31 @@ class UI
 			fuel.y = ammo.y - 70;
 			armor.x = fuel.x;
 			armor.y = fuel.y - 70;
+
+			if(defeatTxt != null) {
+				var tile = Res.UI.missionfail.toTile();
+				defeatTxt.x = (game.s2d.width - tile.width) * 0.5;
+				defeatTxt.y = (game.s2d.height - tile.height) * 0.5;
+			}
 		}
 
 		if(menu != null) {
 			buttons.x = game.s2d.width - 400;
 			buttons.y = game.s2d.height - 150;
+		}
+
+		if(credits != null) {
+			var t = Res.UI.bt_return.toTile();
+			back.x = game.s2d.width - t.width - 150;
+			back.y = game.s2d.height - t.height - 80;
+			btBack.x = back.x; btBack.y = back.y;
+		}
+
+		if(help != null) {
+			var t = Res.UI.bt_return.toTile();
+			back.x = game.s2d.width - t.width - 150;
+			back.y = game.s2d.height - t.height - 80;
+			btBack.x = back.x; btBack.y = back.y;
 		}
 	}
 
@@ -253,6 +456,26 @@ class UI
 		}
 		ammoIco = new h2d.Bitmap(tile, ammo);
 		ammoIco.y -= 5;
+	}
+
+	public function defeat() {
+		if(ingame != null) {
+			var tile = Res.UI.missionfail.toTile();
+			defeatTxt = new h2d.Bitmap(tile, ingame);
+			defeatTxt.x = (game.s2d.width - tile.width) * 0.5;
+			defeatTxt.y = (game.s2d.height - tile.height) * 0.5;
+
+			var c = 1.;
+			defeatTxt.colorAdd = new h3d.Vector(c, c, c);
+			game.event.waitUntil(function(dt) {
+				if(c == 0) {
+					return true;
+				}
+				c = Math.max(0, c - 0.08 * dt);
+				defeatTxt.colorAdd = new h3d.Vector(c, c, c);
+				return false;
+			});
+		}
 	}
 
 

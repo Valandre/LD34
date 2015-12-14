@@ -76,12 +76,14 @@ class Composite extends h3d.scene.Renderer {
 	public var waterReflection : shaders.SSReflection;
 	public var globalColorAdd : h3d.shader.ColorAdd;
 
+	public var enableSAO = true;
+
 	var ambientOcclusion = new h3d.pass.ScalableAO();
 	var ambientOcclusionBlur = new h3d.pass.Blur(2, 3, 2);
 	var waterReflectBlur = new h3d.pass.Blur(1, 2, 2);
 	var antiAliasing = new h3d.pass.FXAA();
 	var colorBlur = new h3d.pass.Blur(2, 1, 100);
-	var ambient : h3d.pass.ScreenFx<CompoShader>;
+	public var ambient : h3d.pass.ScreenFx<CompoShader>;
 	var all : h3d.pass.MRT;
 
 	public function new() {
@@ -133,16 +135,18 @@ class Composite extends h3d.scene.Renderer {
 		draw("default");
 
 	//ssao
-		var saoTarget = allocTarget("sao", 1, false);
-		setTarget(saoTarget);
-		ambientOcclusion.apply(depthTex, normalTex, ctx.camera);
-		ambientOcclusionBlur.apply(saoTarget, allocTarget("saoBlurTmp", 1, false), null);
-		ambientOcclusionBlur.depthBlur = { depths : depthTex, normals : normalTex, camera: ctx.camera};
-		h3d.pass.Copy.run(saoTarget, colorTex, Multiply);
+		if(enableSAO) {
+			var saoTarget = allocTarget("sao", 1, false);
+			setTarget(saoTarget);
+			ambientOcclusion.apply(depthTex, normalTex, ctx.camera);
+			ambientOcclusionBlur.apply(saoTarget, allocTarget("saoBlurTmp", 1, false), null);
+			ambientOcclusionBlur.depthBlur = { depths : depthTex, normals : normalTex, camera: ctx.camera};
+			h3d.pass.Copy.run(saoTarget, colorTex, Multiply);
 
-		setTarget(colorTex);
-		draw("noSAO");
-		draw("additive");
+			setTarget(colorTex);
+			draw("noSAO");
+			draw("additive");
+		}
 
 	//water
 

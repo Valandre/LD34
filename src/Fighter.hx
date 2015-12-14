@@ -92,6 +92,7 @@ class Fighter extends Entity
 		return cells[Std.random(cells.length)];
 	}
 
+	var addRot = 0.;
 	override public function update(dt : Float) {
 		super.update(dt);
 		if(isDead())
@@ -107,24 +108,6 @@ class Fighter extends Entity
 			targetCell = getNextCell();
 
 		if(canMove) {
-			if(currentRotation == rotation)
-				for(f in game.fighters) {
-					if(Std.is(f, this)) continue;
-					if(f.isDead()) continue;
-					if(Std.int(f.x) == targetCell.x && Std.int(f.y) == targetCell.y) {
-						var tmp = targetCell;
-						targetCell = lastCell;
-						lastCell = targetCell;
-
-						game.event.waitUntil(function(dt) {
-							speed = 0;
-							if(currentRotation == rotation) return true;
-							return false;
-						});
-						break;
-					}
-
-				}
 			speed += (maxSpeed - speed) * 0.03 * dt;
 		}
 		else {
@@ -136,16 +119,43 @@ class Fighter extends Entity
 		var da = Math.angle(currentRotation - rotation);
 		model.currentAnimation.speed = Math.max(speed / maxSpeed, da != 0 ? 1 : 0);
 		rotation = Math.atan2(targetCell.y - lastCell.y, targetCell.x - lastCell.x);
+		addRot = Math.max(0, addRot - 0.025 * dt);
+		rotation += addRot;
 		currentRotation = Math.angleMove(currentRotation, rotation, 0.07 * dt);
+
+		if(currentRotation == rotation)
+			for(f in game.fighters) {
+				if(f == this) continue;
+				if(f.isDead()) continue;
+				if(Std.int(f.x) == targetCell.x && Std.int(f.y) == targetCell.y) {
+					addRot = 0.3;
+/*
+					var tmp = targetCell;
+					targetCell = lastCell;
+					lastCell = targetCell;
+
+					game.event.waitUntil(function(dt) {
+						speed = 0;
+						if(currentRotation == rotation) return true;
+						return false;
+					});*/
+					break;
+				}
+
+			}
 
 		var cos = Math.cos(currentRotation);
 		var sin = Math.sin(currentRotation);
 
 		if(dist < 5 && rotation == currentRotation && (Std.int(x) == Std.int(game.hero.x) || Std.int(y) == Std.int(game.hero.y))) {
 			var v1 = new h2d.col.Point(game.hero.x - x, game.hero.y - y);
+			v1.normalize();
 			var v2 = new h2d.col.Point(cos, sin);
-			if(v1.dot(v2) > 0.99)
+			if(v1.dot(v2) > 0.99) {
 				mecaAttack();
+				if(dist < 1)
+					speed *= Math.pow(0.9, dt);
+			}
 		}
 
 		x += speed * cos;

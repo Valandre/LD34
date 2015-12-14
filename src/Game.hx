@@ -76,7 +76,7 @@ class Game extends hxd.App {
 		menu();
 	}
 
-	function menu() {
+	public function menu() {
 		reset();
 		hero = null;
 
@@ -260,13 +260,14 @@ class Game extends hxd.App {
 			resetCamOffset();
 
 
-		if(hero != null) {
+		if(hero != null && cam.follow == null) {
 			cam.target.x = hero.x;
 			cam.target.y = hero.y;
 			//cam.target.x = fighters[1].x;
 			//cam.target.y = fighters[1].y;
 		}
-		cam.pos.set(cam.target.x + camOffset.x, cam.target.y + camOffset.y, cam.target.z + camOffset.z);
+		if(cam.follow == null)
+			cam.pos.set(cam.target.x + camOffset.x, cam.target.y + camOffset.y, cam.target.z + camOffset.z);
 
 		if(K.isPressed("K".code)) {
 			if(fighters != null)
@@ -281,19 +282,178 @@ class Game extends hxd.App {
 	}
 
 	public function start() {
+		credits = 3;
 		ui.fadeIn();
 		event.wait(0.2, function() {
+			Sounds.play("Loop");
 			generate(Std.random(0xFFFFFF));
 			ui.fadeOut();
 		});
 	}
 
-	public function gameOver() {
+	public function respawn() {
+		ui.fadeIn();
+		var n = fighters.length;
+		event.wait(0.2, function() {
+			reset();
+
+			var p = world.startPoint;
+			var cam = s3d.camera;
+			cam.target.x = p.x + 0.5;
+			cam.target.y = p.y + 0.5;
+
+			hero = new Hero(p.x + 0.5, p.y + 0.5);
+
+			for( i in 0...n) { //no more than 9
+				var p = world.getFreePos();
+				fighters.push(new Fighter(p.x + 0.5, p.y + 0.5));
+			}
+
+			ui.init();
+			resetCamOffset();
+
+			ui.fadeOut();
+		});
+	}
+
+	var objs = [];
+	public function menuBack() {
 		ui.fadeIn();
 		event.wait(0.2, function() {
+			for(o in objs)
+				o.remove();
+			objs = [];
+
+			bg.visible = true;
+			@:privateAccess for(c in world.allChunks) c.root.visible = true;
+			renderer.ambient.shader.hasDOF = true;
+			renderer.ambient.shader.hasFOG = true;
+			renderer.ambient.shader.hasBLOOM = true;
+			renderer.enableSAO = true;
+
+			s3d.camera.follow = null;
+			resetCamOffset();
+
 			menu();
 			ui.fadeOut();
 		});
+	}
+
+	public function helpPage() {
+		ui.fadeIn();
+		event.wait(0.2, function() {
+			reset();
+
+			bg.visible = false;
+			@:privateAccess for(c in world.allChunks) c.root.visible = false;
+			renderer.ambient.shader.hasDOF = false;
+			renderer.ambient.shader.hasFOG = false;
+			renderer.ambient.shader.hasBLOOM = false;
+			renderer.enableSAO = false;
+
+			var garage = loadModel(Res.garage.model);
+			for( mat in garage.getMaterials()) {
+				mat.mainPass.enableLights = false;
+				mat.removePass(mat.getPass("depth"));
+				mat.removePass(mat.getPass("normal"));
+				cast(mat, h3d.mat.MeshMaterial).shadows = false;
+			}
+			s3d.camera.follow = { pos : garage.getObjectByName("CamCredits"), target : garage.getObjectByName("CamCredits.Target") };
+			s3d.addChild(garage);
+
+			var bolid = new Hero(garage.x + 1.42, garage.y - 0.28);
+			bolid.model.setScale(1.2);
+			bolid.lock = true;
+			bolid.model.currentAnimation.speed = 0;
+			bolid.rifle.currentAnimation.speed = 0;
+			bolid.rifle.x = bolid.x;
+			bolid.rifle.y = bolid.y;
+			bolid.rifle.setScale(1.2);
+			bolid.rifle.z -= 0.05;
+			bolid.headlight.visible = false;
+
+			var rot = Math.PI * 0.25;
+			event.waitUntil(function(dt) {
+				bolid.model.setRotate(0, 0, rot);
+				bolid.rifle.setRotate(0, 0, rot);
+				rot += 0.01 * dt;
+				return false;
+			});
+
+			objs.push(garage);
+			objs.push(bolid.model);
+			objs.push(bolid.rifle);
+			objs.push(bolid.headlight);
+
+			event.waitUntil(function(dt) {
+				if(K.isDown(K.MOUSE_LEFT))
+					bolid.model.currentAnimation.speed = 1.;
+				else bolid.model.currentAnimation.speed = 0;
+				if(K.isDown(K.MOUSE_RIGHT))
+					bolid.rifle.currentAnimation.speed = 1.5;
+				else bolid.rifle.currentAnimation.speed = 0;
+				return false;
+			});
+
+			ui.setHelp();
+			ui.fadeOut();
+		});
+	}
+
+	public function creditsPage() {
+		ui.fadeIn();
+		event.wait(0.2, function() {
+			reset();
+
+			bg.visible = false;
+			@:privateAccess for(c in world.allChunks) c.root.visible = false;
+			renderer.ambient.shader.hasDOF = false;
+			renderer.ambient.shader.hasFOG = false;
+			renderer.ambient.shader.hasBLOOM = false;
+			renderer.enableSAO = false;
+
+			var garage = loadModel(Res.garage.model);
+			for( mat in garage.getMaterials()) {
+				mat.mainPass.enableLights = false;
+				mat.removePass(mat.getPass("depth"));
+				mat.removePass(mat.getPass("normal"));
+				cast(mat, h3d.mat.MeshMaterial).shadows = false;
+			}
+			s3d.camera.follow = { pos : garage.getObjectByName("CamCredits"), target : garage.getObjectByName("CamCredits.Target") };
+			s3d.addChild(garage);
+
+			var bolid = new Hero(garage.x + 1.42, garage.y - 0.28);
+			bolid.model.setScale(1.2);
+			bolid.lock = true;
+			bolid.model.currentAnimation.speed = 0;
+			bolid.rifle.currentAnimation.speed = 0;
+			bolid.rifle.x = bolid.x;
+			bolid.rifle.y = bolid.y;
+			bolid.rifle.setScale(1.2);
+			bolid.rifle.z -= 0.05;
+			bolid.headlight.visible = false;
+
+			var rot = Math.PI * 0.25;
+			event.waitUntil(function(dt) {
+				bolid.model.setRotate(0, 0, rot);
+				bolid.rifle.setRotate(0, 0, rot);
+				rot += 0.01 * dt;
+				return false;
+			});
+
+			objs.push(garage);
+			objs.push(bolid.model);
+			objs.push(bolid.rifle);
+			objs.push(bolid.headlight);
+
+			ui.setCredits();
+			ui.fadeOut();
+		});
+	}
+
+	public function gameOver() {
+		Sounds.stop("Loop");
+		menu();
 	}
 
 	override function update(dt:Float) {
@@ -307,7 +467,7 @@ class Game extends hxd.App {
 		for( e in entities)
 			e.update(dt);
 
-		if(hero != null && bonus.length < 12)
+		if(hero != null && bonus.length < 20)
 			new Bonus();
 
 		for(m in mines) {

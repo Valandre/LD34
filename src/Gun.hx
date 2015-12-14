@@ -10,6 +10,7 @@ class Gun
 
 	public function new( owner : Entity, rot : Float, currGun : Float, boost = false)
 	{
+		Sounds.play("Rifle");
 		game = Game.inst;
 		this.owner = owner;
 		if(boost)

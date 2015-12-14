@@ -26,6 +26,7 @@ class Hero extends Entity
 	var rRocket : Rocket;
 
 	public var cheat = false;
+	public var lock = false;
 
 	public function new(x, y) {
 		super(x, y);
@@ -43,6 +44,7 @@ class Hero extends Entity
 		wmine.x = x;
 		wmine.y = y;
 		wmine.z = 0.3 * model.scaleX;
+		wmine.visible = false;
 		game.s3d.addChild(wmine);
 		for( mat in wmine.getMaterials()) {
 			mat.mainPass.enableLights = true;
@@ -85,7 +87,8 @@ class Hero extends Entity
 		}
 	}
 
-	function mecaAttack() {
+	public function mecaAttack() {
+
 		if(delay > 0) return;
 		delay = 5 - (boost > 0 ? 1 : 0);
 		currGun = 1 - currGun;
@@ -140,23 +143,33 @@ class Hero extends Entity
 		}
 	}
 
+	override function explode() {
+		super.explode();
+		game.event.wait(1, function() {
+			game.credits = Math.imax(0, game.credits - 1);
+			if(game.credits == 0)
+				game.ui.defeat();
+		});
+		game.event.wait(2.5, function() {
+			if(game.credits > 0)
+				game.respawn();
+			else game.gameOver();
+		});
+	}
+
 	override public function remove() {
 		if(model == null) return;
 		super.remove();
-		if(life <= 0) {
-			game.event.wait(3, function() {
-				game.credits = Math.imax(0, game.credits - 1);
-				if(game.credits > 0)
-					game.generate(Std.random(0xFFFFFF));
-				else game.gameOver();
-			});
-		}
-
 		wmine.remove();
+		if(lRocket != null)
+			lRocket.remove();
+		if(rRocket != null)
+			rRocket.remove();
 	}
 
 	var oldBoost = 0.;
 	override public function update(dt : Float) {
+		if(lock) return;
 		super.update(dt);
 
 		if(isDead())
@@ -243,7 +256,10 @@ class Hero extends Entity
 
 				var v1 = dir1.dot(n1);
 				var v2 = dir2.dot(n2);
-				if(v1 <= 0 && v2 <= 0) continue;
+				if(v1 <= 0 && v2 <= 0) {
+					v1 = -v1;
+					v2 = -v2;
+				}
 
 				f.impact = new h2d.col.Point(n1.x * speed * 2 * v1, n1.y * speed * 2 * v1);
 				f.speed *= Math.pow(0.1, dt);

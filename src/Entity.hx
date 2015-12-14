@@ -22,8 +22,8 @@ class Entity
 	var oldRot = 0.;
 	var rotation = 0.;
 	public var impact : h2d.col.Point;
-	var headlight : h3d.scene.Object;
-	var rifle : h3d.scene.Object;
+	public var headlight : h3d.scene.Object;
+	public var rifle : h3d.scene.Object;
 	var fxs : Array<h3d.scene.Object>;
 
 	var light : h3d.scene.PointLight;
@@ -139,11 +139,16 @@ class Entity
 		});
 	}
 
+	function explode() {
+		remove();
+	}
+
 	public function hurt(dmg : Int) {
+		if(isDead()) return;
 		life = Math.imax(0, life - dmg);
 		blink();
 		if(life <= 0)
-			remove();
+			explode();
 	}
 
 	function addSmoke() {
