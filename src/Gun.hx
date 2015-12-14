@@ -52,6 +52,8 @@ class Gun
 			cpt += dt;
 			return false;
 		});
+
+		game.fxs.push(m);
 	}
 
 	function hit() {

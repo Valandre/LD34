@@ -22,6 +22,8 @@ class Hero extends Entity
 	var ammoId = 0;
 
 	var wmine : h3d.scene.Object;
+	var lRocket : Rocket;
+	var rRocket : Rocket;
 
 	public var cheat = false;
 
@@ -49,8 +51,7 @@ class Hero extends Entity
 			if(mat.name == "minelight") cast(mat, h3d.mat.MeshMaterial).mainPass.culling = Both;
 		}
 
-		//mine = 100;
-		//ammoId = 1;
+		setRocket();
 	}
 
 
@@ -66,7 +67,15 @@ class Hero extends Entity
 		rocket = 2;
 		mine = 0;
 		ammoId = 2;
-		game.ui.updateIco(ammoId);
+		//game.ui.updateIco(ammoId);
+
+		inline function initRocket(r : Rocket) {
+			if(r == null || r.launched)
+				return new Rocket(this);
+			return r;
+		}
+		lRocket = initRocket(lRocket);
+		rRocket = initRocket(rRocket);
 	}
 
 	public function getAmmo() {
@@ -77,7 +86,6 @@ class Hero extends Entity
 			default: -1;
 		}
 	}
-
 
 	function mecaAttack() {
 		if(delay > 0) return;
@@ -118,6 +126,14 @@ class Hero extends Entity
 
 	function rocketLaunch() {
 		rocket--;
+		if(lRocket != null && !lRocket.launched) {
+			lRocket.launch(currentRotation);
+			lRocket = null;
+		}
+		else if(rRocket != null && !rRocket.launched) {
+			rRocket.launch(currentRotation);
+			rRocket = null;
+		}
 		if(rocket == 0) {
 			ammoId = 0;
 			game.ui.updateIco(ammoId);
@@ -170,12 +186,15 @@ class Hero extends Entity
 		var da = Math.angle(currentRotation - rotation);
 		if(game.mpos != null) rotation = Math.atan2(game.mpos.y - y, game.mpos.x - x);
 
+		model.currentAnimation.speed = Math.max(speed / maxSpeed, da != 0 ? 1 : 0);
+		currentRotation = Math.angleMove(currentRotation, rotation, (0.05 + 0.025 * (1 - speed / maxSpeed)) * dt);
+		var cos = Math.cos(currentRotation);
+		var sin = Math.sin(currentRotation);
+
 		if(canMove || speed != 0) {
 			//MOVE
-			model.currentAnimation.speed = Math.max(speed / maxSpeed, da != 0 ? 1 : 0);
-			currentRotation = Math.angleMove(currentRotation, rotation, (0.05 + 0.025 * (1 - speed / maxSpeed)) * dt);
-			x += speed * Math.cos(currentRotation);
-			y += speed * Math.sin(currentRotation);
+			x += speed * cos;
+			y += speed * sin;
 
 			if(!cheat) {
 				var c = game.world.collide(x, y, size * 0.5);
@@ -215,7 +234,7 @@ class Hero extends Entity
 		for(f in game.fighters) {
 			if(f.isDead()) continue;
 			if(Math.distance(f.x - x, f.y - y) < (f.size + size) * 0.5) {
-				var dir1 = new h2d.col.Point(Math.cos(currentRotation), Math.sin(currentRotation));
+				var dir1 = new h2d.col.Point(cos, sin);
 				var dir2 = new h2d.col.Point(Math.cos(f.currentRotation), Math.sin(f.currentRotation));
 				var n1 = new h2d.col.Point(f.x - x, f.y - y);
 				n1.normalize();
@@ -237,38 +256,55 @@ class Hero extends Entity
 			}
 		}
 
-		for(b in game.bonus)
-			if(Math.distance(b.model.x - x, b.model.y - y) < 0.5)
-				b.loot();
+		if(model != null) {
+			for(b in game.bonus)
+				if(Math.distance(b.model.x - x, b.model.y - y) < 0.5)
+					b.loot();
 
 
-		headlight.x = model.x;
-		headlight.y = model.y;
-		headlight.setRotate(0, 0, currentRotation);
-		headlight.setScale(model.scaleX);
+			headlight.x = model.x;
+			headlight.y = model.y;
+			headlight.setRotate(0, 0, currentRotation);
+			headlight.setScale(model.scaleX);
 
-		for(fx in fxs) {
-			fx.x = model.x;
-			fx.y = model.y;
-			fx.setRotate(0, 0, currentRotation);
-			fx.setScale(model.scaleX);
+			for(fx in fxs) {
+				fx.x = model.x;
+				fx.y = model.y;
+				fx.setRotate(0, 0, currentRotation);
+				fx.setScale(model.scaleX);
+			}
+
+			if(rifle != null) {
+				rifle.visible = ammoId == 0;
+				rifle.x = model.x;
+				rifle.y = model.y;
+				rifle.setRotate(0, 0, currentRotation);
+				rifle.setScale(model.scaleX);
+			}
+			if(wmine != null ) {
+				wmine.visible = ammoId == 1;
+				wmine.x = x - 0.1 * cos;
+				wmine.y = y - 0.1 * sin;
+				wmine.z = 0.3 * model.scaleX;
+				wmine.setRotate(0, 0, currentRotation);
+				wmine.setScale(model.scaleX * 0.9);
+			}
+
+			if(lRocket != null) {
+				lRocket.m.visible = ammoId == 2;
+				lRocket.m.x = x + 0.1 * Math.cos(currentRotation - Math.PI * 0.5) * model.scaleX - 0.2 * cos;
+				lRocket.m.y = y + 0.1 * Math.sin(currentRotation - Math.PI * 0.5) * model.scaleX - 0.2 * sin;
+				lRocket.m.z = 0.3 * model.scaleX;
+				lRocket.m.setRotate(0, 0, currentRotation);
+			}
+
+			if(rRocket != null) {
+				rRocket.m.visible = ammoId == 2;
+				rRocket.m.x = x + 0.1 * Math.cos(currentRotation + Math.PI * 0.5) * model.scaleX - 0.2 * cos;
+				rRocket.m.y = y + 0.1 * Math.sin(currentRotation + Math.PI * 0.5) * model.scaleX - 0.2 * sin;
+				rRocket.m.z = 0.3 * model.scaleX;
+				rRocket.m.setRotate(0, 0, currentRotation);
+			}
 		}
-
-		if(rifle != null) {
-			rifle.visible = ammoId == 0;
-			rifle.x = model.x;
-			rifle.y = model.y;
-			rifle.setRotate(0, 0, currentRotation);
-			rifle.setScale(model.scaleX);
-		}
-		if(wmine != null && model != null) {
-			wmine.visible = ammoId == 1;
-			wmine.x = x - 0.1 * Math.cos(currentRotation);
-			wmine.y = y - 0.1 * Math.sin(currentRotation);
-			wmine.z = 0.3 * model.scaleX;
-			wmine.setRotate(0, 0, currentRotation);
-			wmine.setScale(model.scaleX * 0.9);
-		}
-
 	}
 }

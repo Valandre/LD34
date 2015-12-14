@@ -22,6 +22,7 @@ class Game extends hxd.App {
 	public var credits = 3;
 
 	public var mines = [];
+	public var fxs = [];
 
 	var bg : h3d.scene.Object;
 
@@ -67,6 +68,7 @@ class Game extends hxd.App {
 			mat.mainPass.enableLights = true;
 			mat.allocPass("depth");
 			mat.allocPass("normal");
+			cast(mat, h3d.mat.MeshMaterial).shadows = true;
 		}
 		s3d.addChild(bg);
 		world = new World(16, width, s3d);
@@ -133,6 +135,13 @@ class Game extends hxd.App {
 			for( m in mines)
 				m.remove();
 		mines = [];
+
+		if(fxs != null)
+			for( fx in fxs)
+				fx.remove();
+		fxs = [];
+
+		event.clear();
 	}
 
 	public function generate(seed : Int) {

@@ -62,6 +62,8 @@ class Mine
 		game.event.wait(0.25, function() {
 			canHit = true;
 		});
+
+		game.fxs.push(m);
 	}
 
 	public function remove() {

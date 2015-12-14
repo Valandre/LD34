@@ -79,7 +79,7 @@ class Bonus
 				res = Res.fx.mine.model;
 			case Rocket :
 				game.hero.setRocket();
-				res = Res.fx.ammo.model;
+				res = Res.fx.rocket.model;
 			case Fuel :
 				game.hero.fuel = Math.min(game.hero.fuelMax, game.hero.fuel + 100);
 				res = Res.fx.fuel.model;
