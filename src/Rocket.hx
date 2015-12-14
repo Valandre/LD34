@@ -34,6 +34,11 @@ class Rocket
 		m.playAnimation(game.anims.get(Res.rocket.model.entry.path));
 		m.currentAnimation.speed = 1.5;
 
+		var light = new h3d.scene.PointLight(m);
+		light.color.setColor(0xFFD000);
+		light.params = new h3d.Vector(0.2, 0.5, 0.7);
+		game.fxs.push(light);
+
 		var speed = 0.;
 		var cos = Math.cos(rot);
 		var sin = Math.sin(rot);
@@ -96,6 +101,7 @@ class Rocket
 		game.fxs.push(fx);
 		game.s3d.addChild(fx);
 	}
+
 	public function remove() {
 		m.remove();
 	}

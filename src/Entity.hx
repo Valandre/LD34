@@ -26,6 +26,8 @@ class Entity
 	var rifle : h3d.scene.Object;
 	var fxs : Array<h3d.scene.Object>;
 
+	var light : h3d.scene.PointLight;
+
 	public function new(x, y) {
 		game = Game.inst;
 		model = new h3d.scene.Object(game.s3d);
@@ -35,7 +37,10 @@ class Entity
 		currentRotation = 0;
 
 		fxs = [];
-
+		light = new h3d.scene.PointLight(model);
+		light.color.setColor(0xFFD000);
+		light.params = new h3d.Vector(0.5, 0.7, 0.9);
+		light.z += 0.1;
 		game.entities.push(this);
 	}
 	function set_x(v : Float) {
@@ -70,6 +75,8 @@ class Entity
 
 		for(fx in fxs)
 			fx.remove();
+
+		light.remove();
 	}
 
 	function getBolide() {
@@ -139,6 +146,45 @@ class Entity
 			remove();
 	}
 
+	function addSmoke() {
+		var fx = game.loadModel(Res.fx.smoke.model);
+		fx.x = x + 0.05 * Math.srand() - 0.15 * Math.cos(currentRotation);
+		fx.y = y + 0.05 * Math.srand() - 0.15 * Math.sin(currentRotation);
+		fx.z = 0.15 + 0.05 * Math.srand();
+		for( mat in fx.getMaterials()) {
+			mat.mainPass.enableLights = true;
+			mat.shadows = false;
+			mat.mainPass.setPassName("noSAO");
+		}
+
+		var sc = 0.;
+		fx.setScale(sc);
+		fx.setRotate(0, 0, Math.srand(Math.PI));
+		var d = 0.08 + 0.03 * Math.srand();
+		var max = 0.6 + 0.1 * Math.srand();
+		game.event.waitUntil(function(dt) {
+			sc = Math.min(1, sc + d * dt);
+			fx.setScale(sc);
+			if(sc > max) {
+				d = 0.04 + 0.02 * Math.srand();
+				game.event.waitUntil(function(dt) {
+					sc = Math.max(0, sc - 0.05 * dt);
+					fx.setScale(sc);
+					if(sc == 0) {
+						fx.remove();
+						return true;
+					}
+					return false;
+				});
+				return true;
+			}
+
+			return false;
+		});
+		game.fxs.push(fx);
+		game.s3d.addChild(fx);
+	}
+
 	public function collide(tx : Float, ty : Float, tz : Float, forceRay : Float = null) {
 		var r = forceRay == null ? ray : forceRay;
 		if(Math.distance(tx - x, ty - y) < r)
@@ -155,6 +201,9 @@ class Entity
 			impact.x *= Math.pow(0.9, dt);
 			impact.y *= Math.pow(0.9, dt);
 		}
+
+		if(Math.random() < 0.2 && speed > 0.02)
+			addSmoke();
 	}
 
 }

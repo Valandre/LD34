@@ -65,7 +65,7 @@ class Hero extends Entity
 		rocket = 2;
 		mine = 0;
 		ammoId = 2;
-		game.ui.updateIco(ammoId);
+		//game.ui.updateIco(ammoId);
 
 		inline function initRocket(r : Rocket) {
 			if(r == null || r.launched)
@@ -88,6 +88,8 @@ class Hero extends Entity
 	function mecaAttack() {
 		if(delay > 0) return;
 		delay = 5 - (boost > 0 ? 1 : 0);
+		currGun = 1 - currGun;
+		new Gun(this, currentRotation, currGun, boost > 0 ? true : false);
 		currGun = 1 - currGun;
 		new Gun(this, currentRotation, currGun, boost > 0 ? true : false);
 

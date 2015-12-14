@@ -46,6 +46,7 @@ class Game extends hxd.App {
 
 		renderer = new Composite();
 		s3d.renderer = renderer;
+		s3d.lightSystem.maxLightsPerObject = 10;
 
 		var shadow = Std.instance(s3d.renderer.getPass("shadow"), h3d.pass.ShadowMap);
 		shadow.color.setColor(0x74717A);
@@ -297,6 +298,7 @@ class Game extends hxd.App {
 
 	override function update(dt:Float) {
 		super.update(dt);
+
 		mpos = getMousePicker();
 
 		keys(dt);

@@ -47,6 +47,8 @@ class Fighter extends Entity
 		delay = 5;
 		currGun = 1 - currGun;
 		new Gun(this, currentRotation, currGun);
+		currGun = 1 - currGun;
+		new Gun(this, currentRotation, currGun);
 
 		var fx = game.loadModel(Res.fx.rifle.model);
 		for( mat in fx.getMaterials()) {

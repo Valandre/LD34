@@ -17,10 +17,13 @@ class Bonus
 	var game : Game;
 	var looted = false;
 	public var model : h3d.scene.Object;
+	var lifeTime = 1000.;
 
 	public function new() {
 		game = Game.inst;
 		kind = bonusSelect();
+
+		lifeTime = 1000 + Math.srand(500);
 
 		var res = switch(kind) {
 			case Ammo : Res.bonus.ammo.model;
@@ -58,8 +61,44 @@ class Bonus
 				case "Speed": cast(mat, h3d.mat.MeshMaterial).texture = Res.bonus.speed.texture.toTexture();
 			}
 		}
+
+		var obj = switch(kind) {
+			case Ammo : model.getObjectByName("Ammo");
+			case Mine : model.getObjectByName("Mine");
+			case Rocket : model.getObjectByName("Rocket");
+			case Fuel : model.getObjectByName("Fuel");
+			case Repair : model.getObjectByName("Repair");
+			case Speed : model.getObjectByName("Speed");
+		}
+
 		game.s3d.addChild(model);
 		game.bonus.push(this);
+
+		var cpt = 0.;
+		var rot = Math.srand(Math.PI);
+		game.event.waitUntil(function(dt) {
+			if(looted) return true;
+			lifeTime -= dt;
+			if(lifeTime < 0) {
+				remove();
+				return true;
+			}
+
+			if(lifeTime < 120) {
+				if(cpt < 0) {
+					cpt = 2;
+					model.visible = !model.visible;
+				}
+				cpt -= dt;
+			}
+
+
+			if(obj != null) {
+				obj.setRotate(0, 0, rot);
+				rot += 0.01 * dt;
+			}
+			return false;
+		});
 	}
 
 	public function loot() {
@@ -135,9 +174,8 @@ class Bonus
 		if(choice.length == 0)
 			choice = [Mine, Rocket, Fuel, Repair, Speed];
 
+		choice.push(Fuel); //add one more
 		choice.push(Ammo); //add one more
-		choice.push(Ammo); //add one more
-		choice.push(Repair); //add one more
 		choice.push(Repair); //add one more
 
 		return choice[Std.random(choice.length)];

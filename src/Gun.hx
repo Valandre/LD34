@@ -5,7 +5,7 @@ class Gun
 {
 	var game : Game;
 	var m :h3d.scene.Mesh;
-	var dmg = 2;
+	var dmg = 1;
 	var owner : Entity;
 
 	public function new( owner : Entity, rot : Float, currGun : Float, boost = false)
@@ -15,11 +15,11 @@ class Gun
 		if(boost)
 			dmg *= 2;
 
-		var c = new h3d.prim.Cube(0.2, 0.01, 0.01);
+		var c = new h3d.prim.Cube(0.2, 0.015, 0.015);
 		c.unindex();
 		c.addNormals();
 		c.addUVs();
-		c.translate( -0.1, -0.005, -0.005);
+		c.translate( -0.1, -0.0075, -0.0075);
 
 		var model = owner.model;
 		m = new h3d.scene.Mesh(c, game.s3d);
@@ -37,7 +37,7 @@ class Gun
 			m.setRotate(0, dz, rot);
 		}
 
-		rot += Math.srand(0.05);
+		rot += Math.srand(0.03);
 		var cpt = 0.;
 		var sp = 0.3;
 		game.event.waitUntil(function(dt) {
