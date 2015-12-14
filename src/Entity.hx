@@ -9,11 +9,11 @@ class Entity
 	public var x(default, set) : Float;
 	public var y(default, set) : Float;
 	public var currentRotation(default, set) : Float = 0;
-	public var ray = 0.35;
+	public var ray = 0.25;
 	public var life = 100;
 	var maxSpeed = 0.05;
 	var speed = 0.;
-	var size = 0.5;
+	var size = 0.35;
 
 	var canMove = true;
 	var isMeca = false;
@@ -22,6 +22,9 @@ class Entity
 	var oldRot = 0.;
 	var rotation = 0.;
 	public var impact : h2d.col.Point;
+	var headlight : h3d.scene.Object;
+	var rifle : h3d.scene.Object;
+	var fxs : Array<h3d.scene.Object>;
 
 	public function new(x, y) {
 		game = Game.inst;
@@ -30,6 +33,8 @@ class Entity
 		this.x = x;
 		this.y = y;
 		currentRotation = 0;
+
+		fxs = [];
 
 		game.entities.push(this);
 	}
@@ -56,6 +61,15 @@ class Entity
 		model.remove();
 		model.dispose();
 		model = null;
+		headlight.remove();
+		headlight.dispose();
+		headlight = null;
+		rifle.remove();
+		rifle.dispose();
+		rifle = null;
+
+		for(fx in fxs)
+			fx.remove();
 	}
 
 	function getBolide() {
@@ -66,19 +80,34 @@ class Entity
 			mat.addPass(new h3d.mat.Pass("depth", mat.mainPass));
 			mat.addPass(new h3d.mat.Pass("normal", mat.mainPass));
 		}
-		return m;
-	}
+		model.setScale(0.8);
 
-	function getMeca() {
-		var m = game.loadModel(Res.meca.model);
-		for( mat in m.getMaterials()) {
-			mat.addPass(new h3d.mat.Pass("depth", mat.mainPass));
-			mat.addPass(new h3d.mat.Pass("normal", mat.mainPass));
+		headlight = game.loadModel(Res.fx.headlight.model);
+		for( mat in headlight.getMaterials()) {
+			mat.mainPass.enableLights = true;
+			cast(mat, h3d.mat.MeshMaterial).blendMode = Add;
+		}
+		headlight.x = model.x;
+		headlight.y = model.y;
+		headlight.setRotate(0, 0, currentRotation);
+		headlight.setScale(model.scaleX);
+		game.s3d.addChild(headlight);
+
+		rifle = game.loadModel(Res.rifle.model);
+		for( mat in rifle.getMaterials()) {
 			mat.mainPass.enableLights = true;
 			mat.shadows = true;
-			if(mat.name == "Cannon")
-				cast(mat, h3d.mat.MeshMaterial).texture = Res.meca.cannon.toTexture();
+			mat.addPass(new h3d.mat.Pass("depth", mat.mainPass));
+			mat.addPass(new h3d.mat.Pass("normal", mat.mainPass));
 		}
+
+		rifle.x = model.x;
+		rifle.y = model.y;
+		rifle.setRotate(0, 0, currentRotation);
+		rifle.setScale(model.scaleX);
+		rifle.playAnimation(game.anims.get(Res.rifle.model.entry.path));
+		game.s3d.addChild(rifle);
+
 		return m;
 	}
 

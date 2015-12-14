@@ -12,7 +12,7 @@ class Game extends hxd.App {
 	public var hero : Hero;
 	public var fighters : Array<Fighter>;
 	var citySize = 7;
-	var width = 0;
+	public var width = 0;
 	public var event : WaitEvent;
 
 	var camOffset : h3d.Vector;
@@ -64,7 +64,6 @@ class Game extends hxd.App {
 		reset();
 		hero = null;
 
-		//world.generate(5759748);
 		world.generate(16486732);
 		resetCamOffset();
 
@@ -74,18 +73,22 @@ class Game extends hxd.App {
 			fighters.push(new Fighter(p.x + 0.5, p.y + 0.5));
 		}
 
-		ui.setMenu();
+		ui.fadeIn(true);
+		event.wait(0.2, function() {
+			ui.setMenu();
+			ui.fadeOut();
+		});
 	}
 
 	function resetCamOffset() {
-		var c = 0.6;
+		var c = 0.67;
 		if(hero != null) {
 			camOffset = new  h3d.Vector(4 * c, 6 * c, 8 * c);
 			s3d.camera.target.x = hero.x;
 			s3d.camera.target.y = hero.y;
 		}
 		else {
-			camOffset = new  h3d.Vector(4 * c * 1.25, 6 * c * 1.25, 8 * c * 0.8);
+			camOffset = new  h3d.Vector(4 * c * 1.1, 6 * c * 1.1, 8 * c * 0.7);
 			var px = width * 0.5;
 			var py = width * 0.5;
 			var ray = 0.5;
@@ -247,11 +250,19 @@ class Game extends hxd.App {
 	}
 
 	public function start() {
-		generate(Std.random(0xFFFFFF));
+		ui.fadeIn();
+		event.wait(0.2, function() {
+			generate(Std.random(0xFFFFFF));
+			ui.fadeOut();
+		});
 	}
 
 	public function gameOver() {
-		menu();
+		ui.fadeIn();
+		event.wait(0.2, function() {
+			menu();
+			ui.fadeOut();
+		});
 	}
 
 	override function update(dt:Float) {

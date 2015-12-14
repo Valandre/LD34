@@ -9,6 +9,8 @@ class UI
 	var menu : h2d.Sprite;
 	var ingame : h2d.Sprite;
 
+	var blackScreen : h2d.Bitmap;
+
 	var buttons : h2d.Sprite;
 	var btStart : h2d.Interactive;
 
@@ -23,6 +25,8 @@ class UI
 	var armorTxt : h2d.Sprite;
 	var fuelTxt : h2d.Sprite;
 	var ammoTxt : h2d.Sprite;
+
+	var ammoIco : h2d.Bitmap;
 
 	var currArmor = 0;
 	var currFuel = 0;
@@ -45,9 +49,46 @@ class UI
 				menu.removeChild(menu.getChildAt(0));
 	}
 
+	public function fadeIn(instant = false) {
+		if(blackScreen == null)
+			blackScreen = new h2d.Bitmap(h2d.Tile.fromColor(0, game.s2d.width, game.s2d.height));
+		game.s2d.addChildAt(blackScreen, 10);
+		if(!instant) {
+			blackScreen.alpha = 0;
+			game.event.waitUntil(function(dt) {
+				if(blackScreen == null) return true;
+				blackScreen.alpha += 0.08 * dt;
+				if(blackScreen.alpha >= 1) {
+					blackScreen.alpha = 1;
+					return true;
+				}
+				return false;
+			});
+		}
+	}
+
+	public function fadeOut(instant = false) {
+		if(blackScreen == null) return;
+		if(instant) {
+			blackScreen.remove();
+			blackScreen = null;
+		}
+		else {
+			game.event.waitUntil(function(dt) {
+				if(blackScreen == null) return true;
+				blackScreen.alpha -= 0.08 * dt;
+				if(blackScreen.alpha <= 0) {
+					blackScreen.remove();
+					blackScreen = null;
+					return true;
+				}
+				return false;
+			});
+		}
+	}
+
 	public function setMenu() {
 		reset();
-
 		menu = new h2d.Sprite(game.s2d);
 		var t = Res.UI.title.toTile();
 		var title = new h2d.Bitmap(t, menu);
@@ -143,8 +184,8 @@ class UI
 		var tile = Res.UI.counter_bg.toTile();
 		var bg = new h2d.Bitmap(tile, ammo);
 		var tile = Res.UI.counter_ammo.toTile();
-		var ico = new h2d.Bitmap(tile, ammo);
-		ico.y -= 5;
+		ammoIco = new h2d.Bitmap(tile, ammo);
+		ammoIco.y -= 5;
 		ammoTxt = new h2d.Sprite(ammo);
 		ammoTxt.x = armorTxt.x; ammoTxt.y = armorTxt.y;
 		setValue(game.hero.ammo, ammoTxt);
@@ -160,6 +201,11 @@ class UI
 	}
 
 	function setValue(v:Int, s : h2d.Sprite) {
+		if(v == -1) {
+			var t = Res.UI.counter_infinite.toTile();
+			var bg = new h2d.Bitmap(t, s);
+			return;
+		}
 		var nums = Std.string(v).split("");
 		var tiles = [for(e in nums) getCounterTile(Std.parseInt(e))];
 		var dx = 0.;
@@ -205,6 +251,19 @@ class UI
 		}
 	}
 
+	public function updateIco(v : Int) {
+		ammoIco.remove();
+		var tile = switch(v) {
+			case 0:	Res.UI.counter_ammo.toTile();
+			case 1:	Res.UI.counter_mine.toTile();
+			case 2:	Res.UI.counter_rocket.toTile();
+			default: null;
+		}
+		ammoIco = new h2d.Bitmap(tile, ammo);
+		ammoIco.y -= 5;
+	}
+
+
 	public function update(dt : Float) {
 
 		if(game.hero == null) return;
@@ -221,10 +280,10 @@ class UI
 			currFuel = Math.ceil(game.hero.fuel);
 			setValue(currFuel, fuelTxt);
 		}
-		if(currAmmo != game.hero.ammo) {
+		if(currAmmo != game.hero.getAmmo()) {
 			while(ammoTxt.numChildren > 0)
 				ammoTxt.getChildAt(0).remove();
-			currAmmo = game.hero.ammo;
+			currAmmo = game.hero.getAmmo();
 			setValue(currAmmo, ammoTxt);
 		}
 

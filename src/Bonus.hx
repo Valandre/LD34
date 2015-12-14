@@ -3,7 +3,8 @@ import hxd.Res;
 import hxd.Math;
 
 enum BonusKind {
-	Ammo;
+	Mine;
+	Rocket;
 	Fuel;
 	Repair;
 	Speed;
@@ -21,7 +22,8 @@ class Bonus
 		kind = bonusSelect();
 
 		var res = switch(kind) {
-			case Ammo : Res.bonus.ammo.model;
+			case Mine : Res.bonus.mine.model;
+			case Rocket : Res.bonus.rocket.model;
 			case Fuel : Res.bonus.fuel.model;
 			case Repair : Res.bonus.repair.model;
 			case Speed : Res.bonus.speed.model;
@@ -29,9 +31,12 @@ class Bonus
 
 		model = game.loadModel(res);
 		var pos = game.world.getFreePos();
+		if(game.world.hasZebra[Std.int(pos.x + pos.y * game.width)] == 1)
+			return;
 		model.x = pos.x + 0.5;
 		model.y = pos.y + 0.5;
 		model.playAnimation(game.anims.get(res.entry.path));
+		model.setScale(0.9);
 
 		for( mat in model.getMaterials()) {
 			mat.mainPass.enableLights = true;
@@ -40,7 +45,8 @@ class Bonus
 
 			switch(mat.name) {
 				case "Repair": cast(mat, h3d.mat.MeshMaterial).texture = Res.bonus.repair.texture.toTexture();
-				case "Ammo": cast(mat, h3d.mat.MeshMaterial).texture = Res.bonus.ammo.texture.toTexture();
+				case "Mine": cast(mat, h3d.mat.MeshMaterial).texture = Res.bonus.mine.texture.toTexture();
+				case "Rocket": cast(mat, h3d.mat.MeshMaterial).texture = Res.bonus.rocket.texture.toTexture();
 				case "Fuel": cast(mat, h3d.mat.MeshMaterial).texture = Res.bonus.fuel.texture.toTexture();
 				case "Speed": cast(mat, h3d.mat.MeshMaterial).texture = Res.bonus.speed.texture.toTexture();
 			}
@@ -58,8 +64,11 @@ class Bonus
 		model.remove();
 		var res = null;
 		switch(kind) {
-			case Ammo :
-				game.hero.ammo = Math.imin(game.hero.ammoMax, game.hero.ammo + 150);
+			case Mine :
+				game.hero.setMine();
+				res = Res.fx.mine.model;
+			case Rocket :
+				game.hero.setRocket();
 				res = Res.fx.ammo.model;
 			case Fuel :
 				game.hero.fuel = Math.min(game.hero.fuelMax, game.hero.fuel + 100);
@@ -86,28 +95,32 @@ class Bonus
 	}
 
 	function bonusSelect() {
-		var a = 0;
+		var m = 0;
 		var f = 0;
 		var r = 0;
 		var s = 0;
+		var rk = 0;
+
 
 		for(b in game.bonus) {
 			switch(b.kind) {
-				case Ammo: a++;
+				case Mine: m++;
 				case Fuel: f++;
 				case Repair: r++;
 				case Speed: s++;
+				case Rocket: rk++;
 			}
 		}
 
 		var choice = [];
-		if(a == 0) choice.push(Ammo);
+		if(m == 0) choice.push(Mine);
 		if(f == 0) choice.push(Fuel);
 		if(r == 0) choice.push(Repair);
 		if(s == 0) choice.push(Speed);
+		if(rk == 0) choice.push(Rocket);
 
 		if(choice.length == 0)
-			choice = [Ammo, Fuel, Repair, Speed];
+			choice = [Mine, Rocket, Fuel, Repair, Speed];
 
 		choice.push(Repair); //add one more
 

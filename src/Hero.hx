@@ -14,9 +14,12 @@ class Hero extends Entity
 	public var ammo = 0;
 	public var boost = 0.;
 	public var lifeMax = 0;
+	public var mine = 0;
+	public var rocket = 0;
 
 	var maxSpeedRef = 0.;
 	var scale = 1.;
+	var ammoId = 0;
 
 	public function new(x, y) {
 		super(x, y);
@@ -25,17 +28,63 @@ class Hero extends Entity
 		ammo = ammoMax = 100;
 
 		maxSpeedRef = maxSpeed = 0.04;
+		scale = 0.8;
 
 		var a = Res.bolide.anim_run.toHmd().loadAnimation();
 		model.playAnimation(a);
 	}
+
+
+	public function setMine() {
+		mine = 3;
+		rocket = 0;
+		ammoId = 1;
+		game.ui.updateIco(ammoId);
+	}
+
+
+	public function setRocket() {
+		rocket = 2;
+		mine = 0;
+		ammoId = 2;
+		game.ui.updateIco(ammoId);
+	}
+
+	public function getAmmo() {
+		return switch(ammoId) {
+			case 1 : mine;
+			case 2 : rocket;
+			default: -1;
+		}
+	}
+
 
 	public function mecaAttack() {
 		if(delay > 0) return;
 		delay = 5 - (boost > 0 ? 1 : 0);
 		currGun = 1 - currGun;
 		new Gun(this, currentRotation, currGun, boost > 0 ? true : false);
-		ammo = Math.imax(0, ammo - 1);
+
+		var fx = game.loadModel(Res.fx.rifle.model);
+		for( mat in fx.getMaterials()) {
+			mat.mainPass.enableLights = true;
+			cast(mat, h3d.mat.MeshMaterial).blendMode = Add;
+		}
+
+		fx.x = x;
+		fx.y = y;
+		fx.setScale(model.scaleX);
+		fx.setRotate(0, 0, currentRotation);
+		fx.playAnimation(game.anims.get(Res.fx.rifle.model.entry.path));
+		fx.currentAnimation.speed = 1.5;
+		fx.currentAnimation.onAnimEnd = function() {
+			fx.remove();
+			fxs.remove(fx);
+		}
+		game.s3d.addChild(fx);
+		fxs.push(fx);
+
+		//ammo = Math.imax(0, ammo - 1);
 	}
 
 	override public function remove() {
@@ -58,7 +107,7 @@ class Hero extends Entity
 		if(isDead())
 			return;
 
-		fuel = Math.max(0, fuel - (speed + 0.025) * 0.5 * dt);
+		fuel = Math.max(0, fuel - (speed + 0.02) * 0.6 * dt);
 		boost -= dt;
 		maxSpeed = maxSpeedRef * (boost > 0 ? 1.5 : 1);
 		if(fuel <= 0)
@@ -66,21 +115,10 @@ class Hero extends Entity
 		if(boost > 0 && oldBoost < 0)
 			speed = maxSpeed * 1.25;
 		oldBoost = boost;
-		scale = boost > 0 ? 1.3 : 1.;
+		scale = boost > 0 ? 1. : 0.8;
 		model.setScale(model.scaleX + (scale-model.scaleX) * 0.25 * dt);
 
-
-		if(K.isPressed(K.MOUSE_RIGHT)) {
-			canMove = !canMove;
-			if(canMove) {
-				model.getChildAt(0).remove();
-				model.addChild(getBolide());
-				var a = Res.bolide.anim_run.toHmd().loadAnimation();
-				model.playAnimation(a);
-				isMeca = false;
-			}
-		}
-		if(K.isDown(K.MOUSE_LEFT) && canMove)
+		if(K.isDown(K.MOUSE_RIGHT) && canMove)
 			speed += (maxSpeed - speed) * 0.03 * dt;
 		else if(!isMeca) {
 			speed *= Math.pow(0.95, dt);
@@ -99,33 +137,26 @@ class Hero extends Entity
 			x += speed * Math.cos(currentRotation);
 			y += speed * Math.sin(currentRotation);
 
-			var c = game.world.collide(x, y, size * 0.5 * model.scaleX);
+			var c = game.world.collide(x, y, size * 0.5);
 			if(c != null) {
 				speed *= Math.pow(0.95, dt);
-				repell(c.x, c.y, 0.5 + size * 0.5 * model.scaleX);
+				repell(c.x, c.y, 0.5 + size * 0.5);
 				if(Math.abs(Math.angle(currentRotation - Math.atan2(c.y, c.x))) > Math.PI * 0.7) {
 					if(speed > 0) speed = Math.min(-0.01, -speed * 0.6);
 					else speed = Math.max( 0.01, -speed * 0.6);
 				}
 			}
-		}
-		else {
-			currentRotation = Math.angleMove(currentRotation, rotation, 0.2 * dt);
-			if(!isMeca) {
-				isMeca = true;
-				model.getChildAt(0).remove();
-				model.addChild(getMeca());
-				var a = Res.meca.anim_shoot.toHmd().loadAnimation();
-				model.playAnimation(a);
-				model.currentAnimation.speed = 0;
-			}
-			//ATTACK
-			if(K.isDown(K.MOUSE_LEFT) && ammo > 0) {
-				mecaAttack();
-				model.currentAnimation.speed += (1.5 - model.currentAnimation.speed) * 0.25 * dt;
-			}
-			else model.currentAnimation.speed *= Math.pow(0.9, dt);
 
+			if(K.isDown(K.MOUSE_LEFT) && ammo > 0) {
+				rifle.currentAnimation.speed = 1.5;
+				mecaAttack();
+			}
+			else {
+				rifle.currentAnimation.speed = 0;
+				for(fx in fxs)
+					fx.remove();
+				fxs = [];
+			}
 		}
 
 		for(f in game.fighters) {
@@ -148,8 +179,8 @@ class Hero extends Entity
 				impact = new h2d.col.Point(n2.x * f.speed * 2 * v2, n2.y * f.speed * 2 * v2);
 				speed *= Math.pow(0.1, dt);
 
-				repell((x - f.x) * 0.1, (y - f.y) * 0.1, f.size * 0.5 + size * 0.5);
-				f.repell((f.x - x) * 0.1, (f.y - y) * 0.1, size * 0.5 + f.size * 0.5);
+				repell((x - f.x) * 0.1, (y - f.y) * 0.1, f.size * 0.5 + size * model.scaleX * 0.5);
+				f.repell((f.x - x) * 0.1, (f.y - y) * 0.1, size * 0.5 * model.scaleX + f.size * 0.5);
 			}
 		}
 
@@ -157,6 +188,23 @@ class Hero extends Entity
 			if(Math.distance(b.model.x - x, b.model.y - y) < 0.5)
 				b.loot();
 
+
+		headlight.x = model.x;
+		headlight.y = model.y;
+		headlight.setRotate(0, 0, currentRotation);
+		headlight.setScale(model.scaleX);
+
+		rifle.x = model.x;
+		rifle.y = model.y;
+		rifle.setRotate(0, 0, currentRotation);
+		rifle.setScale(model.scaleX);
+
+		for(fx in fxs) {
+			fx.x = model.x;
+			fx.y = model.y;
+			fx.setRotate(0, 0, currentRotation);
+			fx.setScale(model.scaleX);
+		}
 
 	}
 }
