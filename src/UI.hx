@@ -201,11 +201,6 @@ class UI
 	}
 
 	function setValue(v:Int, s : h2d.Sprite) {
-		if(v == -1) {
-			var t = Res.UI.counter_infinite.toTile();
-			var bg = new h2d.Bitmap(t, s);
-			return;
-		}
 		var nums = Std.string(v).split("");
 		var tiles = [for(e in nums) getCounterTile(Std.parseInt(e))];
 		var dx = 0.;
@@ -231,9 +226,6 @@ class UI
 	}
 
 	public function onResize() {
-		//scale = game.s2d.height / 1080;
-		//trace(scale);
-
 		if(ingame != null) {
 			life.x = game.s2d.width * 0.5;
 			life.y = 30;

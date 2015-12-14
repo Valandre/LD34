@@ -34,6 +34,8 @@ class Game extends hxd.App {
 		inspector = new hxd.net.SceneInspector(s3d);
 		width = 3 * citySize + 1;
 
+		s2d.setFixedSize(1920, 1080);
+
 		//var light = new h3d.scene.DirLight(new h3d.Vector( 0.3, -0.4, -0.9), s3d);
 		//light.color.setColor(0x8EA59E);
 		s3d.lightSystem.ambientLight.setColor(0xA0A0A0);
@@ -249,10 +251,13 @@ class Game extends hxd.App {
 		}
 		cam.pos.set(cam.target.x + camOffset.x, cam.target.y + camOffset.y, cam.target.z + camOffset.z);
 
-		if(K.isPressed("K".code))
+		if(K.isPressed("K".code)) {
 			if(fighters != null)
 				while(fighters.length > 0)
 					fighters[0].remove();
+			if(hero != null)
+				hero.cheat = true;
+		}
 
 		if(K.isPressed(K.SPACE))
 			generate(Std.random(0xFFFFFF));

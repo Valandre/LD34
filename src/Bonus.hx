@@ -3,6 +3,7 @@ import hxd.Res;
 import hxd.Math;
 
 enum BonusKind {
+	Ammo;
 	Mine;
 	Rocket;
 	Fuel;
@@ -22,6 +23,7 @@ class Bonus
 		kind = bonusSelect();
 
 		var res = switch(kind) {
+			case Ammo : Res.bonus.ammo.model;
 			case Mine : Res.bonus.mine.model;
 			case Rocket : Res.bonus.rocket.model;
 			case Fuel : Res.bonus.fuel.model;
@@ -48,6 +50,7 @@ class Bonus
 			mat.mainPass.setPassName("noSAO");
 
 			switch(mat.name) {
+				case "Ammo": cast(mat, h3d.mat.MeshMaterial).texture = Res.bonus.ammo.texture.toTexture();
 				case "Repair": cast(mat, h3d.mat.MeshMaterial).texture = Res.bonus.repair.texture.toTexture();
 				case "Mine": cast(mat, h3d.mat.MeshMaterial).texture = Res.bonus.mine.texture.toTexture();
 				case "Rocket": cast(mat, h3d.mat.MeshMaterial).texture = Res.bonus.rocket.texture.toTexture();
@@ -68,6 +71,9 @@ class Bonus
 		model.remove();
 		var res = null;
 		switch(kind) {
+			case Ammo :
+				game.hero.ammo = Math.imin(game.hero.ammoMax, game.hero.ammo + 100);
+				res = Res.fx.ammo.model;
 			case Mine :
 				game.hero.setMine();
 				res = Res.fx.mine.model;
@@ -99,6 +105,7 @@ class Bonus
 	}
 
 	function bonusSelect() {
+		var a = 0;
 		var m = 0;
 		var f = 0;
 		var r = 0;
@@ -108,6 +115,7 @@ class Bonus
 
 		for(b in game.bonus) {
 			switch(b.kind) {
+				case Ammo: a++;
 				case Mine: m++;
 				case Fuel: f++;
 				case Repair: r++;
@@ -117,6 +125,7 @@ class Bonus
 		}
 
 		var choice = [];
+		if(a == 0) choice.push(Ammo);
 		if(m == 0) choice.push(Mine);
 		if(f == 0) choice.push(Fuel);
 		if(r == 0) choice.push(Repair);
@@ -126,6 +135,9 @@ class Bonus
 		if(choice.length == 0)
 			choice = [Mine, Rocket, Fuel, Repair, Speed];
 
+		choice.push(Ammo); //add one more
+		choice.push(Ammo); //add one more
+		choice.push(Repair); //add one more
 		choice.push(Repair); //add one more
 
 		return choice[Std.random(choice.length)];

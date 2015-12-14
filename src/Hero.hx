@@ -21,6 +21,8 @@ class Hero extends Entity
 	var scale = 1.;
 	var ammoId = 0;
 
+	public var cheat = false;
+
 	public function new(x, y) {
 		super(x, y);
 		life = lifeMax = 100;
@@ -52,6 +54,7 @@ class Hero extends Entity
 
 	public function getAmmo() {
 		return switch(ammoId) {
+			case 0 : ammo;
 			case 1 : mine;
 			case 2 : rocket;
 			default: -1;
@@ -84,7 +87,7 @@ class Hero extends Entity
 		game.s3d.addChild(fx);
 		fxs.push(fx);
 
-		//ammo = Math.imax(0, ammo - 1);
+		ammo = Math.imax(0, ammo - 1);
 	}
 
 	override public function remove() {
@@ -107,7 +110,8 @@ class Hero extends Entity
 		if(isDead())
 			return;
 
-		fuel = Math.max(0, fuel - (speed + 0.02) * 0.6 * dt);
+		if(!cheat)
+			fuel = Math.max(0, fuel - (speed + 0.02) * 0.6 * dt);
 		boost -= dt;
 		maxSpeed = maxSpeedRef * (boost > 0 ? 1.5 : 1);
 		if(fuel <= 0)
@@ -137,13 +141,15 @@ class Hero extends Entity
 			x += speed * Math.cos(currentRotation);
 			y += speed * Math.sin(currentRotation);
 
-			var c = game.world.collide(x, y, size * 0.5);
-			if(c != null) {
-				speed *= Math.pow(0.95, dt);
-				repell(c.x, c.y, 0.5 + size * 0.5);
-				if(Math.abs(Math.angle(currentRotation - Math.atan2(c.y, c.x))) > Math.PI * 0.7) {
-					if(speed > 0) speed = Math.min(-0.01, -speed * 0.6);
-					else speed = Math.max( 0.01, -speed * 0.6);
+			if(!cheat) {
+				var c = game.world.collide(x, y, size * 0.5);
+				if(c != null) {
+					speed *= Math.pow(0.95, dt);
+					repell(c.x, c.y, 0.5 + size * 0.5);
+					if(Math.abs(Math.angle(currentRotation - Math.atan2(c.y, c.x))) > Math.PI * 0.7) {
+						if(speed > 0) speed = Math.min(-0.01, -speed * 0.6);
+						else speed = Math.max( 0.01, -speed * 0.6);
+					}
 				}
 			}
 
@@ -205,6 +211,5 @@ class Hero extends Entity
 			fx.setRotate(0, 0, currentRotation);
 			fx.setScale(model.scaleX);
 		}
-
 	}
 }
