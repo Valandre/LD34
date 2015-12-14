@@ -21,14 +21,15 @@ class Game extends hxd.App {
 	public var ui: UI;
 	public var credits = 3;
 
-	public var mines = [];
+	public var mines : Array<Mine> = [];
 	public var fxs = [];
 
 	var bg : h3d.scene.Object;
 
 	static function main() {
-		hxd.Res.initLocal();
-		hxd.res.Resource.LIVE_UPDATE = true;
+		//hxd.Res.initLocal();
+		//hxd.res.Resource.LIVE_UPDATE = true;
+		hxd.Res.initEmbed({ compressSounds : true });
 		inst = new Game();
 	}
 
@@ -288,6 +289,21 @@ class Game extends hxd.App {
 		ui.fadeIn();
 		event.wait(0.2, function() {
 			Sounds.play("Loop");
+			generate(Std.random(0xFFFFFF));
+			ui.fadeOut();
+			ui.setGo();
+		});
+	}
+
+
+	public function victory() {
+		ui.setVictory();
+	}
+
+
+	public function nextStage() {
+		ui.fadeIn();
+		event.wait(0.2, function() {
 			generate(Std.random(0xFFFFFF));
 			ui.fadeOut();
 			ui.setGo();

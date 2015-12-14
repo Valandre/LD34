@@ -1,0 +1,7 @@
+-cp src
+-swf ../loader.swf
+-swf-header 960:960:60:000000
+--flash-strict
+-swf-version 12
+-main Main
+-dce no

@@ -142,6 +142,8 @@ class Entity
 	function explode() {
 		Sounds.play("Explode");
 		remove();
+		if(game.fighters.length == 0 && game.hero != null)
+			game.victory();
 	}
 
 	public function hurt(dmg : Int) {

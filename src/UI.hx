@@ -101,6 +101,32 @@ class UI
 		}
 	}
 
+	public function setVictory() {
+		if(ingame != null) {
+			game.event.wait(0.5, function() {
+				var tile = Res.UI.Victory.toTile();
+				defeatTxt = new h2d.Bitmap(tile, ingame);
+				defeatTxt.x = (game.s2d.width - tile.width) * 0.5;
+				defeatTxt.y = (game.s2d.height - tile.height) * 0.5;
+
+				var c = 1.;
+				defeatTxt.colorAdd = new h3d.Vector(c, c, c);
+				game.event.waitUntil(function(dt) {
+					if(c == 0) {
+						game.event.wait(1, function() {
+							defeatTxt.remove();
+							game.nextStage();
+						});
+						return true;
+					}
+					c = Math.max(0, c - 0.08 * dt);
+					defeatTxt.colorAdd = new h3d.Vector(c, c, c);
+					return false;
+				});
+			});
+		}
+	}
+
 	public function setGo() {
 		if(ingame != null) {
 			game.event.wait(1.5, function() {
