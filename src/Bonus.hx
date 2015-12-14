@@ -33,6 +33,10 @@ class Bonus
 		var pos = game.world.getFreePos();
 		if(game.world.hasZebra[Std.int(pos.x + pos.y * game.width)] == 1)
 			return;
+		for( b in game.bonus)
+			if(Std.int(b.model.x) == pos.x && Std.int(b.model.y) == pos.y)
+				return;
+
 		model.x = pos.x + 0.5;
 		model.y = pos.y + 0.5;
 		model.playAnimation(game.anims.get(res.entry.path));
