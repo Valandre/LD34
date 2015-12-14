@@ -61,9 +61,11 @@ class Sounds {
 
 		switch(name) {
 			case "Loop":
-				var t = new T();
-				t.volume = 0.5;
-				musicChannel = s.play(0, 99999, t);
+				if(!Game.inst.mute) {
+					var t = new T();
+					t.volume = 0.5;
+					musicChannel = s.play(0, 99999, t);
+				}
 			case "MenuClick":
 				s.play(0, 0);
 			case "MenuOver":

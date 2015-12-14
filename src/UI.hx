@@ -7,7 +7,7 @@ class UI
 {
 	var game : Game;
 	var menu : h2d.Sprite;
-	var ingame : h2d.Sprite;
+	public var ingame : h2d.Sprite;
 	var credits : h2d.Sprite;
 	var help : h2d.Sprite;
 
@@ -501,7 +501,7 @@ class UI
 		}
 
 		if(menu != null) {
-			buttons.x = game.s2d.width - 400;
+			buttons.x = game.s2d.width - 200;
 			buttons.y = game.s2d.height - 150;
 		}
 

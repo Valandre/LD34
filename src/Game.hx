@@ -25,12 +25,18 @@ class Game extends hxd.App {
 	public var fxs = [];
 
 	var bg : h3d.scene.Object;
+	public var level = 0;
+	public var mute = false;
 
 	static function main() {
 		//hxd.Res.initLocal();
 		//hxd.res.Resource.LIVE_UPDATE = true;
-		hxd.Res.initEmbed({ compressSounds : true });
+		//hxd.Res.initEmbed({ compressSounds : true });
 		inst = new Game();
+	}
+
+	override function loadAssets(done) {
+		new hxd.fmt.pak.Loader(s2d, done);
 	}
 
 	override function init() {
@@ -243,6 +249,12 @@ class Game extends hxd.App {
 	function keys(dt : Float) {
 		var cam = s3d.camera;
 
+		if(K.isPressed("M".code)) {
+			mute = !mute;
+			if(!mute && ui != null && ui.ingame != null) Sounds.play("Loop");
+			else Sounds.stop("Loop");
+		}
+
 		if(K.isDown(K.CTRL) && K.isPressed("F".code))
 			engine.fullScreen = !engine.fullScreen;
 
@@ -286,6 +298,7 @@ class Game extends hxd.App {
 
 	public function start() {
 		credits = 3;
+		level = 0;
 		ui.fadeIn();
 		event.wait(0.2, function() {
 			Sounds.play("Loop");
@@ -302,6 +315,7 @@ class Game extends hxd.App {
 
 
 	public function nextStage() {
+		level++;
 		ui.fadeIn();
 		event.wait(0.2, function() {
 			generate(Std.random(0xFFFFFF));
@@ -323,7 +337,7 @@ class Game extends hxd.App {
 
 			hero = new Hero(p.x + 0.5, p.y + 0.5);
 
-			for( i in 0...n) { //no more than 9
+			for( i in 0...n) {
 				var p = world.getFreePos();
 				fighters.push(new Fighter(p.x + 0.5, p.y + 0.5));
 			}

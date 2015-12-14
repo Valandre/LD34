@@ -13,7 +13,7 @@ class Fighter extends Entity
 
 	public function new(x, y) {
 		super(x, y);
-		life = 20;
+		life = 20 + game.level * 5;
 
 		maxSpeed = 0.04;
 
